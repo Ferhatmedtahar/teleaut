@@ -2,11 +2,6 @@ import { MobileSidebarDrawer } from "@/components/navigation/MobileSidebarDrawer
 import { Navbar } from "@/components/navigation/NavBar";
 import AppSidebar from "@/components/navigation/Sidebar";
 
-export const metadata = {
-  title: "Education Platform",
-  description: "Learn and explore educational content",
-};
-
 export default function RootLayout({
   children,
 }: {

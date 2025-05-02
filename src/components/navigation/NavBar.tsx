@@ -50,7 +50,6 @@ export function Navbar({ className }: NavbarProps) {
           </Link>
         </div>
 
-        {/* Search button that redirects to search page */}
         <div className="relative mx-auto hidden w-full max-w-md md:block">
           <Input
             type="search"
@@ -60,7 +59,7 @@ export function Navbar({ className }: NavbarProps) {
           <div className="absolute inset-y-0 left-3 flex items-center">
             <Search className="h-5 w-5 text-muted-foreground" />
           </div>
-          <div className="absolute inset-y-0 right-3 flex items-center">
+          {/* <div className="absolute inset-y-0 right-3 flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
@@ -70,9 +69,9 @@ export function Navbar({ className }: NavbarProps) {
               <path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z" />
               <path d="M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z" />
             </svg>
-          </div>
+          </div> */}
         </div>
-
+        {/* TODO fix this on the phone to do the search correctly */}
         {/* Mobile search button */}
         <Link href="/search" passHref>
           <Button
@@ -90,9 +89,9 @@ export function Navbar({ className }: NavbarProps) {
           {isLoggedIn ? (
             <>
               <Button
-                variant="outline"
-                size="sm"
-                className="gap-1 hidden sm:flex"
+                variant="default"
+                size="lg"
+                className="gap-1 hidden sm:flex "
               >
                 <Plus className="h-4 w-4" />
                 <span>Publier</span>
@@ -139,8 +138,9 @@ export function Navbar({ className }: NavbarProps) {
           ) : (
             <Button
               onClick={() => setIsLoggedIn(true)}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 whitespace-nowrap"
-              size="sm"
+              className=" hover:cursor-pointer whitespace-nowrap"
+              variant="default"
+              size={"lg"}
             >
               Se connecter
             </Button>
