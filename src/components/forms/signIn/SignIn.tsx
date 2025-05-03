@@ -1,14 +1,14 @@
 "use client";
 
 import { signInAction } from "@/actions/auth/signIn.action";
-import { SignInSchema } from "@/lib/schemas/auth/SignIn.schema";
+import { SignInSchema } from "@/components/forms/signIn/SignIn.schema";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { z } from "zod";
-import { Button } from "../common/buttons/Button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { Button } from "../../common/buttons/Button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
 
 export default function SignInForm() {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -103,7 +103,7 @@ export default function SignInForm() {
       </div>
 
       <Button type="submit" className="py-5 w-full">
-        Se connecter
+        {isPending ? "Connexion en cours..." : "Se connecter"}
       </Button>
 
       <div className="text-center mt-6">

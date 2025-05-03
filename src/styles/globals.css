@@ -352,3 +352,10 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.radial-gradient {
+  background: radial-gradient(circle, #fffd 20%, #ffffff44 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

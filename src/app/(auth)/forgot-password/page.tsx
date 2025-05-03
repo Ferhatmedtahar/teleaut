@@ -41,39 +41,41 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
-            Forgot Password
-          </CardTitle>
-          <CardDescription className="text-center">
-            Enter your email address to receive a password reset link
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            {error && (
-              <div className="p-3 text-sm bg-red-50 text-red-500 rounded-md">
-                {error}
+    <div className="bg-[#355869] w-full relative">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 lg:rounded-tl-[6rem]">
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-bold text-center">
+              Forgot Password
+            </CardTitle>
+            <CardDescription className="text-center">
+              Enter your email address to receive a password reset link
+            </CardDescription>
+          </CardHeader>
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-4">
+              {error && (
+                <div className="p-3 text-sm bg-red-50 text-red-500 rounded-md">
+                  {error}
+                </div>
+              )}
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              Send reset link
-            </Button>
-          </CardContent>
-        </form>
-      </Card>
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                Send reset link
+              </Button>
+            </CardContent>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 }
