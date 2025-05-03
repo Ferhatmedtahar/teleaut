@@ -1,14 +1,14 @@
 "use client";
 
 import { signInAction } from "@/actions/auth/signIn.action";
-import { SignInSchema } from "@/components/forms/signIn/SignIn.schema";
+import { SignInSchema } from "@/app/(auth)/_components/forms/signIn/SignIn.schema";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { z } from "zod";
-import { Button } from "../../common/buttons/Button";
-import { Input } from "../../ui/input";
-import { Label } from "../../ui/label";
+import { Button } from "../../../../../components/common/buttons/Button";
+import { Input } from "../../../../../components/ui/input";
+import { Label } from "../../../../../components/ui/label";
 
 export default function SignInForm() {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -76,7 +76,7 @@ export default function SignInForm() {
           />
           <button
             type="button"
-            className="absolute inset-y-0 right-0 pr-3 flex items-center justify-center focus:ouline-none focus:ring focus:ring-primary-400 border-0"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center justify-center focus:ouline-none"
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
@@ -110,7 +110,7 @@ export default function SignInForm() {
         <p className="text-sm text-gray-600">
           Vous n'avez pas de compte ?{" "}
           <Link
-            href="sign-up"
+            href="sign-up/info"
             className="text-blue-600 hover:text-blue-800 font-medium transition duration-200"
           >
             Créez-en un

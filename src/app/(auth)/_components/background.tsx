@@ -25,25 +25,7 @@ export default function Background() {
             priority
           />
         ) : (
-          // <div>
-          //   <Image
-          //     src="/icons/sign-up1.svg"
-          //     alt="Sign Up Background"
-          //     fill
-          //     className="object-contain opacity-40 pointer-events-none"
-          //     priority
-          //   />
-          //   <Image
-          //     src="/icons/sign-up2.svg"
-          //     alt="Sign Up Background"
-          //     height={200}
-          //     width={200}
-          //     className="object-contain opacity-40 pointer-events-none"
-          //     priority
-          //   />
-          // </div>
           <>
-            {/* Image 1: Positioned towards top/center-left */}
             <Image
               src="/icons/sign-up1.svg"
               alt="Sign Up Background Element 1"
@@ -99,7 +81,7 @@ export default function Background() {
               <br />
               en ligne les plus
               <br />
-              performants.
+              performants
             </span>
           )}
         </h1>

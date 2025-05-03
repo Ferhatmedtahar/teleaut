@@ -111,7 +111,7 @@
   --background: #fafafa;
   --color-card: oklch(1 0 0);
   --color-card-foreground: oklch(0.129 0.042 264.695);
-  --color-popover: oklch(1 0 0);
+  --color-popover: oklch(3 0 0);
   --color-popover-foreground: oklch(0.129 0.042 264.695);
   --color-primary: #16222a;
   --color-primary-foreground: oklch(1 0 0);
