@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { SignUpSchema } from "../SignUp.schema";
@@ -19,6 +20,17 @@ const SignUpBasicInfoFormSchema = SignUpSchema.pick({
 type SignUpBasicInfoFormSchema = z.infer<typeof SignUpBasicInfoFormSchema>;
 export default function SignUpBasicInfoForm() {
   const router = useRouter();
+  const [signUpInfoData, setSignUpInfoData] = useState<
+    Partial<SignUpBasicInfoFormSchema>
+  >({});
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("signUpData");
+    if (storedData) {
+      setSignUpInfoData(JSON.parse(storedData));
+    }
+  }, []);
+  // const signUpInfoData = JSON.parse(localStorage.getItem("signUpData") ?? "{}");
   const {
     register,
     handleSubmit,
@@ -27,14 +39,16 @@ export default function SignUpBasicInfoForm() {
   } = useForm<SignUpBasicInfoFormSchema>({
     resolver: zodResolver(SignUpBasicInfoFormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
+      firstName: signUpInfoData.firstName ?? "",
+      lastName: signUpInfoData.lastName ?? "",
+      email: signUpInfoData.email ?? "",
+      phoneNumber: signUpInfoData.phoneNumber ?? "",
+      role: signUpInfoData.role ?? "student",
     },
   });
 
   function onSubmit(data: SignUpBasicInfoFormSchema) {
+    localStorage.setItem("signUpData", JSON.stringify(data));
     console.log(data);
     router.push("/sign-up/details");
   }
@@ -117,7 +131,7 @@ export default function SignUpBasicInfoForm() {
         type="submit"
         // disabled={isPending}
       >
-        Se connecter
+        Continuer
       </Button>
     </form>
   );
