@@ -24,28 +24,34 @@ export default function SignUpBasicInfoForm() {
     Partial<SignUpBasicInfoFormSchema>
   >({});
 
-  useEffect(() => {
-    const storedData = localStorage.getItem("signUpData");
-    if (storedData) {
-      setSignUpInfoData(JSON.parse(storedData));
-    }
-  }, []);
-  // const signUpInfoData = JSON.parse(localStorage.getItem("signUpData") ?? "{}");
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
+    reset,
   } = useForm<SignUpBasicInfoFormSchema>({
     resolver: zodResolver(SignUpBasicInfoFormSchema),
     defaultValues: {
-      firstName: signUpInfoData.firstName ?? "",
-      lastName: signUpInfoData.lastName ?? "",
-      email: signUpInfoData.email ?? "",
-      phoneNumber: signUpInfoData.phoneNumber ?? "",
-      role: signUpInfoData.role ?? "student",
+      firstName: signUpInfoData.firstName,
+      lastName: signUpInfoData.lastName,
+      email: signUpInfoData.email,
+      phoneNumber: signUpInfoData.phoneNumber,
+      role: signUpInfoData.role,
     },
   });
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("signUpData");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setSignUpInfoData(parsedData);
+      reset(parsedData);
+    }
+  }, [reset]);
+
+  // const signUpInfoData = JSON.parse(localStorage.getItem("signUpData") ?? "{}");
+  console.log(signUpInfoData);
 
   function onSubmit(data: SignUpBasicInfoFormSchema) {
     localStorage.setItem("signUpData", JSON.stringify(data));

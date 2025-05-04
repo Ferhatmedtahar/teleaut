@@ -22,7 +22,6 @@ export const SignUpSchema = z.object({
   diplomeFile: z
     .any()
     .refine((file) => {
-      console.log(file);
       return (
         file[0] instanceof File && ACCEPTED_MIME_TYPES.includes(file[0].type),
         "Diplôme must be a PDF, JPG, or PNG file"

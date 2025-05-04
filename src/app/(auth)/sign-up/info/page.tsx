@@ -25,7 +25,6 @@ export default function page() {
             </p>
           </div>
 
-          {/* <SignUpForm /> */}
           <SignUpBasicInfoForm />
           <div className="text-center mt-6">
             <p className="text-sm text-gray-600">

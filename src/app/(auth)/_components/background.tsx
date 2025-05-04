@@ -7,7 +7,6 @@ export default function Background() {
   const currentPath = usePathname();
   return (
     <div className="hidden w-full lg:flex lg:w-1/2 lg:rounded-br-[6rem] items-center justify-center bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] text-gray-300 relative overflow-hidden">
-      {/* Large SVG background */}
       <motion.div
         initial={{ opacity: 0, scale: 1.02 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -17,13 +16,25 @@ export default function Background() {
       >
         <h1 className="absolute top-10 left-10 text-2xl font-bold">LOGO</h1>
         {currentPath == "/sign-in" ? (
-          <Image
-            src="/icons/sign-in.svg"
-            alt="Sign In Background"
-            fill
-            className="object-contain opacity-40 pointer-events-none"
-            priority
-          />
+          <motion.div
+            animate={{ y: [0, 10, 0], x: [0, 5, 0] }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className={cn("w-full h-auto", "opacity-65", "pointer-events-none")}
+          >
+            <Image
+              src="/icons/sign-in.svg"
+              alt="Sign In Background"
+              // fill
+              width={1200}
+              height={1200}
+              className="object-contain opacity-40 pointer-events-none"
+              priority
+            />
+          </motion.div>
         ) : (
           <>
             <Image
