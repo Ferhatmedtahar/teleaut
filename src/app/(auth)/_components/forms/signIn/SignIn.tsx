@@ -3,6 +3,7 @@
 import { signInAction } from "@/actions/auth/signIn.action";
 import { SignInSchema } from "@/app/(auth)/_components/forms/signIn/SignIn.schema";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useActionState, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { z } from "zod";
@@ -11,6 +12,7 @@ import { Input } from "../../../../../components/ui/input";
 import { Label } from "../../../../../components/ui/label";
 
 export default function SignInForm() {
+  const router = useRouter();
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [state, formAction, isPending] = useActionState(handleSubmit, {
@@ -23,6 +25,10 @@ export default function SignInForm() {
     try {
       await SignInSchema.parseAsync(Object.fromEntries(formData.entries()));
       result = await signInAction(prevState, formData);
+      console.log(result);
+      if (result.state == "SUCCESS") {
+        router.push("/");
+      }
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldErrors = error.flatten().fieldErrors;

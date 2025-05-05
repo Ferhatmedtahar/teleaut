@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/app/(root)/chats/_components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,8 +8,9 @@ import {
 } from "@/app/(root)/chats/_components/ui/card";
 import { Input } from "@/app/(root)/chats/_components/ui/input";
 import { Label } from "@/app/(root)/chats/_components/ui/label";
-import {} from "@/components/ui/card";
+import { Button } from "@/components/common/buttons/Button";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -23,17 +23,17 @@ export default function ForgotPasswordPage() {
     setError("");
 
     try {
-      // Call API to send forgot password email
-      await fetch("/api/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
+      // throw new Error("Failed to send email");
+      // Call function to send forgot password email
+      toast.success("Password reset link sent to your email", {
+        duration: 5000,
+        description: "Check your inbox",
       });
-
-      alert("Check your email for further instructions");
     } catch (err) {
+      toast.error("Failed to send email", {
+        description: "Please try again later",
+        duration: 5000,
+      });
       setError("Failed to send email");
     } finally {
       setIsLoading(false);
