@@ -1,6 +1,6 @@
 "use server";
 
-import { SignInSchema } from "@/components/forms/signIn/SignIn.schema";
+import { SignInSchema } from "@/app/(auth)/_components/forms/signIn/SignIn.schema";
 import { ActionState } from "@/types/ActionState";
 import { z } from "zod";
 
