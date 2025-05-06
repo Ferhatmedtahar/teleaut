@@ -16,9 +16,9 @@ export default function ConfirmationPage() {
       router.push("/sign-up/info");
     }
     if (role === "teacher") {
-      toast.success("Your request has been successfully uploaded.", {
+      toast.success("Your request has been submitted successfully!", {
         description:
-          "We will email you once your request has been accepted or rejected.",
+          "The Cognacia team is now reviewing it and will email you once your request has processed.",
         duration: 5000,
       });
     }

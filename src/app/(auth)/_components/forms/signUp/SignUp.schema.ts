@@ -16,7 +16,14 @@ export const SignUpSchema = z.object({
   }),
 
   branch: z.string().optional(),
-  class: z.string().min(3, "Class must be at least 3 characters"),
+  class: z.string({
+    message: "Please select a class",
+  }),
+  password: z.string().min(6, "Password must be at least 6 characters").max(25),
+  confirmPassword: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .max(25),
 
   //teacher
   diplomeFile: z
@@ -48,12 +55,6 @@ export const SignUpSchema = z.object({
 
   specialties: z.array(z.string()).optional(),
   // specialty: z.string().optional(),
-
-  password: z.string().min(6, "Password must be at least 6 characters").max(25),
-  confirmPassword: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .max(25),
 });
 
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;

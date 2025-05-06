@@ -16,8 +16,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { signUpStudent } from "@/actions/auth/signUpStudent.action";
+import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
+import { toast } from "sonner";
 import { SignUpSchema } from "../SignUp.schema";
 import SpecialtiesPicker from "../SpecialtiesPicker";
+import { signUpTeacher } from "@/actions/auth/signUpTeacher.action";
+import { uploadFile } from "@/app/(auth)/_lib/uploadFile";
 
 const StudentSchema = SignUpSchema.pick({
   branch: true,
@@ -38,42 +43,8 @@ const SignUpDetailsSchema = z.discriminatedUnion("role", [
 ]);
 type SignUpDetailsSchemaType = z.infer<typeof SignUpDetailsSchema>;
 
-// Class to branch mapping
-const classBranchMapping = {
-  "7ème année de base": ["Aucune filière"],
-  "8ème année de base": ["Aucune filière"],
-  "9ème année de base": ["Aucune filière"],
-  "1ère année secondaire": ["Aucune filière"],
-  "2ème année secondaire": [
-    "Sciences expérimentales",
-    "Sciences techniques",
-    "Lettres",
-    "Économie & gestion",
-    "Sciences de l'informatique",
-    "Sciences sportives",
-  ],
-  "3ème année secondaire": [
-    "Mathématiques",
-    "Sciences expérimentales",
-    "Sciences techniques",
-    "Lettres",
-    "Économie & gestion",
-    "Sciences de l'informatique",
-    "Sciences sportives",
-  ],
-  "4ème année secondaire (BAC)": [
-    "Mathématiques",
-    "Sciences expérimentales",
-    "Sciences techniques",
-    "Lettres",
-    "Économie & gestion",
-    "Sciences de l'informatique",
-    "Sciences sportives",
-  ],
-};
-
-const allClasses = Object.keys(classBranchMapping);
-const allBranches = Object.values(classBranchMapping);
+const allClasses = Object.keys(studentClassesAndBranches);
+const allBranches = Object.values(studentClassesAndBranches);
 export default function SignUpDetailsForm() {
   //! check if user has filled the informations form if not redirect him back.
   const router = useRouter();
@@ -138,52 +109,158 @@ export default function SignUpDetailsForm() {
 
   const [selectedClass, setSelectedClass] = useState<string>("");
   const [availableBranches, setAvailableBranches] = useState<string[]>([]);
-  console.log("all classes", allClasses);
-  console.log("all branches", allBranches);
-  console.log(
-    "selectedClass",
-    selectedClass,
-    "availableBranches",
-    availableBranches
-  );
-
-  const handleClassChange = (value: string) => {
+  const handleClassChange = (value: keyof typeof studentClassesAndBranches) => {
     setSelectedClass(value);
-    setAvailableBranches(classBranchMapping[value] ?? []);
-    setValue("class", value); // ✅ sync form
-    setValue("branch", ""); // ✅ reset branch when class changes
+    setAvailableBranches(studentClassesAndBranches[value] ?? []);
+    setValue("class", value);
+    setValue("branch", "");
   };
 
   const handleBranchChange = (value: string) => {
-    setValue("branch", value); // ✅ sync form
+    setValue("branch", value);
   };
 
-  // console.log("role from the prev form ", InfoFormData.role);
   console.log("errors", errors);
-
   //$ the actual form handler
-  function onSubmit(data: SignUpDetailsSchemaType) {
+  async function onSubmit(data: SignUpDetailsSchemaType) {
     if (data.role === "teacher") {
-      const diplomeFile = (data.diplomeFile as FileList)[0];
-      const identityFileFront = (data.identityFileFront as FileList)[0];
-      const identityFileBack = (data.identityFileBack as FileList)[0];
-      //todo upload the files and get the urls
+      // //todo upload the files and get the urls
+      await handleTeacherSubmit(data);
+      // const diplomeFile = (data.diplomeFile as FileList)[0];
+      // const identityFileFront = (data.identityFileFront as FileList)[0];
+      // const identityFileBack = (data.identityFileBack as FileList)[0];
 
-      const formData = new FormData();
-      formData.append("diplomeFile", diplomeFile);
-      formData.append("identityFileFront", identityFileFront);
-      formData.append("identityFileBack", identityFileBack);
-      console.log("Teacher form data", { ...InfoFormData, ...data });
-      router.push("/sign-up/confirmation");
+      // const formData = new FormData();
+      // formData.append("diplomeFile", diplomeFile);
+      // formData.append("identityFileFront", identityFileFront);
+      // formData.append("identityFileBack", identityFileBack);
+      // console.log("Teacher form data", { ...InfoFormData, ...data });
+      // router.push("/sign-up/confirmation");
     }
 
     if (data.role === "student") {
-      // setData(data);
-      console.log("student form data", { ...InfoFormData, ...data });
-      router.push("/sign-up/verify-email");
+      if (data.password !== data.confirmPassword) {
+        toast.error("Passwords do not match");
+        return;
+      }
+
+      if (!selectedClass) {
+        toast.error("Please select a class");
+        return;
+      }
+
+      if (
+        !data.branch &&
+        availableBranches.length != 1 &&
+        availableBranches[0] != "Aucune filière"
+      ) {
+        toast.error("Please select a branch");
+        return;
+      }
+      try {
+        const formData = new FormData();
+        Object.entries({
+          ...InfoFormData,
+          ...data,
+          class: selectedClass,
+          branch: data.branch ?? "Aucune filière",
+        }).forEach(([key, value]) => formData.append(key, value ?? ""));
+
+        //call the server action
+        const result: { success: boolean; message?: string; token?: string } =
+          await signUpStudent(formData);
+        if (!result.success) {
+          toast.error(result.message);
+          router.push("/sign-up/fail-auth");
+          return;
+        }
+        if (result.success && result.token) {
+          localStorage.setItem("token", result.token);
+          router.push("/sign-up/verify-email");
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Something went wrong.");
+        router.push("/sign-up/fail-auth");
+      }
     }
   }
 
+  async function handleTeacherSubmit(data: SignUpDetailsSchemaType) {
+    try {
+      if (data.role !== "teacher") {
+        return;
+      }
+
+      // Show loading state
+      toast.loading("Uploading files...");
+      let diplomeFile: File | null = null;
+      let identityFileFront: File | null = null;
+      let identityFileBack: File | null = null;
+
+      // Get files from the form
+      diplomeFile = (data.diplomeFile as FileList)[0];
+      identityFileFront = (data.identityFileFront as FileList)[0];
+      identityFileBack = (data.identityFileBack as FileList)[0];
+
+      // Create temporary ID for the user (will be replaced with actual ID after registration)
+      const tempUserId = `temp_${Date.now()}`;
+      if (!data.specialties) {
+        toast.error("Please select at least one specialty");
+        return;
+      }
+
+      if (!diplomeFile || !identityFileFront || !identityFileBack) {
+        toast.error("Please upload all files");
+        return;
+      }
+
+      // Upload each file and get the URLs
+      const [diplomeUrl, idFrontUrl, idBackUrl] = await Promise.all([
+        uploadFile(diplomeFile, "diploma", tempUserId),
+        uploadFile(identityFileFront, "idFront", tempUserId),
+        uploadFile(identityFileBack, "idBack", tempUserId),
+      ]);
+
+      const formData = new FormData();
+
+      // Add user info
+      Object.entries(InfoFormData).forEach(([key, value]) => {
+        formData.append(key, String(value ?? ""));
+      });
+      // Add teacher-specific data
+      formData.append("role", "teacher");
+
+      formData.append("specialties", JSON.stringify(data.specialties));
+
+      // Add file URLs
+      formData.append("diplomeFileUrl", diplomeUrl);
+      formData.append("identityFileFrontUrl", idFrontUrl);
+      formData.append("identityFileBackUrl", idBackUrl);
+
+      // Call your registration API endpoint
+      const result = await signUpTeacher(formData);
+
+      if (!result.success) {
+        toast.dismiss();
+        toast.error(result.message ?? "Registration failed");
+        router.push("/sign-up/fail-auth");
+        return;
+      }
+
+      // Handle successful registration
+      toast.dismiss();
+      router.push("/sign-up/confirmation");
+    } catch (error) {
+      toast.dismiss();
+      console.error("Teacher registration error:", error);
+      toast.error("Something went wrong during registration");
+      router.push("/sign-up/fail-auth");
+    }
+  }
+
+  //!return the form
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 w-full">
       {/* Teacher Fields */}
@@ -194,16 +271,6 @@ export default function SignUpDetailsForm() {
             value={InfoFormData.role}
             type="hidden"
           />
-          {/* <div className="flex flex-col gap-1">
-            <Label>Spécialité</Label>
-            <Input
-              {...register("specialties")}
-              placeholder="Votre spécialité"
-            />
-            {"specialties" in errors && errors.specialties && (
-              <p className="text-red-500">{errors?.specialties?.message}</p>
-            )}
-          </div> */}
           <SpecialtiesPicker
             onChange={(specialties) => setValue("specialties", specialties)}
           />
@@ -259,93 +326,10 @@ export default function SignUpDetailsForm() {
             value={InfoFormData.role}
             type="hidden"
           />
-          {/* <div className="flex flex-col gap-1">
-            <Label>Filière</Label>
-            <Input {...register("branch")} placeholder="Votre filière" />
-            {"branch" in errors && errors.branch && (
-              <p className="text-red-500">{errors.branch.message}</p>
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <Label>Classe</Label>
-            <Input {...register("class")} placeholder="Votre classe" />
-            {"class" in errors && errors.class && (
-              <p className="text-red-500">{errors.class.message}</p>
-            )}
-          </div> */}
-          {/* <div className="flex flex-col gap-1">
-            <Label>Classe</Label>
-            <Select
-              onValueChange={(value) => {
-                setSelectedClass(value);
-                // Reset branch when class changes
-                const branchField = "branch" as const;
-                register(branchField).onChange({ target: { value: "" } });
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Sélectionnez votre classe" />
-              </SelectTrigger>
-              <SelectContent>
-                {allClasses.map((classOption) => (
-                  <SelectItem key={classOption} value={classOption}>
-                    {classOption}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Input
-              {...register("class")}
-              type="hidden"
-              value={selectedClass}
-              onChange={(e) => {
-                setSelectedClass(e.target.value);
-                setAvailableBranches(classBranchMapping[e.target.value]);
-              }}
-            />
-            {"class" in errors && errors.class && (
-              <p className="text-red-500">{errors.class.message}</p>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <Label>Filière</Label>
-            <Select
-              disabled={!selectedClass || availableBranches.length <= 1}
-              onValueChange={(value) => {
-                const branchField = "branch" as const;
-                register(branchField).onChange({ target: { value } });
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue
-                  placeholder={
-                    !selectedClass
-                      ? "Sélectionnez d'abord une classe"
-                      : availableBranches.length <= 1
-                      ? availableBranches[0]
-                      : "Sélectionnez votre filière"
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {availableBranches.map((branch) => (
-                  <SelectItem key={branch} value={branch}>
-                    {branch}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Input {...register("branch")} type="hidden" />
-            {"branch" in errors && errors.branch && (
-              <p className="text-red-500">{errors.branch.message}</p>
-            )}
-          </div> */}
-
           <div className="flex flex-col gap-1">
             <Label>Classe</Label>
             <Select onValueChange={handleClassChange}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Sélectionnez votre classe" />
               </SelectTrigger>
               <SelectContent>
@@ -368,7 +352,7 @@ export default function SignUpDetailsForm() {
               disabled={!selectedClass || availableBranches.length <= 1}
               onValueChange={handleBranchChange}
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue
                   placeholder={
                     !selectedClass
