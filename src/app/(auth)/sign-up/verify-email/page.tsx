@@ -1,14 +1,26 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 export default function EmailConfirmationPage() {
+  const router = useRouter();
   useEffect(() => {
-    toast.success("We've sent a confirmation email to your inbox.", {
-      description:
-        "Please check it and verify your email address to continue to your dashboard.",
-      duration: 5000,
-    });
-  }, []);
+    const role = localStorage.getItem("role"); // ✅ move inside effect
+    if (!role) return;
+
+    if (role !== "student") {
+      toast.error(
+        "You're not allowed to access this page. Please sign up as a student if you want to request a feature."
+      );
+      router.push("/sign-up/info");
+    } else {
+      toast.success("We've sent a confirmation email to your inbox.", {
+        description:
+          "Please check it and verify your email address to continue to your dashboard.",
+        duration: 5000,
+      });
+    }
+  }, [router]); // ✅ remove `toast` — it doesn't need to be here
 
   return (
     <div className="bg-[#355869] w-full relative  ">

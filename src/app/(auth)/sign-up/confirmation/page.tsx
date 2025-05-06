@@ -1,26 +1,29 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-// import { useRouter } from "next/navigation";
-
 export default function ConfirmationPage() {
+  const router = useRouter();
   useEffect(() => {
-    toast.success("Your request has been successfully uploaded.", {
-      description:
-        "We will email you once your request has been accepted or rejected.",
-      duration: 5000,
-    });
-  }, []);
-  // const role = localStorage.getItem("role");
-  // const router = useRouter();
-  // if (role !== "teacher") {
-  //   toast.error(
-  //     "You're not allowed to access this page. Please sign up as a teacher if you want to request a feature."
-  //   );
-  //   router.push("/sign-up/info");
-  // }
+    const role = localStorage.getItem("role");
+    if (!role) return;
+    if (role !== "teacher") {
+      toast.error(
+        "You're not allowed to access this page. Please sign up as a teacher if you want to request a feature."
+      );
+      router.push("/sign-up/info");
+    }
+    if (role === "teacher") {
+      toast.success("Your request has been submitted successfully!", {
+        description:
+          "The Cognacia team is now reviewing it and will email you once your request has processed.",
+        duration: 5000,
+      });
+    }
+  }, [router]);
+
   return (
     <div className="bg-[#355869] w-full relative  ">
       <div className="flex flex-col items-center justify-center h-screen py-10 gap-6 sm:gap-8 md:gap-10 lg:gap-14 bg-gray-50 px-6 lg:items-start lg:px-24 lg:rounded-tl-[6rem]">

@@ -1,15 +1,15 @@
 "use client";
-// import { SelectRole } from "@/app/(auth)/_components/Select";
 import { SelectRole } from "@/app/(auth)/_components/SelectRole";
+import { useSignUpStore } from "@/app/(auth)/sign-up/store";
 import { Button } from "@/components/common/buttons/Button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { SignUpSchema } from "../SignUp.schema";
+
 const SignUpBasicInfoFormSchema = SignUpSchema.pick({
   firstName: true,
   lastName: true,
@@ -17,45 +17,31 @@ const SignUpBasicInfoFormSchema = SignUpSchema.pick({
   phoneNumber: true,
   role: true,
 });
+
 type SignUpBasicInfoFormSchema = z.infer<typeof SignUpBasicInfoFormSchema>;
+
 export default function SignUpBasicInfoForm() {
   const router = useRouter();
-  const [signUpInfoData, setSignUpInfoData] = useState<
-    Partial<SignUpBasicInfoFormSchema>
-  >({});
-
+  const setData = useSignUpStore((state) => state.setData);
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm<SignUpBasicInfoFormSchema>({
     resolver: zodResolver(SignUpBasicInfoFormSchema),
     defaultValues: {
-      firstName: signUpInfoData.firstName,
-      lastName: signUpInfoData.lastName,
-      email: signUpInfoData.email,
-      phoneNumber: signUpInfoData.phoneNumber,
-      role: signUpInfoData.role,
+      firstName: useSignUpStore((state) => state.firstName),
+      lastName: useSignUpStore((state) => state.lastName),
+      email: useSignUpStore((state) => state.email),
+      phoneNumber: useSignUpStore((state) => state.phoneNumber),
+      role: useSignUpStore((state) => state.role),
     },
   });
 
-  useEffect(() => {
-    const storedData = localStorage.getItem("signUpData");
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      setSignUpInfoData(parsedData);
-      reset(parsedData);
-    }
-  }, [reset]);
-
-  // const signUpInfoData = JSON.parse(localStorage.getItem("signUpData") ?? "{}");
-  console.log(signUpInfoData);
-
   function onSubmit(data: SignUpBasicInfoFormSchema) {
-    localStorage.setItem("signUpData", JSON.stringify(data));
-    console.log(data);
+    localStorage.setItem("role", data.role);
+    setData(data);
     router.push("/sign-up/details");
   }
   return (
