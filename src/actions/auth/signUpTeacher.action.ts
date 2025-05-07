@@ -2,6 +2,7 @@
 
 import { SignUpSchema } from "@/app/(auth)/_components/forms/signUp/SignUp.schema";
 import { hashPassword } from "@/app/(auth)/_lib/hashComparePassword";
+import { uploadFile } from "@/app/(auth)/_lib/uploadFile";
 import { createClient } from "@/lib/supabase/server"; // adjust the path to your client
 import { z } from "zod";
 const TeacherSchema = SignUpSchema.pick({
@@ -10,19 +11,18 @@ const TeacherSchema = SignUpSchema.pick({
   email: true,
   phoneNumber: true,
   role: true,
-  diplomeFile: true,
-  identityFileFront: true,
-  identityFileBack: true,
   specialties: true,
   password: true,
-  confirmPassword: true,
+}).extend({
+  diplomeFile: z.instanceof(File),
+  identityFileFront: z.instanceof(File),
+  identityFileBack: z.instanceof(File),
 });
 
 export async function signUpTeacher(formData: FormData) {
-  console.log("Start the server action");
-
   const data = Object.fromEntries(formData.entries());
-  console.log(data);
+  data.specialties = JSON.parse(data.specialties as string);
+  let newUserId: string | null = null;
   try {
     const {
       firstName,
@@ -35,25 +35,10 @@ export async function signUpTeacher(formData: FormData) {
       identityFileBack,
       specialties,
       password,
-      confirmPassword,
     } = await TeacherSchema.parseAsync(data);
-    console.log(
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      role,
-      diplomeFile,
-      identityFileFront,
-      identityFileBack,
-      specialties,
-      password,
-      confirmPassword
-    );
-
-    // Check if user exists
 
     const supabase = await createClient();
+
     const { data: existingUser, error: existingError } = await supabase
       .from("users")
       .select("id")
@@ -66,6 +51,13 @@ export async function signUpTeacher(formData: FormData) {
       return { success: false, message: "Email is already registered." };
     }
 
+    if (!diplomeFile || !identityFileFront || !identityFileBack) {
+      return {
+        success: false,
+        message: "One or more required files are missing.",
+      };
+    }
+
     const hashedPassword = await hashPassword(password);
     console.log(hashedPassword);
     const { data: newTeacher, error: insertError } = await supabase
@@ -74,26 +66,55 @@ export async function signUpTeacher(formData: FormData) {
         first_name: firstName,
         last_name: lastName,
         email,
-        password: hashedPassword,
+        phone_number: phoneNumber,
         role,
-        diplome: diplomeFile,
-        card_identity_front: identityFileFront,
-        card_identity_back: identityFileBack,
+        password: hashedPassword,
         specialties,
         is_verified: false,
         created_at: new Date().toISOString(),
       })
-      .select()
+      .select("id")
       .single();
 
-    console.log(newTeacher);
+    console.log("new teacher from server action ", newTeacher);
     if (insertError || !newTeacher) {
       console.error(insertError);
       return { success: false, message: "Failed to create user." };
     }
 
-    return { success: true, message: "User created successfully." };
+    newUserId = newTeacher.id;
+    if (!newUserId) {
+      return { success: false, message: "Failed to create user." };
+    }
+
+    const uploads = await Promise.all([
+      uploadFile(diplomeFile, "diploma", newUserId),
+      uploadFile(identityFileFront, "idFront", newUserId),
+      uploadFile(identityFileBack, "idBack", newUserId),
+    ]);
+
+    console.log("Files uploaded and references stored.");
+
+    await supabase
+      .from("users")
+      .update({
+        diplome_url: uploads[0],
+        id_front_url: uploads[1],
+        id_back_url: uploads[2],
+      })
+      .eq("id", newTeacher.id);
+
+    return {
+      success: true,
+      message: "Teacher account created successfully, awaiting verification.",
+    };
   } catch (error) {
+    console.error("error", error);
+    const supabase = await createClient();
+    if (newUserId) {
+      console.error("Rolling back user creation...");
+      await supabase.from("users").delete().eq("id", newUserId);
+    }
     if (error instanceof z.ZodError) {
       return { success: false, message: error.message };
     }

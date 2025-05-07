@@ -6,23 +6,16 @@ import { v4 as uuidv4 } from "uuid";
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
     console.log("File upload route hit!");
     const formData = await request.formData();
     console.log("form data here", Object.fromEntries(formData));
 
     const file = formData.get("file") as File;
-    if (!file) {
-      return NextResponse.json({ error: "No file provided" }, { status: 400 });
-    }
-
     const fileType = formData.get("fileType") as string;
     const userId = formData.get("userId") as string;
-
-    console.log("file types and user id here", fileType, userId);
-    if (!fileType) {
+    if (!file || !fileType || !userId) {
       return NextResponse.json(
-        { error: "File type is required" },
+        { error: "Missing required fields" },
         { status: 400 }
       );
     }
@@ -48,9 +41,6 @@ export async function POST(request: NextRequest) {
       case "idBack":
         folderPath = "documents/id-cards/back";
         break;
-      case "video":
-        folderPath = "videos";
-        break;
       default:
         folderPath = "other";
     }
@@ -73,6 +63,7 @@ export async function POST(request: NextRequest) {
     //   await requestVideoConversion(finalPath);
     // }
 
+    console.log("url", url);
     if (userId) {
       await storeFileReference(userId, fileType, url);
     }
@@ -98,7 +89,6 @@ async function uploadToBunny(
 ): Promise<string> {
   const fs = require("fs");
   const https = require("https");
-  console.log("called!");
 
   const STORAGE_ZONE_NAME = process.env.BUNNY_STORAGE_ZONE!;
   const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY!;
@@ -126,7 +116,7 @@ async function uploadToBunny(
         if (res.statusCode === 200 || res.statusCode === 201) {
           // Construct the CDN URL
           const cdnUrl = `https://${
-            process.env.BUNNY_PULL_ZONE || HOSTNAME
+            process.env.BUNNY_PULL_ZONE ?? HOSTNAME
           }/${STORAGE_ZONE_NAME}/${destinationPath}`;
           resolve(cdnUrl);
         } else {
@@ -138,6 +128,31 @@ async function uploadToBunny(
     req.on("error", reject);
     fileStream.pipe(req);
   });
+}
+
+async function storeFileReference(
+  userId: string,
+  fileType: string,
+  url: string
+): Promise<void> {
+  console.log("storeFileReference called", userId, fileType, url);
+  const supabase = await createClient();
+  const STORAGE_ZONE_NAME = process.env.BUNNY_STORAGE_ZONE!;
+  const hostname = process.env.BUNNY_HOST!;
+  const file_path = url.replace(`https://${hostname}/${STORAGE_ZONE_NAME}`, "");
+  // Store file reference in Supabase
+  const { error } = await supabase.from("user_files").insert({
+    user_id: userId,
+    file_type: fileType,
+    file_url: url,
+    file_path,
+    created_at: new Date().toISOString(),
+  });
+
+  if (error) {
+    console.error("Failed to store file reference:", error);
+    throw new Error("Failed to store file reference in database");
+  }
 }
 
 // async function requestVideoConversion(videoPath: string): Promise<void> {
@@ -181,26 +196,6 @@ async function uploadToBunny(
 //     }
 //   }
 // }
-
-async function storeFileReference(
-  userId: string,
-  fileType: string,
-  url: string
-): Promise<void> {
-  const supabase = await createClient();
-  // Store file reference in Supabase
-  const { error } = await supabase.from("user_files").insert({
-    user_id: userId,
-    file_type: fileType,
-    file_url: url,
-    created_at: new Date().toISOString(),
-  });
-
-  if (error) {
-    console.error("Failed to store file reference:", error);
-    throw new Error("Failed to store file reference in database");
-  }
-}
 
 // export async function POST(request: Request) {}
 // import https from "https";

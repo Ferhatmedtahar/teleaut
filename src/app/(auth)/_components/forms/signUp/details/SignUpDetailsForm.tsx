@@ -18,7 +18,6 @@ import { z } from "zod";
 
 import { signUpStudent } from "@/actions/auth/signUpStudent.action";
 import { signUpTeacher } from "@/actions/auth/signUpTeacher.action";
-import { uploadFile } from "@/app/(auth)/_lib/uploadFile";
 import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
 import { toast } from "sonner";
 import { SignUpSchema } from "../SignUp.schema";
@@ -35,6 +34,8 @@ const TeacherSchema = SignUpSchema.pick({
   diplomeFile: true,
   identityFileFront: true,
   identityFileBack: true,
+  password: true,
+  confirmPassword: true,
 });
 
 const SignUpDetailsSchema = z.discriminatedUnion("role", [
@@ -55,20 +56,34 @@ export default function SignUpDetailsForm() {
   const phoneNumber = useSignUpStore((state) => state.phoneNumber);
   const role = useSignUpStore((state) => state.role);
 
-  const hasHydrated = useSignUpStore.persist?.hasHydrated;
+  // const hasHydrated = useSignUpStore.persist?.hasHydrated;
   useEffect(() => {
-    if (!hasHydrated) return;
+    if (!useSignUpStore.persist?.hasHydrated) return;
+
     if (!firstName || !lastName || !email || !phoneNumber || !role) {
       router.replace("/sign-up/info");
     }
+    const signedUp = localStorage.getItem("signedUp");
+    const token = localStorage.getItem("token");
+    const roleLocalStorage = localStorage.getItem("role");
+
+    if (signedUp && signedUp == "true" && roleLocalStorage === "teacher") {
+      router.replace("/sign-up/waitlist");
+    }
+    if (signedUp && signedUp == "true" && roleLocalStorage === "student") {
+      router.replace("/sign-up/verify-email");
+    }
+    if (token) {
+      router.replace("/");
+    }
   }, [
-    firstName,
-    lastName,
+    // firstName,
+    // lastName,
     router,
-    email,
-    phoneNumber,
-    role,
-    // useSignUpStore.persist?.hasHydrated,
+    // email,
+    // phoneNumber,
+    // role,
+    useSignUpStore.persist?.hasHydrated,
   ]);
 
   //!get the prevous information form data
@@ -88,6 +103,8 @@ export default function SignUpDetailsForm() {
           diplomeFile: "",
           identityFileFront: "",
           identityFileBack: "",
+          password: "",
+          confirmPassword: "",
         }
       : {
           branch: "",
@@ -124,18 +141,9 @@ export default function SignUpDetailsForm() {
   //$ the actual form handler
   async function onSubmit(data: SignUpDetailsSchemaType) {
     if (data.role === "teacher") {
-      // //todo upload the files and get the urls
+      //REVIEW upload the files and get the urls
       await handleTeacherSubmit(data);
-      // const diplomeFile = (data.diplomeFile as FileList)[0];
-      // const identityFileFront = (data.identityFileFront as FileList)[0];
-      // const identityFileBack = (data.identityFileBack as FileList)[0];
-
-      // const formData = new FormData();
-      // formData.append("diplomeFile", diplomeFile);
-      // formData.append("identityFileFront", identityFileFront);
-      // formData.append("identityFileBack", identityFileBack);
-      // console.log("Teacher form data", { ...InfoFormData, ...data });
-      // router.push("/sign-up/confirmation");
+      localStorage.setItem("signedUp", "true");
     }
 
     if (data.role === "student") {
@@ -176,6 +184,7 @@ export default function SignUpDetailsForm() {
         }
         if (result.success && result.token) {
           localStorage.setItem("token", result.token);
+          localStorage.setItem("signedUp", "true");
           router.push("/sign-up/verify-email");
           return;
         }
@@ -192,20 +201,20 @@ export default function SignUpDetailsForm() {
       if (data.role !== "teacher") {
         return;
       }
+      if (data.password !== data.confirmPassword) {
+        toast.error("Passwords do not match");
+        return;
+      }
 
-      // Show loading state
       toast.loading("Uploading files...");
       let diplomeFile: File | null = null;
       let identityFileFront: File | null = null;
       let identityFileBack: File | null = null;
 
-      // Get files from the form
       diplomeFile = (data.diplomeFile as FileList)[0];
       identityFileFront = (data.identityFileFront as FileList)[0];
       identityFileBack = (data.identityFileBack as FileList)[0];
 
-      // Create temporary ID for the user (will be replaced with actual ID after registration)
-      const tempUserId = `temp_${Date.now()}`;
       if (!data.specialties) {
         toast.error("Please select at least one specialty");
         return;
@@ -216,31 +225,20 @@ export default function SignUpDetailsForm() {
         return;
       }
 
-      // Upload each file and get the URLs
-      const [diplomeUrl, idFrontUrl, idBackUrl] = await Promise.all([
-        uploadFile(diplomeFile, "diploma", tempUserId),
-        uploadFile(identityFileFront, "idFront", tempUserId),
-        uploadFile(identityFileBack, "idBack", tempUserId),
-      ]);
-
       const formData = new FormData();
 
-      // Add user info
       Object.entries(InfoFormData).forEach(([key, value]) => {
         formData.append(key, String(value ?? ""));
       });
-      // Add teacher-specific data
-      formData.append("role", "teacher");
 
+      formData.append("role", "teacher");
       formData.append("specialties", JSON.stringify(data.specialties));
 
-      // Add file URLs
-      formData.append("diplomeFileUrl", diplomeUrl);
-      formData.append("identityFileFrontUrl", idFrontUrl);
-      formData.append("identityFileBackUrl", idBackUrl);
+      formData.append("diplomeFile", diplomeFile);
+      formData.append("identityFileFront", identityFileFront);
+      formData.append("identityFileBack", identityFileBack);
+      formData.append("password", data.password);
 
-      // Call your registration API endpoint
-      console.log("Teacher form data", Object.fromEntries(formData.entries()));
       const result = await signUpTeacher(formData);
 
       if (!result.success) {
@@ -249,10 +247,8 @@ export default function SignUpDetailsForm() {
         router.push("/sign-up/fail-auth");
         return;
       }
-
-      // Handle successful registration
       toast.dismiss();
-      router.push("/sign-up/confirmation");
+      router.push("/sign-up/waitlist");
     } catch (error) {
       toast.dismiss();
       console.error("Teacher registration error:", error);
@@ -314,6 +310,23 @@ export default function SignUpDetailsForm() {
               <p className="text-red-500">
                 {errors.diplomeFile?.message?.toString()}
               </p>
+            )}
+          </div>
+          <h3 className="text-lg font-semibold my-2">
+            Informations de connexion
+          </h3>
+          <div className="flex flex-col gap-1">
+            <Label>Mot de passe</Label>
+            <Input type="password" {...register("password")} />
+            {"password" in errors && errors.password && (
+              <p className="text-red-500">{errors.password.message}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label>Confirmer le mot de passe</Label>
+            <Input type="password" {...register("confirmPassword")} />
+            {"confirmPassword" in errors && errors.confirmPassword && (
+              <p className="text-red-500">{errors.confirmPassword.message}</p>
             )}
           </div>
         </>
