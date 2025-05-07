@@ -1,3 +1,207 @@
+import { createClient } from "@/lib/supabase/server";
+import { writeFile } from "fs/promises";
+import { NextRequest, NextResponse } from "next/server";
+import { join } from "path";
+import { v4 as uuidv4 } from "uuid";
+
+export async function POST(request: NextRequest) {
+  try {
+    const supabase = await createClient();
+    console.log("File upload route hit!");
+    const formData = await request.formData();
+    console.log("form data here", Object.fromEntries(formData));
+
+    const file = formData.get("file") as File;
+    if (!file) {
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    const fileType = formData.get("fileType") as string;
+    const userId = formData.get("userId") as string;
+
+    console.log("file types and user id here", fileType, userId);
+    if (!fileType) {
+      return NextResponse.json(
+        { error: "File type is required" },
+        { status: 400 }
+      );
+    }
+
+    const fileExtension = file.name.split(".").pop();
+    const uniqueFilename = `${uuidv4()}.${fileExtension}`;
+
+    console.log("fileExtension,uniqueFilename", fileExtension, uniqueFilename);
+    let folderPath = "";
+    switch (fileType) {
+      case "profile_picture":
+        folderPath = "profiles";
+        break;
+      case "cover_picture":
+        folderPath = "profiles";
+        break;
+      case "diploma":
+        folderPath = "documents/diplomas";
+        break;
+      case "idFront":
+        folderPath = "documents/id-cards/front";
+        break;
+      case "idBack":
+        folderPath = "documents/id-cards/back";
+        break;
+      case "video":
+        folderPath = "videos";
+        break;
+      default:
+        folderPath = "other";
+    }
+
+    // Add user ID to path if provided
+    const finalPath = userId
+      ? `${folderPath}/${userId}/${uniqueFilename}`
+      : `${folderPath}/${uniqueFilename}`;
+
+    console.log("finalPath", finalPath);
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const tempPath = join("/tmp", uniqueFilename);
+    await writeFile(tempPath, buffer);
+
+    const url = await uploadToBunny(tempPath, finalPath, file.type);
+
+    // if (fileType === "video") {
+    //   await requestVideoConversion(finalPath);
+    // }
+
+    if (userId) {
+      await storeFileReference(userId, fileType, url);
+    }
+
+    return NextResponse.json({
+      success: true,
+      url,
+      path: finalPath,
+    });
+  } catch (error: any) {
+    console.error("Upload error:", error);
+    return NextResponse.json(
+      { error: error.message ?? "Upload failed" },
+      { status: 500 }
+    );
+  }
+}
+
+async function uploadToBunny(
+  filePath: string,
+  destinationPath: string,
+  contentType: string
+): Promise<string> {
+  const fs = require("fs");
+  const https = require("https");
+  console.log("called!");
+
+  const STORAGE_ZONE_NAME = process.env.BUNNY_STORAGE_ZONE!;
+  const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY!;
+  const HOSTNAME = process.env.BUNNY_HOST!;
+
+  const fileStream = fs.createReadStream(filePath);
+  const stats = fs.statSync(filePath);
+
+  return new Promise((resolve, reject) => {
+    const options = {
+      method: "PUT",
+      host: HOSTNAME,
+      path: `/${STORAGE_ZONE_NAME}/${destinationPath}`,
+      headers: {
+        AccessKey: ACCESS_KEY,
+        "Content-Type": contentType || "application/octet-stream",
+        "Content-Length": stats.size,
+      },
+    };
+
+    const req = https.request(options, (res: any) => {
+      let body = "";
+      res.on("data", (chunk: any) => (body += chunk));
+      res.on("end", () => {
+        if (res.statusCode === 200 || res.statusCode === 201) {
+          // Construct the CDN URL
+          const cdnUrl = `https://${
+            process.env.BUNNY_PULL_ZONE || HOSTNAME
+          }/${STORAGE_ZONE_NAME}/${destinationPath}`;
+          resolve(cdnUrl);
+        } else {
+          reject(`Upload failed with status ${res.statusCode}: ${body}`);
+        }
+      });
+    });
+
+    req.on("error", reject);
+    fileStream.pipe(req);
+  });
+}
+
+// async function requestVideoConversion(videoPath: string): Promise<void> {
+//   // For video files, if you want to create HLS streams for adaptive streaming
+//   // You would call the Bunny Stream API here
+//   // This is a placeholder function - implement according to your Bunny Stream account
+
+//   const STREAM_API_KEY = process.env.BUNNY_STREAM_API_KEY;
+//   const STREAM_LIBRARY_ID = process.env.BUNNY_STREAM_LIBRARY_ID;
+
+//   // Example implementation - would need to be adjusted for your specific setup
+//   if (STREAM_API_KEY && STREAM_LIBRARY_ID) {
+//     try {
+//       const response = await fetch(
+//         `https://video.bunnycdn.com/library/${STREAM_LIBRARY_ID}/videos`,
+//         {
+//           method: "POST",
+//           headers: {
+//             Accept: "application/json",
+//             "Content-Type": "application/json",
+//             AccessKey: STREAM_API_KEY,
+//           },
+//           body: JSON.stringify({
+//             title: videoPath.split("/").pop(),
+//             collectionId: "default",
+//           }),
+//         }
+//       );
+
+//       if (!response.ok) {
+//         throw new Error(`Video creation failed with status ${response.status}`);
+//       }
+
+//       const data = await response.json();
+//       console.log("Video conversion requested:", data);
+
+//       // You would then need to upload the actual video file to the created video ID
+//       // This is a simplified example
+//     } catch (error) {
+//       console.error("Error requesting video conversion:", error);
+//     }
+//   }
+// }
+
+async function storeFileReference(
+  userId: string,
+  fileType: string,
+  url: string
+): Promise<void> {
+  const supabase = await createClient();
+  // Store file reference in Supabase
+  const { error } = await supabase.from("user_files").insert({
+    user_id: userId,
+    file_type: fileType,
+    file_url: url,
+    created_at: new Date().toISOString(),
+  });
+
+  if (error) {
+    console.error("Failed to store file reference:", error);
+    throw new Error("Failed to store file reference in database");
+  }
+}
+
 // export async function POST(request: Request) {}
 // import https from "https";
 // import multer from "multer";
@@ -113,202 +317,3 @@
 
 //   return NextResponse.json({ url: upload });
 // }
-
-// app/api/upload/route.ts
-import { createClient } from "@/lib/supabase/server";
-import { writeFile } from "fs/promises";
-import { NextRequest, NextResponse } from "next/server";
-import { join } from "path";
-import { v4 as uuidv4 } from "uuid";
-
-const supabase = await createClient();
-
-export async function POST(request: NextRequest) {
-  try {
-    const formData = await request.formData();
-
-    const file = formData.get("file") as File;
-    if (!file) {
-      return NextResponse.json({ error: "No file provided" }, { status: 400 });
-    }
-
-    const fileType = formData.get("fileType") as string;
-    const userId = formData.get("userId") as string;
-
-    if (!fileType) {
-      return NextResponse.json(
-        { error: "File type is required" },
-        { status: 400 }
-      );
-    }
-
-    const fileExtension = file.name.split(".").pop();
-    const uniqueFilename = `${uuidv4()}.${fileExtension}`;
-
-    let folderPath = "";
-    switch (fileType) {
-      case "profile_picture":
-        folderPath = "profiles";
-        break;
-      case "cover_picture":
-        folderPath = "profiles";
-        break;
-      case "diploma":
-        folderPath = "documents/diplomas";
-        break;
-      case "idFront":
-        folderPath = "documents/id-cards/front";
-        break;
-      case "idBack":
-        folderPath = "documents/id-cards/back";
-        break;
-      case "video":
-        folderPath = "videos";
-        break;
-      default:
-        folderPath = "other";
-    }
-
-    // Add user ID to path if provided
-    const finalPath = userId
-      ? `${folderPath}/${userId}/${uniqueFilename}`
-      : `${folderPath}/${uniqueFilename}`;
-
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const tempPath = join("/tmp", uniqueFilename);
-    await writeFile(tempPath, buffer);
-
-    const url = await uploadToBunny(tempPath, finalPath, file.type);
-
-    if (fileType === "video") {
-      await requestVideoConversion(finalPath);
-    }
-
-    if (userId) {
-      await storeFileReference(userId, fileType, url);
-    }
-
-    return NextResponse.json({
-      success: true,
-      url,
-      path: finalPath,
-    });
-  } catch (error: any) {
-    console.error("Upload error:", error);
-    return NextResponse.json(
-      { error: error.message ?? "Upload failed" },
-      { status: 500 }
-    );
-  }
-}
-
-async function uploadToBunny(
-  filePath: string,
-  destinationPath: string,
-  contentType: string
-): Promise<string> {
-  const fs = require("fs");
-  const https = require("https");
-
-  const STORAGE_ZONE_NAME = process.env.BUNNY_STORAGE_ZONE!;
-  const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY!;
-  const HOSTNAME = process.env.BUNNY_HOST!;
-
-  const fileStream = fs.createReadStream(filePath);
-  const stats = fs.statSync(filePath);
-
-  return new Promise((resolve, reject) => {
-    const options = {
-      method: "PUT",
-      host: HOSTNAME,
-      path: `/${STORAGE_ZONE_NAME}/${destinationPath}`,
-      headers: {
-        AccessKey: ACCESS_KEY,
-        "Content-Type": contentType || "application/octet-stream",
-        "Content-Length": stats.size,
-      },
-    };
-
-    const req = https.request(options, (res: any) => {
-      let body = "";
-      res.on("data", (chunk: any) => (body += chunk));
-      res.on("end", () => {
-        if (res.statusCode === 200 || res.statusCode === 201) {
-          // Construct the CDN URL
-          const cdnUrl = `https://${
-            process.env.BUNNY_PULL_ZONE || HOSTNAME
-          }/${STORAGE_ZONE_NAME}/${destinationPath}`;
-          resolve(cdnUrl);
-        } else {
-          reject(`Upload failed with status ${res.statusCode}: ${body}`);
-        }
-      });
-    });
-
-    req.on("error", reject);
-    fileStream.pipe(req);
-  });
-}
-
-async function requestVideoConversion(videoPath: string): Promise<void> {
-  // For video files, if you want to create HLS streams for adaptive streaming
-  // You would call the Bunny Stream API here
-  // This is a placeholder function - implement according to your Bunny Stream account
-
-  const STREAM_API_KEY = process.env.BUNNY_STREAM_API_KEY;
-  const STREAM_LIBRARY_ID = process.env.BUNNY_STREAM_LIBRARY_ID;
-
-  // Example implementation - would need to be adjusted for your specific setup
-  if (STREAM_API_KEY && STREAM_LIBRARY_ID) {
-    try {
-      const response = await fetch(
-        `https://video.bunnycdn.com/library/${STREAM_LIBRARY_ID}/videos`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            AccessKey: STREAM_API_KEY,
-          },
-          body: JSON.stringify({
-            title: videoPath.split("/").pop(),
-            collectionId: "default",
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Video creation failed with status ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("Video conversion requested:", data);
-
-      // You would then need to upload the actual video file to the created video ID
-      // This is a simplified example
-    } catch (error) {
-      console.error("Error requesting video conversion:", error);
-    }
-  }
-}
-
-async function storeFileReference(
-  userId: string,
-  fileType: string,
-  url: string
-): Promise<void> {
-  // Store file reference in Supabase
-  const { error } = await supabase.from("user_files").insert({
-    user_id: userId,
-    file_type: fileType,
-    file_url: url,
-    created_at: new Date().toISOString(),
-  });
-
-  if (error) {
-    console.error("Failed to store file reference:", error);
-    throw new Error("Failed to store file reference in database");
-  }
-}

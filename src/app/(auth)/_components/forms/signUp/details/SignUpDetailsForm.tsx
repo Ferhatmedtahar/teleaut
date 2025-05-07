@@ -17,12 +17,12 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { signUpStudent } from "@/actions/auth/signUpStudent.action";
+import { signUpTeacher } from "@/actions/auth/signUpTeacher.action";
+import { uploadFile } from "@/app/(auth)/_lib/uploadFile";
 import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
 import { toast } from "sonner";
 import { SignUpSchema } from "../SignUp.schema";
 import SpecialtiesPicker from "../SpecialtiesPicker";
-import { signUpTeacher } from "@/actions/auth/signUpTeacher.action";
-import { uploadFile } from "@/app/(auth)/_lib/uploadFile";
 
 const StudentSchema = SignUpSchema.pick({
   branch: true,
@@ -240,6 +240,7 @@ export default function SignUpDetailsForm() {
       formData.append("identityFileBackUrl", idBackUrl);
 
       // Call your registration API endpoint
+      console.log("Teacher form data", Object.fromEntries(formData.entries()));
       const result = await signUpTeacher(formData);
 
       if (!result.success) {
