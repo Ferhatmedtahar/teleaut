@@ -311,7 +311,8 @@ body {
     @apply bg-gradient-to-r from-[#16222A] to-[#355869];
   }
   .gradient-sidebar-light {
-    @apply bg-gradient-to-r from-[#85a8c1] via-[#b1c8d8] to-[#fafafa];
+    @apply bg-gradient-to-r from-[#5287a1] via-[#85a8c1] to-[#b1c8d8];
+    /* @apply bg-gradient-to-r from-[#85a8c1] via-[#b1c8d8] to-[#fafafa]; */
   }
   .gradient-sidebar-dark {
     @apply bg-gradient-to-r from-[#355869] via-[#85a8c1] to-[#b1c8d8];

@@ -32,19 +32,7 @@ export async function signUpStudent(formData: FormData) {
       branch,
       class: studentClass,
       password,
-      confirmPassword,
     } = await StudentSchema.parseAsync(data);
-    console.log(
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      role,
-      branch,
-      studentClass,
-      password,
-      confirmPassword
-    );
 
     // Check if user exists
 
@@ -87,7 +75,7 @@ export async function signUpStudent(formData: FormData) {
     }
 
     //!generate token and send email server action call
-    const token = await generateToken(newUser?.id);
+    const token = await generateToken({ id: newUser.id, role: "student" });
     console.log(token);
     const emailSent = await sendVerificationEmail(newUser.email, token);
     console.log(emailSent);

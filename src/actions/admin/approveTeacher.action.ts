@@ -6,9 +6,9 @@ import { z } from "zod";
 
 export async function signUpTeacher(user: { id: string; email: string }) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     //!generate token and send email server action call
-    const token = await generateToken(user.id);
+    const token = await generateToken({ id: user.id, role: "teacher" });
     console.log(token);
     const emailSent = await sendVerificationEmail(user.email, token);
     console.log(emailSent);

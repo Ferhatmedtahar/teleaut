@@ -21,7 +21,7 @@ export default async function VerifyPage({
     const { error } = await supabase
       .from("users")
       .update({ is_verified: true })
-      .eq("id", payload.userId);
+      .eq("id", payload.id);
 
     if (error) {
       console.error("Supabase update failed:", error);

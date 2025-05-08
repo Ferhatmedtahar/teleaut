@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function SignInPage() {
   return (
     <div className="bg-[#355869] w-full relative  ">
-      <Link href="/sign-up" className="absolute top-10 right-10">
+      <Link href="/sign-up/info" className="absolute top-10 right-10">
         <Button size={"lg"} className="text-base cursor-pointer">
           S'inscrire
         </Button>

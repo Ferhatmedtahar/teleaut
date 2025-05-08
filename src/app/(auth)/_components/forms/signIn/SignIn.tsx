@@ -1,11 +1,12 @@
 "use client";
 
-import { signInAction } from "@/actions/auth/signIn.action";
+import { signInAction } from "@/actions/auth/sign-in/signIn.action";
 import { SignInSchema } from "@/app/(auth)/_components/forms/signIn/SignIn.schema";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "../../../../../components/common/buttons/Button";
 import { Input } from "../../../../../components/ui/input";
@@ -27,7 +28,10 @@ export default function SignInForm() {
       result = await signInAction(prevState, formData);
       console.log(result);
       if (result.state == "SUCCESS") {
+        toast.success("Connexion réussie");
         router.push("/");
+      } else {
+        toast.error("Email ou mot de passe incorrect");
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -38,7 +42,7 @@ export default function SignInForm() {
           state: "ERROR",
           error: "Validation Error",
           inputs: {
-            emailOrUsername: formData.get("emailOrUsername") as string,
+            email: formData.get("email") as string,
           },
         };
       }
@@ -48,7 +52,7 @@ export default function SignInForm() {
       state: "ERROR",
       error: "An unexpected error occurred",
       inputs: {
-        emailOrUsername: formData.get("emailOrUsername") as string,
+        email: formData.get("email") as string,
       },
     };
   }
@@ -56,17 +60,17 @@ export default function SignInForm() {
   return (
     <form action={formAction} className="space-y-4 w-full">
       <div className="flex flex-col gap-2 ">
-        <Label>Nom d'utilisateur ou e-mail</Label>
+        <Label>E-mail</Label>
         <Input
           className="block text-sm font-medium text-gray-700  py-5"
-          placeholder="Votre nom d'utilisateur ou e-mail"
+          placeholder="Votre E-mail d'inscription"
           type="text"
-          name="emailOrUsername"
-          defaultValue={state?.inputs?.emailOrUsername}
+          name="email"
+          defaultValue={state?.inputs?.email}
           required
         />
-        {errors.emailOrUsername && (
-          <p className="text-red-500 text-sm">{errors.emailOrUsername[0]}</p>
+        {errors.email && (
+          <p className="text-red-500 text-sm">{errors.email[0]}</p>
         )}
       </div>
 

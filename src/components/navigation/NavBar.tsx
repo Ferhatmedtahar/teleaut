@@ -1,32 +1,22 @@
 "use client";
 
 import { Button } from "@/components/common/buttons/Button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Bell, ChevronDown, Menu, Plus, Search } from "lucide-react";
+import { useUser } from "@/providers/UserProvider";
+import { Bell, Plus, Search } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import UserDropDownMenu from "./UserDropDownMenu";
 
 interface NavbarProps {
-  className?: string;
+  readonly className?: string;
 }
 
 export function Navbar({ className }: NavbarProps) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // Toggle sidebar through custom event
-  const toggleSidebar = () => {
-    const event = new CustomEvent("toggleSidebar", {
-      detail: { isOpen: true },
-    });
-    window.dispatchEvent(event);
-  };
+  // const router = useRouter();
+  const user = useUser();
+  console.log("user from navbar", user);
+  const role = user?.role;
+  if (!user) return null;
 
   return (
     <header
@@ -35,7 +25,7 @@ export function Navbar({ className }: NavbarProps) {
       <div className="flex w-full items-center justify-between">
         {/* Left side with menu toggle and logo */}
         <div className="flex items-center gap-4">
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
@@ -43,7 +33,7 @@ export function Navbar({ className }: NavbarProps) {
             aria-label="Open sidebar"
           >
             <Menu className="h-5 w-5" />
-          </Button>
+          </Button> */}
 
           <Link href="/" className="flex items-center">
             <span className="text-xl font-bold">LOGO</span>
@@ -86,7 +76,7 @@ export function Navbar({ className }: NavbarProps) {
 
         {/* Right side with buttons and profile */}
         <div className="flex items-center gap-2 md:gap-4">
-          {isLoggedIn ? (
+          {role == "teacher" && (
             <>
               <Button
                 variant="default"
@@ -105,46 +95,13 @@ export function Navbar({ className }: NavbarProps) {
               >
                 <Plus className="h-4 w-4" />
               </Button>
-
-              <Button variant="ghost" size="icon" className="relative">
-                <Bell className="h-5 w-5" />
-                <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></span>
-              </Button>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage
-                        src="/placeholder.svg?height=32&width=32"
-                        alt="Rayen"
-                      />
-                      <AvatarFallback>R</AvatarFallback>
-                    </Avatar>
-                    <span className="hidden sm:inline">Rayen</span>
-                    <ChevronDown className="h-4 w-4 hidden sm:block" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setIsLoggedIn(false)}>
-                    <span className="text-destructive">Deconnection</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </>
-          ) : (
-            <Button
-              onClick={() => setIsLoggedIn(true)}
-              className=" hover:cursor-pointer whitespace-nowrap"
-              variant="default"
-              size={"lg"}
-            >
-              Se connecter
-            </Button>
           )}
+          <Button variant="ghost" size="icon" className="relative">
+            <Bell className="h-5 w-5" />
+            <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></span>
+          </Button>
+          <UserDropDownMenu userId={user?.id} />
         </div>
       </div>
     </header>

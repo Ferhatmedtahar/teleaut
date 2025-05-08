@@ -30,7 +30,7 @@ export default function EmailConfirmationPage() {
   }, [router]);
 
   return (
-    <div className="bg-[#21282c] w-full relative  ">
+    <div className="bg-[#355869] w-full relative  ">
       <div className="flex flex-col items-center justify-center h-screen py-10 gap-6 sm:gap-8 md:gap-10 lg:gap-14 bg-gray-50 px-6 lg:items-start lg:px-24 lg:rounded-tl-[6rem]">
         <div className="bg-gray-50 w-full min-h-screen flex items-center justify-center px-6">
           <div className="max-w-2xl text-center space-y-6">
