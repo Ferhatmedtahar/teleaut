@@ -70,6 +70,7 @@ export async function signUpStudent(formData: FormData) {
         last_name: lastName,
         email,
         password: hashedPassword,
+        phone_number: phoneNumber,
         role,
         class: studentClass,
         branch,

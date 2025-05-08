@@ -4,22 +4,37 @@ export async function uploadFile(
   userId: string
 ): Promise<string> {
   if (!file) throw new Error(`${fileType} file is required`);
+  const BASE_URL = process.env.SITE_URL ?? "http://localhost:3000";
 
   const formData = new FormData();
   formData.append("file", file);
   formData.append("fileType", fileType);
   formData.append("userId", userId);
+  console.log(
+    "upload file function called with ",
+    Object.fromEntries(formData)
+  );
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/upload/upload_file_to_bunny`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
-  const response = await fetch("/api/upload/uploadFileToBunny", {
-    method: "POST",
-    body: formData,
-  });
+    if (!response.ok) {
+      const error = await response.json();
+      console.log("error", error);
+      throw new Error(error.message ?? `Failed to upload ${fileType}`);
+    }
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message ?? `Failed to upload ${fileType}`);
+    const result = await response.json();
+
+    console.log("result", result);
+    return result.url;
+  } catch (e) {
+    console.log(e);
+    throw new Error(`Failed to upload ${fileType}`);
   }
-
-  const result = await response.json();
-  return result.url;
 }

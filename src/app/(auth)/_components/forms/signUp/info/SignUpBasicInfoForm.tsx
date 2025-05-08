@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { SignUpSchema } from "../SignUp.schema";
@@ -22,6 +23,23 @@ type SignUpBasicInfoFormSchema = z.infer<typeof SignUpBasicInfoFormSchema>;
 
 export default function SignUpBasicInfoForm() {
   const router = useRouter();
+  useEffect(() => {
+    if (!useSignUpStore.persist?.hasHydrated) return;
+    const signedUp = localStorage.getItem("signedUp");
+    const token = localStorage.getItem("token");
+    const roleLocalStorage = localStorage.getItem("role");
+    if (token) {
+      router.replace("/");
+    }
+
+    if (signedUp && signedUp == "true" && roleLocalStorage === "teacher") {
+      router.replace("/sign-up/waitlist");
+    }
+    if (signedUp && signedUp == "true" && roleLocalStorage === "student") {
+      router.replace("/sign-up/verify-email");
+    }
+  }, [router, useSignUpStore.persist?.hasHydrated]);
+
   const setData = useSignUpStore((state) => state.setData);
   const {
     register,
