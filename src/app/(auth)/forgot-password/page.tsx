@@ -23,8 +23,6 @@ export default function ForgotPasswordPage() {
     setError("");
 
     try {
-      // throw new Error("Failed to send email");
-      // Call function to send forgot password email
       toast.success("Password reset link sent to your email", {
         duration: 5000,
         description: "Check your inbox",

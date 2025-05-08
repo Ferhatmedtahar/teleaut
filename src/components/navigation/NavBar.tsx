@@ -9,12 +9,14 @@ import UserDropDownMenu from "./UserDropDownMenu";
 
 interface NavbarProps {
   readonly className?: string;
+  readonly userInfo?: {
+    first_name: string;
+    profile_url: string;
+  };
 }
 
-export function Navbar({ className }: NavbarProps) {
-  // const router = useRouter();
+export function Navbar({ className, userInfo }: NavbarProps) {
   const user = useUser();
-  console.log("user from navbar", user);
   const role = user?.role;
   if (!user) return null;
 
@@ -97,11 +99,11 @@ export function Navbar({ className }: NavbarProps) {
               </Button>
             </>
           )}
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
+          <Button variant="ghost" size="icon" className="relative  ">
+            <Bell className="h-5 w-5 " />
             <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></span>
           </Button>
-          <UserDropDownMenu userId={user?.id} />
+          <UserDropDownMenu userInfo={userInfo} />
         </div>
       </div>
     </header>

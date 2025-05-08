@@ -2,6 +2,7 @@ import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { MobileSidebarDrawer } from "@/components/navigation/MobileSidebarDrawer";
 import { Navbar } from "@/components/navigation/NavBar";
 import AppSidebar from "@/components/navigation/Sidebar";
+import { createClient } from "@/lib/supabase/server";
 import { UserProvider } from "@/providers/UserProvider";
 import AuthGuard from "../(auth)/_components/AuthGuardRouter";
 
@@ -11,12 +12,22 @@ export default async function RootLayout({
   readonly children: React.ReactNode;
 }) {
   const user = await getCurrentUser();
-
-  console.log("layout user", user);
+  const supabase = await createClient();
+  const { data: userInfo } = await supabase
+    .from("users")
+    .select("first_name ,profile_url ")
+    .eq("id", user?.id)
+    .single();
+  if (!user) return null;
+  if (
+    typeof userInfo?.first_name !== "string" ||
+    typeof userInfo?.profile_url !== "string"
+  )
+    return null;
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <UserProvider user={user}>
-        <Navbar />
+        <Navbar userInfo={userInfo} />
 
         <MobileSidebarDrawer />
 
