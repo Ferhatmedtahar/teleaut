@@ -3,6 +3,7 @@
 import { SignUpSchema } from "@/app/(auth)/_components/forms/signUp/SignUp.schema";
 import { hashPassword } from "@/app/(auth)/_lib/hashComparePassword";
 import { uploadFile } from "@/app/(auth)/_lib/uploadFile";
+import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server"; // adjust the path to your client
 import { z } from "zod";
 const TeacherSchema = SignUpSchema.pick({
@@ -70,7 +71,7 @@ export async function signUpTeacher(formData: FormData) {
         role,
         password: hashedPassword,
         specialties,
-        is_verified: false,
+        verification_status: VERIFICATION_STATUS.PENDING,
         created_at: new Date().toISOString(),
       })
       .select("id")

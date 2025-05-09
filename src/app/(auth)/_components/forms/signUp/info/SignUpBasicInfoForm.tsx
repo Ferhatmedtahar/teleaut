@@ -26,11 +26,11 @@ export default function SignUpBasicInfoForm() {
   useEffect(() => {
     if (!useSignUpStore.persist?.hasHydrated) return;
     const signedUp = localStorage.getItem("signedUp");
-    const token = localStorage.getItem("token");
+    // const token = localStorage.getItem("token");
     const roleLocalStorage = localStorage.getItem("role");
-    if (token) {
-      router.replace("/");
-    }
+    // if (token) {
+    //   router.replace("/");
+    // }
 
     if (signedUp && signedUp == "true" && roleLocalStorage === "teacher") {
       router.replace("/sign-up/waitlist");

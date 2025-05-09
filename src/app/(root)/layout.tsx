@@ -15,12 +15,13 @@ export default async function RootLayout({
   const supabase = await createClient();
   const { data: userInfo } = await supabase
     .from("users")
-    .select("first_name ,profile_url ")
+    .select("first_name ,profile_url")
     .eq("id", user?.id)
     .single();
 
   console.table(userInfo);
   console.table(user);
+  // if (userInfo?.verification_status !== "approved") return null;
   if (!user || !userInfo) return null;
 
   return (

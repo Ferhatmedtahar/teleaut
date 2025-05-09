@@ -2,6 +2,7 @@
 
 import { ResetPasswordSchema } from "@/app/(auth)/_components/forms/reset-password/resetPassword.schema";
 import { hashPassword } from "@/app/(auth)/_lib/hashComparePassword";
+import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
 
 export async function resetPassword(formData: FormData) {
@@ -19,7 +20,7 @@ export async function resetPassword(formData: FormData) {
 
     const { data: existingUser, error: existingError } = await supabase
       .from("users")
-      .select("*")
+      .select("id, verification_status")
       .eq("id", data.id)
       .single();
 
@@ -27,7 +28,7 @@ export async function resetPassword(formData: FormData) {
       console.error("User does not exist");
       return { success: false, message: "User does not exist." };
     }
-    if (!existingUser.is_verified) {
+    if (existingUser?.verification_status != VERIFICATION_STATUS.APPROVED) {
       console.error("User is not verified");
       return { success: false, message: "User is not verified." };
     }

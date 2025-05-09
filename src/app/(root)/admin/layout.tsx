@@ -1,16 +1,17 @@
+"use client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useUser } from "@/providers/UserProvider";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import type React from "react";
-import { getCurrentUser } from "./_lib/auth";
 
-export default async function AdminLayout({
+export default function AdminLayout({
   children,
 }: {
   readonly children: React.ReactNode;
 }) {
-  // Check if user is admin
-  const user = await getCurrentUser();
-
+  const user = useUser();
+  console.log("admin layout user", user);
   if (!user || user.role !== "admin") {
     redirect("/");
   }
@@ -20,12 +21,15 @@ export default async function AdminLayout({
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
       <Tabs defaultValue="dashboard" className="w-full mb-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="dashboard" asChild>
-            <a href="/admin">Dashboard</a>
+            <Link href="/admin">Dashboard</Link>
           </TabsTrigger>
           <TabsTrigger value="unverified" asChild>
-            <a href="/admin/unverified">Unverified Teachers</a>
+            <Link href="/admin/unverified">Unverified Teachers</Link>
+          </TabsTrigger>
+          <TabsTrigger value="videos" asChild>
+            <Link href="/admin/videos">Videos</Link>
           </TabsTrigger>
         </TabsList>
       </Tabs>

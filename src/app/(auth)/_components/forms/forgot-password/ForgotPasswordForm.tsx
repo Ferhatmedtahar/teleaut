@@ -70,7 +70,11 @@ export default function ForgotPasswordForm() {
               required
             />
           </div>
-          <Button type="submit" className="w-full py-5" disabled={isSubmitting}>
+          <Button
+            type="submit"
+            className={`w-full py-5 disabled:cursor-not-allowed`}
+            disabled={isSubmitting}
+          >
             {isSubmitting
               ? "Envoi en cours..."
               : "Envoyer le lien de réinitialisation"}

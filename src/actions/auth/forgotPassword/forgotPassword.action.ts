@@ -2,6 +2,7 @@
 
 import { sendResetPasswordEmail } from "@/app/(auth)/_lib/email/sendResetPasswordEmailUser";
 import { generateToken } from "@/app/(auth)/_lib/generateToken";
+import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server"; // adjust the path to your client
 import { z } from "zod";
 
@@ -11,7 +12,7 @@ export async function forgotPassword(email: string) {
     const supabase = await createClient();
     const { data: existingUser, error: existingError } = await supabase
       .from("users")
-      .select("id, role")
+      .select("id, role ,verification_status")
       .eq("email", email)
       .single();
 
@@ -21,19 +22,25 @@ export async function forgotPassword(email: string) {
       return { success: false, message: "User does not exist." };
     }
 
+    if (existingUser?.verification_status != VERIFICATION_STATUS.APPROVED) {
+      console.error("User is not verified");
+      return { success: false, message: "User is not verified." };
+    }
+
     //!generate token and send email server action call
     const token = await generateToken({
       id: existingUser.id,
       role: existingUser.role,
     });
     console.log(token);
-    const emailSent = await sendResetPasswordEmail(email, token);
-    console.log(emailSent);
+    const { emailSent, message } = await sendResetPasswordEmail(
+      existingUser.id,
+      email,
+      token
+    );
 
     if (!emailSent) {
-      //$Rollback user creation
-      // await supabase.from("users").delete().eq("id", existingUser.id);
-      return { success: false, message: "Failed to send verification email." };
+      return { success: false, message };
     }
 
     return { success: true, token, message: "User created successfully." };

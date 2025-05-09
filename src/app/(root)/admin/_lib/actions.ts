@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "./auth";
+import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 
 export async function verifyTeacher(formData: FormData) {
   const user = await getCurrentUser();
@@ -22,7 +23,7 @@ export async function verifyTeacher(formData: FormData) {
 
   const { error } = await supabase
     .from("users")
-    .update({ is_verified: verify })
+    .update({ verification_status: verify && VERIFICATION_STATUS.APPROVED })
     .eq("id", teacherId)
     .eq("role", "teacher");
 
