@@ -4,6 +4,7 @@ import { SignUpSchema } from "@/app/(auth)/_components/forms/signUp/SignUp.schem
 import { sendVerificationEmail } from "@/app/(auth)/_lib/email/sendVerificationEmailStudents";
 import { generateToken } from "@/app/(auth)/_lib/generateToken";
 import { hashPassword } from "@/app/(auth)/_lib/hashComparePassword";
+import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server"; // adjust the path to your client
 import { z } from "zod";
 const StudentSchema = SignUpSchema.pick({
@@ -62,7 +63,7 @@ export async function signUpStudent(formData: FormData) {
         role,
         class: studentClass,
         branch,
-        is_verified: false,
+        verification_status: VERIFICATION_STATUS.PENDING,
         created_at: new Date().toISOString(),
       })
       .select()
@@ -77,13 +78,17 @@ export async function signUpStudent(formData: FormData) {
     //!generate token and send email server action call
     const token = await generateToken({ id: newUser.id, role: "student" });
     console.log(token);
-    const emailSent = await sendVerificationEmail(newUser.email, token);
+    const { emailSent, message } = await sendVerificationEmail(
+      newUser.id,
+      newUser.email,
+      token
+    );
     console.log(emailSent);
 
     if (!emailSent) {
       //$Rollback user creation
       await supabase.from("users").delete().eq("id", newUser.id);
-      return { success: false, message: "Failed to send verification email." };
+      return { success: false, message };
     }
 
     return { success: true, token, message: "User created successfully." };

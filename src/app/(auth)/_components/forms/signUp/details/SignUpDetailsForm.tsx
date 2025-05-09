@@ -64,7 +64,7 @@ export default function SignUpDetailsForm() {
       router.replace("/sign-up/info");
     }
     const signedUp = localStorage.getItem("signedUp");
-    const token = localStorage.getItem("token");
+
     const roleLocalStorage = localStorage.getItem("role");
 
     if (signedUp && signedUp == "true" && roleLocalStorage === "teacher") {
@@ -72,9 +72,6 @@ export default function SignUpDetailsForm() {
     }
     if (signedUp && signedUp == "true" && roleLocalStorage === "student") {
       router.replace("/sign-up/verify-email");
-    }
-    if (token) {
-      router.replace("/");
     }
   }, [
     // firstName,

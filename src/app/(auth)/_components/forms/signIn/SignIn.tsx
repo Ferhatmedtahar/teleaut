@@ -26,7 +26,6 @@ export default function SignInForm() {
     try {
       await SignInSchema.parseAsync(Object.fromEntries(formData.entries()));
       result = await signInAction(prevState, formData);
-      console.log(result);
       if (result.state == "SUCCESS") {
         toast.success("Connexion réussie");
         router.push("/");
@@ -51,6 +50,9 @@ export default function SignInForm() {
       ...prevState,
       state: "ERROR",
       error: "An unexpected error occurred",
+      inputs: {
+        email: formData.get("email") as string,
+      },
     };
   }
 

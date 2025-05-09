@@ -2,6 +2,7 @@
 import { SignInSchema } from "@/app/(auth)/_components/forms/signIn/SignIn.schema";
 import { generateToken } from "@/app/(auth)/_lib/generateToken";
 import { comparePasswords } from "@/app/(auth)/_lib/hashComparePassword";
+import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
 import { ActionState } from "@/types/ActionStateSignIn";
 import { cookies } from "next/headers";
@@ -21,7 +22,7 @@ export async function signInAction(
 
     const { data, error } = await supabase
       .from("users")
-      .select("email, password,role, id,is_verified")
+      .select("email, password,role, id,verification_status")
       .eq("email", email)
       .single();
     console.log(data, error);
@@ -41,7 +42,7 @@ export async function signInAction(
       };
     }
 
-    if (!data.is_verified) {
+    if (data?.verification_status !== VERIFICATION_STATUS.APPROVED) {
       return {
         state: "ERROR",
         error: "User not verified",

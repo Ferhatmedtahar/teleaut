@@ -15,7 +15,7 @@ export default function Home() {
   const subjects = ["All", "Math", "Science", "Physique", "Arab", "Eng", "ITA"];
 
   return (
-    <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg shadow-md">
+    <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg ">
       <Tabs defaultValue="all" className="w-full">
         <TabsList className="flex flex-wrap gap-2 dark:bg-background/80 bg-background/80 border border-white/90 ">
           {subjects.map((subject) => (

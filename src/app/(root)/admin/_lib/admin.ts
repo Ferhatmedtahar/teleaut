@@ -1,3 +1,4 @@
+import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
 
 export async function getAdminStats() {
@@ -25,7 +26,7 @@ export async function getAdminStats() {
     .from("users")
     .select("*", { count: "exact", head: true })
     .eq("role", "teacher")
-    .eq("is_verified", false);
+    .eq("verification_status", VERIFICATION_STATUS.PENDING);
 
   return {
     totalUsers: totalUsers || 0,
@@ -42,7 +43,7 @@ export async function getUnverifiedTeachers() {
     .from("users")
     .select("*")
     .eq("role", "teacher")
-    .eq("is_verified", false)
+    .eq("verification_status", VERIFICATION_STATUS.PENDING)
     .order("created_at", { ascending: false });
 
   if (error) {
