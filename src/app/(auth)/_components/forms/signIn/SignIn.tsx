@@ -51,9 +51,6 @@ export default function SignInForm() {
       ...prevState,
       state: "ERROR",
       error: "An unexpected error occurred",
-      inputs: {
-        email: formData.get("email") as string,
-      },
     };
   }
 
@@ -91,9 +88,9 @@ export default function SignInForm() {
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? (
-              <FiEyeOff className="h-5 w-5 text-gray-500" />
-            ) : (
               <FiEye className="h-5 w-5 text-gray-500" />
+            ) : (
+              <FiEyeOff className="h-5 w-5 text-gray-500" />
             )}
           </button>
         </div>

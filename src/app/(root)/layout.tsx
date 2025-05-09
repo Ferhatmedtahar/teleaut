@@ -18,12 +18,11 @@ export default async function RootLayout({
     .select("first_name ,profile_url ")
     .eq("id", user?.id)
     .single();
-  if (!user) return null;
-  if (
-    typeof userInfo?.first_name !== "string" ||
-    typeof userInfo?.profile_url !== "string"
-  )
-    return null;
+
+  console.table(userInfo);
+  console.table(user);
+  if (!user || !userInfo) return null;
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <UserProvider user={user}>

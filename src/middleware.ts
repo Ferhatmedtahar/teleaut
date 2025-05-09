@@ -18,7 +18,10 @@ export async function middleware(request: NextRequest) {
   // sign-in(?:/reset-password)?|sign-up(?:/.*)?
   const pathname = request.nextUrl.pathname;
   const isAuthPage =
-    pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
+    pathname.startsWith("/sign-in") ||
+    pathname.startsWith("/sign-up") ||
+    pathname.startsWith("/forgot-password") ||
+    pathname.startsWith("/reset-password");
 
   console.log("isAuthPage", isAuthPage);
   console.log("url", request.url);

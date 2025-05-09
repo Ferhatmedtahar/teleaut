@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useUser } from "@/providers/UserProvider";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -21,6 +22,10 @@ export default function UserDropDownMenu({
       }
     | undefined;
 }) {
+  const user = useUser();
+  if (!user) return null;
+  const { role } = user;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -47,6 +52,13 @@ export default function UserDropDownMenu({
             <span>Profile</span>
           </Link>
         </DropdownMenuItem>
+        {role === "admin" && (
+          <DropdownMenuItem>
+            <Link href="/admin">
+              <span>administrateur</span>
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           onClick={async () => {
             await signOut();
