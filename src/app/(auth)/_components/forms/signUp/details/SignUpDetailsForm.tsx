@@ -16,8 +16,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { signUpStudent } from "@/actions/auth/signUpStudent.action";
-import { signUpTeacher } from "@/actions/auth/signUpTeacher.action";
+import { signUpStudent } from "@/actions/auth/sign-up/signUpStudent.action";
+import { signUpTeacher } from "@/actions/auth/sign-up/signUpTeacher.action";
 import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
 import { toast } from "sonner";
 import { SignUpSchema } from "../SignUp.schema";
@@ -117,7 +117,7 @@ export default function SignUpDetailsForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setValue,
   } = useForm<SignUpDetailsSchemaType>({
     resolver: zodResolver(SignUpDetailsSchema),
@@ -417,7 +417,7 @@ export default function SignUpDetailsForm() {
         >
           Back
         </Button>
-        <Button type="submit" className=" flex-1 py-4">
+        <Button type="submit" disabled={isSubmitting} className=" flex-1 py-4">
           Continuer
         </Button>
       </div>
