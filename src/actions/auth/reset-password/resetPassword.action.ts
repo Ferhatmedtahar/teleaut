@@ -18,7 +18,7 @@ export async function resetPassword(formData: FormData) {
     const hashedPassword = await hashPassword(password);
     const supabase = await createClient();
 
-    const { data: existingUser, error: existingError } = await supabase
+    const { data: existingUser } = await supabase
       .from("users")
       .select("id, verification_status")
       .eq("id", data.id)

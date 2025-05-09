@@ -15,7 +15,7 @@ export const metadata = {
 function TeachersList({
   teachers,
 }: {
-  teachers: Awaited<ReturnType<typeof getUnverifiedTeachers>>;
+  readonly teachers: Awaited<ReturnType<typeof getUnverifiedTeachers>>;
 }) {
   if (teachers.length === 0) {
     return (
@@ -36,7 +36,7 @@ function TeachersList({
               <div className="flex items-center space-x-4">
                 <Avatar>
                   <AvatarImage
-                    src={teacher.profile_url || ""}
+                    src={teacher.profile_url ?? ""}
                     alt={`${teacher.first_name} ${teacher.last_name}`}
                   />
                   <AvatarFallback>
@@ -52,11 +52,11 @@ function TeachersList({
                     {teacher.email}
                   </p>
                   <div className="flex gap-2 mt-1">
-                    {teacher.specialties &&
+                    {teacher.specialties ??
                       teacher.specialties.map(
                         (specialty: string, index: number) => (
                           <Badge
-                            key={index}
+                            key={specialty + index}
                             variant="secondary"
                             className="text-xs"
                           >

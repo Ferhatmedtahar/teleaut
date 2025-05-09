@@ -28,7 +28,7 @@ export default function UserChart({
   return (
     <Card className="col-span-4 mt-6">
       <CardHeader>
-        <CardTitle>User Statistics</CardTitle>
+        <CardTitle className="text-xl py-4">User Statistics</CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
         <ResponsiveContainer width="100%" height={350}>

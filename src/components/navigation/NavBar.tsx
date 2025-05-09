@@ -78,32 +78,31 @@ export function Navbar({ className, userInfo }: NavbarProps) {
 
         {/* Right side with buttons and profile */}
         <div className="flex items-center gap-2 md:gap-4">
-          {role == "teacher" ||
-            (role == "admin" && (
-              <>
-                <Link href="/create" passHref>
-                  <Button
-                    variant="default"
-                    size="lg"
-                    className="gap-1 hidden sm:flex "
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>Publier</span>
-                  </Button>
-                </Link>
+          {(role == "teacher" || role == "admin") && (
+            <>
+              <Link href="/create" passHref>
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="gap-1 hidden sm:flex "
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Publier</span>
+                </Button>
+              </Link>
 
-                {/* Mobile-only publish button */}
-                <Link href="/create" passHref>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8 sm:hidden"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </>
-            ))}
+              {/* Mobile-only publish button */}
+              <Link href="/create" passHref>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 sm:hidden"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </Link>
+            </>
+          )}
           <Button variant="ghost" size="icon" className="relative  ">
             <Bell className="h-5 w-5 " />
             <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></span>

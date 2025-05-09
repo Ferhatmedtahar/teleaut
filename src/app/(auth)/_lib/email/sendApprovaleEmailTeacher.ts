@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import nodemailer from "nodemailer";
 
-export async function sendVerificationEmail(
+export async function sendVerificationEmailTeacher(
   userId: string,
   email: string,
   token: string
