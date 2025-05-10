@@ -1,3 +1,3 @@
 export default function page() {
-  return <div>page historique</div>;
+  return <div className="p-4">page historique</div>;
 }

@@ -7,6 +7,18 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "3mb",
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "storage.bunnycdn.com",
+      },
+      {
+        protocol: "https",
+        hostname: "media.licdn.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

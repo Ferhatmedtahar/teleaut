@@ -1,18 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import StudyTabs from "@/components/cards/StudyTabs";
-import StudyCard from "@/components/cards/StudyCard";
 import ProfessorCard from "@/components/cards/ProfessorCard";
+import StudyCard from "@/components/cards/StudyCard";
+import StudyTabs from "@/components/cards/StudyTabs";
 import SubjectTabs from "@/components/cards/SubjectTabs";
+import { useState } from "react";
 
 export default function EtudePage() {
   const [activeTab, setActiveTab] = useState<"etudes" | "professors">("etudes");
   const [selectedSubject, setSelectedSubject] = useState("All");
 
   return (
-    <div className=" py-6">
-      <div className="">
+    <div className="p-6">
+      <div>
         <StudyTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         {activeTab !== "etudes" && (
           <SubjectTabs

@@ -22,7 +22,7 @@ export default function TeacherProfile({
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar className="h-16 w-16">
           <AvatarImage
-            src={teacher.profile_url || ""}
+            src={teacher.profile_url ?? ""}
             alt={`${teacher.first_name} ${teacher.last_name}`}
           />
           <AvatarFallback className="text-lg">

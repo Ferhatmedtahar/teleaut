@@ -42,7 +42,7 @@ export default async function RootLayout({
             <AppSidebar className="h-[calc(100vh-4rem)]" />
           </div>
 
-          <main className="flex-1 overflow-auto p-4 w-full">
+          <main className="flex-1 overflow-auto w-full">
             <AuthGuard />
             {children}
           </main>
