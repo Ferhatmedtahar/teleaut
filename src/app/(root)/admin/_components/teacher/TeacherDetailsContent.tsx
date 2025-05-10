@@ -5,7 +5,7 @@ import TeacherFilesSkeleton from "../../_components/teacher/LoadingTeacher";
 import { getTeacherById } from "../../_lib/admin";
 import TeacherFilesContent from "./TeacherFilesContent";
 import TeacherProfile from "./TeacherProfile";
-import TeacherVerificationActions from "./TeacherVerificationAction";
+import TeacherVerificationActions from "./TeacherVerificationSection";
 
 export default async function TeacherDetailsContent({
   teacherId,
@@ -27,9 +27,6 @@ export default async function TeacherDetailsContent({
 
       <div>
         <Tabs defaultValue="documents">
-          {/* <TabsList className="mb-4">
-            <TabsTrigger value="documents">Documents</TabsTrigger>
-          </TabsList> */}
           <h2 className="text-2xl font-bold">Documents</h2>
           <TabsContent value="documents">
             <Suspense fallback={<TeacherFilesSkeleton />}>

@@ -36,10 +36,10 @@ export default function AdminLayout({
           <TabsTrigger value="dashboard" key={"dashboard"} asChild>
             <Link href="/admin">Dashboard</Link>
           </TabsTrigger>
-          <TabsTrigger value="unverified" key={"unverified"} asChild>
+          <TabsTrigger value="unverified" key={"/admin/unverified"} asChild>
             <Link href="/admin/unverified">Unverified Teachers</Link>
           </TabsTrigger>
-          <TabsTrigger value="videos" key={"videos"} asChild>
+          <TabsTrigger value="videos" key={"/admin/videos"} asChild>
             <Link href="/admin/videos">Videos</Link>
           </TabsTrigger>
         </TabsList>

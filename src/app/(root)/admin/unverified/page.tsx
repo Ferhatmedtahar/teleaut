@@ -1,6 +1,5 @@
 import { Button } from "@/components/common/buttons/Button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
@@ -20,8 +19,8 @@ function TeachersList({
   if (teachers.length === 0) {
     return (
       <Card>
-        <CardContent className="pt-6 text-center">
-          <p>No unverified teachers found.</p>
+        <CardContent className="p-6 text-center">
+          <p className="text-muted-foreground">No unverified teachers found.</p>
         </CardContent>
       </Card>
     );
@@ -51,19 +50,21 @@ function TeachersList({
                   <p className="text-sm text-muted-foreground">
                     {teacher.email}
                   </p>
-                  <div className="flex gap-2 mt-1">
-                    {teacher.specialties ??
-                      teacher.specialties.map(
-                        (specialty: string, index: number) => (
-                          <Badge
-                            key={specialty + index}
-                            variant="secondary"
-                            className="text-xs"
-                          >
-                            {specialty}
-                          </Badge>
-                        )
-                      )}
+                  <div className="flex gap-4 mt-2">
+                    {teacher.specialties ? (
+                      teacher.specialties.map((specialty: string) => (
+                        <div
+                          key={specialty}
+                          className="text-xs p-1  text-primary-900 bg-primary-50 rounded-lg"
+                        >
+                          {specialty}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        No specialties
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>

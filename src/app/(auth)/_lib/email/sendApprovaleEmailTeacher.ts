@@ -13,7 +13,7 @@ export async function sendVerificationEmailTeacher(
       .from("email_logs")
       .select("id")
       .eq("user_id", userId)
-      .eq("type", "reset_password")
+      .eq("type", "verification")
       .gte("sent_at", new Date(Date.now() - 60 * 60 * 1000).toISOString());
 
     if (error) {
