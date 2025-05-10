@@ -1,7 +1,5 @@
-// app/api/videos/[videoId]/route.ts
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-const supabase = await createClient();
 
 // Bunny Stream API credentials
 const STREAM_API_KEY = process.env.BUNNY_STREAM_API_KEY!;
@@ -12,6 +10,7 @@ export async function GET(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
+    const supabase = await createClient();
     const { videoId } = await params;
 
     // First check if we have this video in our database

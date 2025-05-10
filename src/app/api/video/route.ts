@@ -1,11 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-const supabase = await createClient();
 const STREAM_API_KEY = process.env.BUNNY_STREAM_API_KEY!;
 const STREAM_LIBRARY_ID = process.env.BUNNY_STREAM_LIBRARY_ID!;
 // app/api/videos/route.ts - For listing all videos
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await createClient();
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
     const page = parseInt(searchParams.get("page") || "1");
@@ -104,6 +104,7 @@ export async function GET(request: NextRequest) {
 // app/api/videos/route.ts - For creating a new video
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createClient();
     const body = await request.json();
     const { title, userId, collectionId = "default" } = body;
 
