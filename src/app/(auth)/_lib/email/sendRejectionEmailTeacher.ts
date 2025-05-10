@@ -1,8 +1,7 @@
-import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
 import nodemailer from "nodemailer";
 
-export async function sendVerificationEmail(
+export async function sendVerificationEmailTeacher(
   userId: string,
   email: string,
   token: string
@@ -38,35 +37,28 @@ export async function sendVerificationEmail(
       },
     });
 
-    const verificationUrl = `http://localhost:3000/sign-up/verify?token=${token}`;
-
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: email,
-      subject: "Welcome to Cognacia",
+      subject: "Cognacia - Application Update",
       html: `
-      <h1>Welcome to Cognacia</h1>
-      <p>Hey there, welcome to Cognacia!</p>
-      <p>We are very excited to see you join us!</p>
-        <h2>Email Verification</h2>
-        <p>To access your dashboard and start your learning journey please confirm your email by clicking the button below.</p>
-        <a  style="background:#355869;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;"href="${verificationUrl}">Confirm Email Address</a>
-        <p>If you have any questions, make sure to contact us. We are always happy to help you out!</p>
+        <h2>Application Status - Cognacia</h2>
+        <p>Dear Teacher,</p>
+        <p>Thank you for taking the time to apply to join Cognacia as a teacher. We’ve carefully reviewed your application.</p>
+        <p>At this time, we've decided not to move forward with your application. This decision was based on a variety of factors, and we want to assure you it was not made lightly.</p>
+        <p>You're welcome to reapply in the future, especially if there are changes or updates to your experience or qualifications.</p>
+        <p>If you have any questions or would like feedback, feel free to contact our support team.</p>
+        <br />
+        <p>Warm regards,</p>
+        <p>The Cognacia Team</p>
       `,
     };
-
     const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent:", info.messageId);
 
     if (info.messageId) {
-      await supabase
-        .from("users")
-        .update({ verification_status: VERIFICATION_STATUS.EMAIL_SENT })
-        .eq("id", userId);
-
       await supabase.from("email_logs").insert({
         user_id: userId,
-        type: "verification",
+        type: "reject_teacher",
         sent_at: new Date(),
       });
     }

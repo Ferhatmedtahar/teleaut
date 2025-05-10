@@ -1,12 +1,16 @@
-"use client";
+import { getUserById } from "@/actions/profile/getUserById.action";
+import ErrorProfile from "./_components/ErrorProfile";
 
-import { useUser } from "@/providers/UserProvider";
-
-export default function UserProfilePage() {
-  const userid = useUser();
+async function ProfileContent() {
+  const { user, success } = await getUserById();
+  if (!success) return <ErrorProfile />;
   return (
-    <div>
-      page profile {userid?.id} and his role {userid?.role}
-    </div>
+    <>
+      {/* <StatsCards stats={stats} /> */}
+      {/* <UserChart stats={stats} /> */}
+    </>
   );
+}
+export default async function UserProfilePage() {
+  return <div></div>;
 }

@@ -102,7 +102,7 @@
   }
 }
 :root {
-  --radius: 0.625rem;
+  --radius: 0.525rem;
   --color-foreground: #0d0d0d;
   --color-background: #fafafa;
   /* --foreground: #0d0d0d; */

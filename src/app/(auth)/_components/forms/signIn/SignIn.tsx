@@ -11,7 +11,6 @@ import { z } from "zod";
 import { Button } from "../../../../../components/common/buttons/Button";
 import { Input } from "../../../../../components/ui/input";
 import { Label } from "../../../../../components/ui/label";
-import { ActionState } from "@/types/ActionStateSignIn";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -31,7 +30,7 @@ export default function SignInForm() {
         toast.success("Connexion réussie");
         router.push("/");
       } else {
-        toast.error("Email ou mot de passe incorrect");
+        toast.error(result.error);
       }
     } catch (error) {
       if (error instanceof z.ZodError) {

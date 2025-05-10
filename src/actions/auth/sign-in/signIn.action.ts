@@ -45,7 +45,7 @@ export async function signInAction(
     if (data?.verification_status !== VERIFICATION_STATUS.APPROVED) {
       return {
         state: "ERROR",
-        error: "User not verified",
+        error: "Sign in Action not allowed",
         inputs: { email, password },
       };
     }

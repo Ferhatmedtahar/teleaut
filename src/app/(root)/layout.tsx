@@ -11,23 +11,29 @@ export default async function RootLayout({
 }: {
   readonly children: React.ReactNode;
 }) {
-  const user = await getCurrentUser();
+  const result = await getCurrentUser();
+  if (!result.success || !result.user) return null;
+
+  const { user } = result;
   const supabase = await createClient();
   const { data: userInfo } = await supabase
     .from("users")
-    .select("first_name ,profile_url")
+    .select("first_name ,profile_url,verification_status")
     .eq("id", user?.id)
     .single();
 
-  console.table(userInfo);
-  console.table(user);
-  // if (userInfo?.verification_status !== "approved") return null;
-  if (!user || !userInfo) return null;
+  // if (userInfo?.verification_status !== "approved") return redirect("/sign-in");
 
+  if (!user || !userInfo) return null;
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background  selection:bg-yellow-100  selection:text-[#355869] ">
       <UserProvider user={user}>
-        <Navbar userInfo={userInfo} />
+        <Navbar
+          userInfo={{
+            first_name: userInfo.first_name,
+            profile_url: userInfo.profile_url,
+          }}
+        />
 
         <MobileSidebarDrawer />
 

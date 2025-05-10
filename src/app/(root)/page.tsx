@@ -48,6 +48,8 @@ export default function Home() {
                 </div>
                 <Image
                   src="/placeholder.svg?height=300&width=500"
+                  height={300}
+                  width={500}
                   alt="Featured video"
                   className="object-cover w-full h-full"
                 />
@@ -97,6 +99,8 @@ export default function Home() {
                   </Button>
                 </div>
                 <Image
+                  height={200}
+                  width={350}
                   src="/placeholder.svg?height=200&width=350"
                   alt="Video thumbnail"
                   className="object-cover w-full h-full"
