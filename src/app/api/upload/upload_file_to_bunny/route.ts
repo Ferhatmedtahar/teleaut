@@ -4,6 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
 import { v4 as uuidv4 } from "uuid";
 
+import fs from "fs";
+import https from "https";
+import { Http2ServerResponse } from "http2";
+import { IncomingMessage } from "http";
 export async function POST(request: NextRequest) {
   try {
     console.log("File upload route hit!");
@@ -73,12 +77,14 @@ export async function POST(request: NextRequest) {
       url,
       path: finalPath,
     });
-  } catch (error: any) {
-    console.error("Upload error:", error);
-    return NextResponse.json(
-      { error: error.message ?? "Upload failed" },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Upload error:", error.message);
+      return NextResponse.json(
+        { error: error.message ?? "Upload failed" },
+        { status: 500 }
+      );
+    }
   }
 }
 
@@ -87,9 +93,6 @@ async function uploadToBunny(
   destinationPath: string,
   contentType: string
 ): Promise<string> {
-  const fs = require("fs");
-  const https = require("https");
-
   const STORAGE_ZONE_NAME = process.env.BUNNY_STORAGE_ZONE!;
   const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY!;
   const HOSTNAME = process.env.BUNNY_HOST!;
@@ -109,9 +112,9 @@ async function uploadToBunny(
       },
     };
 
-    const req = https.request(options, (res: any) => {
+    const req = https.request(options, (res: IncomingMessage) => {
       let body = "";
-      res.on("data", (chunk: any) => (body += chunk));
+      res.on("data", (chunk: Buffer) => (body += chunk));
       res.on("end", () => {
         if (res.statusCode === 200 || res.statusCode === 201) {
           // Construct the CDN URL

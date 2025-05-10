@@ -11,6 +11,7 @@ import { z } from "zod";
 import { Button } from "../../../../../components/common/buttons/Button";
 import { Input } from "../../../../../components/ui/input";
 import { Label } from "../../../../../components/ui/label";
+import { ActionState } from "@/types/ActionStateSignIn";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -117,7 +118,7 @@ export default function SignInForm() {
 
       <div className="text-center mt-6">
         <p className="text-sm text-gray-600">
-          Vous n'avez pas de compte ?{" "}
+          Vous n&apos;avez pas de compte ?{" "}
           <Link
             href="sign-up/info"
             className="text-blue-600 hover:text-blue-800 font-medium transition duration-200"

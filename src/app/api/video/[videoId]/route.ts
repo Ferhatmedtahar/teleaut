@@ -1,6 +1,6 @@
 // app/api/videos/[videoId]/route.ts
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { NextRequest, NextResponse } from "next/server";
 const supabase = await createClient();
 
 // Bunny Stream API credentials
@@ -69,12 +69,14 @@ export async function GET(
     };
 
     return NextResponse.json(combinedData);
-  } catch (error: any) {
-    console.error("Error fetching video details:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Internal server error:", error);
+      return NextResponse.json(
+        { error: error.message || "Internal server error" },
+        { status: 500 }
+      );
+    }
   }
 }
 

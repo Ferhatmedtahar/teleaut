@@ -14,14 +14,14 @@ export function MobileSidebarDrawer() {
 
     // Add event listener
     window.addEventListener(
-      "toggleSidebar" as any,
+      "toggleSidebar" as string,
       handleSidebarToggle as EventListener
     );
 
     // Cleanup
     return () => {
       window.removeEventListener(
-        "toggleSidebar" as any,
+        "toggleSidebar" as string,
         handleSidebarToggle as EventListener
       );
     };

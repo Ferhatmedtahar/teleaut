@@ -4,8 +4,13 @@ import { Suspense } from "react";
 import TeacherDetailsContent from "../../_components/teacher/TeacherDetailsContent";
 import { getTeacherById } from "../../_lib/admin";
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const teacher = await getTeacherById(params.id);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const teacher = await getTeacherById(id);
 
   if (!teacher) {
     return {

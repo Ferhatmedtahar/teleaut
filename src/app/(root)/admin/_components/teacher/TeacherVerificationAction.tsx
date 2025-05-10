@@ -20,7 +20,7 @@ export default async function TeacherVerificationActions({
       <CardHeader>
         <CardTitle>Verification Actions</CardTitle>
         <CardDescription>
-          Review the teacher's documents and verify their account
+          Review the teacher&apos;s documents and verify their account
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -14,7 +14,7 @@ export default function SubjectTabs({ selected, onChange }: SubjectTabsProps) {
     if (!subjects.includes(selected)) {
       onChange("All");
     }
-  }, [selected]);
+  }, [selected, onChange]);
 
   return (
     <div className="flex flex-wrap gap-2 mt-6 overflow-x-auto pb-2">

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { FileIcon } from "lucide-react";
 import { getTeacherFiles } from "../../_lib/admin";
+import { TeacherFile } from "@/types/TeacherFile";
 
 export function TeacherFiles({
   files,
@@ -27,7 +28,7 @@ export function TeacherFiles({
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      {files.map((file: any) => (
+      {files.map((file: TeacherFile) => (
         <Card key={file.id}>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">

@@ -1,5 +1,6 @@
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
+import { TeacherFile } from "@/types/TeacherFile";
 
 //! Admin statistics
 
@@ -77,7 +78,9 @@ export async function getTeacherById(id: string) {
 }
 
 //! Teacher Files from user_files table
-export async function getTeacherFiles(teacherId: string) {
+export async function getTeacherFiles(
+  teacherId: string
+): Promise<TeacherFile[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase

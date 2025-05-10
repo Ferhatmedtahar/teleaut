@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Play } from "lucide-react";
+import Image from "next/image";
 
 export default function Home() {
   const subjects = ["All", "Math", "Science", "Physique", "Arab", "Eng", "ITA"];
@@ -45,7 +46,7 @@ export default function Home() {
                     <Play className="h-8 w-8" />
                   </Button>
                 </div>
-                <img
+                <Image
                   src="/placeholder.svg?height=300&width=500"
                   alt="Featured video"
                   className="object-cover w-full h-full"
@@ -95,7 +96,7 @@ export default function Home() {
                     <Play className="h-6 w-6" />
                   </Button>
                 </div>
-                <img
+                <Image
                   src="/placeholder.svg?height=200&width=350"
                   alt="Video thumbnail"
                   className="object-cover w-full h-full"

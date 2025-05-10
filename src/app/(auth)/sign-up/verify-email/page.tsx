@@ -38,8 +38,8 @@ export default function EmailConfirmationPage() {
               Verify Your Email
             </h1>
             <p className="text-lg text-gray-600">
-              We've successfully sent a confirmation email to your inbox. Please
-              check it and verify your email address to continue to your
+              We&apos;ve successfully sent a confirmation email to your inbox.
+              Please check it and verify your email address to continue to your
               dashboard.
             </p>
           </div>

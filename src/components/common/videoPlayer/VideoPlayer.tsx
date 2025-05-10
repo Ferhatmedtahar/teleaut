@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import {
   Pause,
@@ -10,6 +9,7 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface VideoPlayerProps {
   videoId: string;
@@ -84,9 +84,10 @@ export default function VideoPlayer({
 
     fetchVideoDetails();
   }, [videoId, userId]);
+  // }, [videoId, userId, setupHlsPlayer]);
 
   // Initialize HLS player
-  const setupHlsPlayer = (hlsUrl: string) => {
+  function setupHlsPlayer(hlsUrl: string) {
     if (!videoRef.current) return;
 
     if (Hls.isSupported()) {
@@ -107,8 +108,8 @@ export default function VideoPlayer({
         }
       });
 
-      hls.on(Hls.Events.ERROR, (_, data) => {
-        if (data.fatal) {
+      hls.on(Hls.Events.ERROR, (_: string, data: any) => {
+        if (data?.fatal) {
           console.error("HLS error:", data);
           setError("Video playback error. Please try again.");
         }
@@ -124,7 +125,7 @@ export default function VideoPlayer({
     } else {
       setError("Your browser does not support HLS video playback.");
     }
-  };
+  }
 
   // Video event handlers
   const handlePlay = () => {

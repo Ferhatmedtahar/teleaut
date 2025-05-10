@@ -2,7 +2,7 @@
 
 import { useUser } from "@/providers/UserProvider";
 
-export default function page() {
+export default function UserProfilePage() {
   const userid = useUser();
   return (
     <div>

@@ -270,7 +270,7 @@ export default function SignUpDetailsForm() {
           />
 
           <div className="flex flex-col gap-1">
-            <Label>Carte d'identité front</Label>
+            <Label>Recto de la carte d&apos;identité</Label>
             <Input
               type="file"
               {...register("identityFileFront")}
@@ -283,7 +283,7 @@ export default function SignUpDetailsForm() {
             )}
           </div>
           <div className="flex flex-col gap-1">
-            <Label>Carte d'identité back</Label>
+            <Label>Verso de la carte d&apos;identité</Label>
             <Input
               type="file"
               {...register("identityFileBack")}
