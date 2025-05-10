@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-const supabase = await createClient();
+import { NextRequest, NextResponse } from "next/server";
 const STREAM_API_KEY = process.env.BUNNY_STREAM_API_KEY!;
 const STREAM_LIBRARY_ID = process.env.BUNNY_STREAM_LIBRARY_ID!;
 // app/api/videos/route.ts - For listing all videos
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await createClient();
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
     const page = parseInt(searchParams.get("page") || "1");
@@ -90,18 +90,21 @@ export async function GET(request: NextRequest) {
         total: count,
       },
     });
-  } catch (error: any) {
-    console.error("Error fetching videos:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error fetching videos:", error.message);
+      return NextResponse.json(
+        { error: error.message || "Internal server error" },
+        { status: 500 }
+      );
+    }
   }
 }
 
 // app/api/videos/route.ts - For creating a new video
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createClient();
     const body = await request.json();
     const { title, userId, collectionId = "default" } = body;
 
@@ -133,7 +136,7 @@ export async function POST(request: NextRequest) {
       const errorData = await bunnyResponse.json();
       return NextResponse.json(
         {
-          error: errorData.message || "Failed to create video in Bunny Stream",
+          error: errorData.message ?? "Failed to create video in Bunny Stream",
         },
         { status: bunnyResponse.status }
       );
@@ -170,11 +173,13 @@ export async function POST(request: NextRequest) {
       bunnyVideoId,
       uploadUrl: `https://video.bunnycdn.com/library/${STREAM_LIBRARY_ID}/videos/${bunnyVideoId}`,
     });
-  } catch (error: any) {
-    console.error("Error creating video:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error creating video:", error.message);
+      return NextResponse.json(
+        { error: error.message || "Internal server error" },
+        { status: 500 }
+      );
+    }
   }
 }

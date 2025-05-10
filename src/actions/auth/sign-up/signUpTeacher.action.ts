@@ -40,7 +40,7 @@ export async function signUpTeacher(formData: FormData) {
 
     const supabase = await createClient();
 
-    const { data: existingUser, error: existingError } = await supabase
+    const { data: existingUser } = await supabase
       .from("users")
       .select("id")
       .eq("email", email)

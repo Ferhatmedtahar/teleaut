@@ -7,7 +7,7 @@ import StudyCard from "@/components/cards/StudyCard";
 import ProfessorCard from "@/components/cards/ProfessorCard";
 import SubjectTabs from "@/components/cards/SubjectTabs";
 
-export default function page() {
+export default function EtudePage() {
   const [activeTab, setActiveTab] = useState<"etudes" | "professors">("etudes");
   const [selectedSubject, setSelectedSubject] = useState("All");
 

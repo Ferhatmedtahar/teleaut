@@ -1,5 +1,8 @@
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
+import { TeacherFile } from "@/types/TeacherFile";
+
+//! Admin statistics
 
 export async function getAdminStats() {
   const supabase = await createClient();
@@ -29,13 +32,14 @@ export async function getAdminStats() {
     .eq("verification_status", VERIFICATION_STATUS.PENDING);
 
   return {
-    totalUsers: totalUsers || 0,
-    totalTeachers: totalTeachers || 0,
-    totalStudents: totalStudents || 0,
-    pendingVerifications: pendingVerifications || 0,
+    totalUsers: totalUsers ?? 0,
+    totalTeachers: totalTeachers ?? 0,
+    totalStudents: totalStudents ?? 0,
+    pendingVerifications: pendingVerifications ?? 0,
   };
 }
 
+//! Unverified Teachers list and details
 export async function getUnverifiedTeachers() {
   const supabase = await createClient();
 
@@ -54,6 +58,7 @@ export async function getUnverifiedTeachers() {
   return data ?? [];
 }
 
+//! Teacher details by id for approval
 export async function getTeacherById(id: string) {
   const supabase = await createClient();
 
@@ -72,7 +77,10 @@ export async function getTeacherById(id: string) {
   return data;
 }
 
-export async function getTeacherFiles(teacherId: string) {
+//! Teacher Files from user_files table
+export async function getTeacherFiles(
+  teacherId: string
+): Promise<TeacherFile[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase

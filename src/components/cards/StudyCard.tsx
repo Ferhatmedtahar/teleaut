@@ -1,6 +1,7 @@
 import React from "react";
 import { FaCirclePlay } from "react-icons/fa6"; // Play icon
 import { FaChevronDown } from "react-icons/fa"; // Dropdown arrow
+import Image from "next/image";
 
 interface StudyCardProps {
   title: string;
@@ -19,7 +20,7 @@ const StudyCard: React.FC<StudyCardProps> = ({
     <div className="flex bg-gray-100 rounded-xl shadow-md overflow-hidden max-w-3xl w-full p-4">
       {/* Left thumbnail */}
       <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden">
-        <img
+        <Image
           src="https://flagcdn.com/w320/fr.png" // Use your actual image here
           alt="French Flag"
           className="w-full h-full object-cover"

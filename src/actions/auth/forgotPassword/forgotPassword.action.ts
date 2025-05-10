@@ -10,7 +10,7 @@ export async function forgotPassword(email: string) {
   // Check if user exists
   try {
     const supabase = await createClient();
-    const { data: existingUser, error: existingError } = await supabase
+    const { data: existingUser } = await supabase
       .from("users")
       .select("id, role ,verification_status")
       .eq("email", email)

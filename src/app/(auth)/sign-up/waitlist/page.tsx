@@ -43,7 +43,8 @@ export default function WaitlistPage() {
             <h1 className="text-4xl font-bold text-gray-800">Thank You!</h1>
             <p className="text-lg text-gray-600">
               Your request has been successfully submitted. The Cognacia team is
-              now reviewing it and will contact you once it's been processed.
+              now reviewing it and will contact you once it&apos;s been
+              processed.
             </p>
           </div>
         </div>

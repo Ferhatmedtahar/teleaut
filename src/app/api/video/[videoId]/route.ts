@@ -1,7 +1,5 @@
-// app/api/videos/[videoId]/route.ts
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-const supabase = await createClient();
+import { NextRequest, NextResponse } from "next/server";
 
 // Bunny Stream API credentials
 const STREAM_API_KEY = process.env.BUNNY_STREAM_API_KEY!;
@@ -12,6 +10,7 @@ export async function GET(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
+    const supabase = await createClient();
     const { videoId } = await params;
 
     // First check if we have this video in our database
@@ -69,12 +68,14 @@ export async function GET(
     };
 
     return NextResponse.json(combinedData);
-  } catch (error: any) {
-    console.error("Error fetching video details:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Internal server error:", error);
+      return NextResponse.json(
+        { error: error.message || "Internal server error" },
+        { status: 500 }
+      );
+    }
   }
 }
 

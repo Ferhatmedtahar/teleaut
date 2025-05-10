@@ -1,4 +1,5 @@
 "use client";
+import { verifyEmailExists } from "@/actions/auth/sign-up/verifyEmailExists.action";
 import { SelectRole } from "@/app/(auth)/_components/SelectRole";
 import { useSignUpStore } from "@/app/(auth)/sign-up/store";
 import { Button } from "@/components/common/buttons/Button";
@@ -8,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { SignUpSchema } from "../SignUp.schema";
 
@@ -26,12 +28,7 @@ export default function SignUpBasicInfoForm() {
   useEffect(() => {
     if (!useSignUpStore.persist?.hasHydrated) return;
     const signedUp = localStorage.getItem("signedUp");
-    // const token = localStorage.getItem("token");
     const roleLocalStorage = localStorage.getItem("role");
-    // if (token) {
-    //   router.replace("/");
-    // }
-
     if (signedUp && signedUp == "true" && roleLocalStorage === "teacher") {
       router.replace("/sign-up/waitlist");
     }
@@ -45,7 +42,7 @@ export default function SignUpBasicInfoForm() {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<SignUpBasicInfoFormSchema>({
     resolver: zodResolver(SignUpBasicInfoFormSchema),
     defaultValues: {
@@ -57,7 +54,12 @@ export default function SignUpBasicInfoForm() {
     },
   });
 
-  function onSubmit(data: SignUpBasicInfoFormSchema) {
+  async function onSubmit(data: SignUpBasicInfoFormSchema) {
+    const userExist = await verifyEmailExists(data.email);
+    if (!userExist.success) {
+      toast.error(userExist.message);
+      return;
+    }
     localStorage.setItem("role", data.role);
     setData(data);
     router.push("/sign-up/details");
@@ -136,12 +138,8 @@ export default function SignUpBasicInfoForm() {
         )}
       </div>
 
-      <Button
-        className="py-5 w-full"
-        type="submit"
-        // disabled={isPending}
-      >
-        Continuer
+      <Button className="py-5 w-full" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Chargement..." : "Suivant"}
       </Button>
     </form>
   );

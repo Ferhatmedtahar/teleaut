@@ -8,7 +8,7 @@ export default function AboutPage() {
       <section className="bg-white border-b border-gray-200 py-6 px-8 shadow-sm">
         <h1 className="text-3xl font-semibold">À propos</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Apprendre, c'est plus simple ici.
+          Apprendre, c&apos;est plus simple ici.
         </p>
       </section>
 
