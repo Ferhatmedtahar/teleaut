@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Settings } from "lucide-react";
 import { Button } from "@/components/common/buttons/Button";
+import { roles } from "@/types/roles.enum";
+import { Settings } from "lucide-react";
+import { useState } from "react";
 import EditProfileModal from "./EditProfileModal";
 
 interface EditProfileButtonProps {
-  userId: string;
-  currentUserId: string;
-  userRole: string;
-  userData: {
+  readonly userId: string;
+  readonly currentUserId: string;
+  readonly userRole: roles.admin | roles.student | roles.teacher;
+  readonly userData: {
     first_name: string;
     last_name: string;
     bio: string;

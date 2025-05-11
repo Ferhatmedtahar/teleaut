@@ -5,7 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export async function verifyToken(token: string): Promise<User> {
   const decoded = jwt.verify(token, JWT_SECRET);
-  console.log(decoded, JWT_SECRET);
+  // console.log(decoded, JWT_SECRET);
   if (
     !decoded ||
     typeof decoded !== "object" ||
