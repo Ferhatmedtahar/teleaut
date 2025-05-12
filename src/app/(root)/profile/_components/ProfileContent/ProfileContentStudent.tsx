@@ -1,11 +1,9 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { roles } from "@/types/roles.enum";
 import { UserProps } from "@/types/UserProps";
-import Image from "next/image";
-import EditProfileButton from "../EditProfileButton";
+import BackgroundUser from "./BackgroundUser";
+import ProfilePictureUser from "./ProfilePictureUser";
 
-export default function ProfileContentStudent({
+export default async function ProfileContentStudent({
   user,
   currentUserId,
 }: {
@@ -18,76 +16,31 @@ export default function ProfileContentStudent({
   const branch = user?.branch;
   const classValue = user?.class;
   const bio = user?.bio ?? `Hi, i'm ${firstName} ${lastName}.`;
-  const profileUrl = user?.profile_url;
-  const background_cover = user?.background_url;
   const userId = user?.id;
+
   return (
     <div className="w-full p-3">
       {/* max-w-6xl mx-auto */}
       {/* Profile Banner and Info */}
       <div className="relative mb-6">
-        {/* Banner with gradient background */}
-        {background_cover ? (
-          <div className="relative h-40 w-full rounded-t-lg overflow-hidden">
-            <Image
-              height={1920}
-              width={1080}
-              src={background_cover}
-              alt={`background cover image for ${firstName} ${lastName}`}
-              className="w-full h-50 object-cover rounded-t-lg"
-            />
+        <BackgroundUser
+          firstName={firstName}
+          lastName={lastName}
+          role={role}
+          bio={bio}
+          profileUrl={user?.profile_url}
+          background_cover={user?.background_url}
+          userId={userId}
+          currentUserId={currentUserId}
+          classValue={classValue}
+          branch={branch}
+        />
 
-            {/* Edit button - only visible if current user is viewing their own profile */}
-            <EditProfileButton
-              userId={userId}
-              currentUserId={currentUserId}
-              userRole={role as roles.student}
-              userData={{
-                first_name: firstName,
-                last_name: lastName,
-                bio,
-                profile_url: profileUrl,
-                background_url: background_cover,
-                class: user?.class,
-                branch: user?.branch,
-              }}
-            />
-          </div>
-        ) : (
-          <div className="h-40 w-full rounded-t-lg overflow-hidden">
-            <div className="w-full h-full bg-gradient-to-r from-[#355869] via-primary-700 to-green-600"></div>
-
-            {/* Edit button - only visible if current user is viewing their own profile */}
-            <EditProfileButton
-              userId={userId}
-              currentUserId={currentUserId}
-              userRole={role as roles.student}
-              userData={{
-                first_name: firstName,
-                last_name: lastName,
-                bio,
-                profile_url: profileUrl,
-                background_url: background_cover,
-                class: user?.class,
-                branch: user?.branch,
-              }}
-            />
-          </div>
-        )}
-
-        {/* Profile Avatar */}
-        <div className="absolute left-8 -bottom-12">
-          <Avatar className="h-24 w-24 border-4 border-white">
-            <AvatarImage
-              src={`${profileUrl}`}
-              alt={`${firstName} ${lastName}`}
-            />
-            <AvatarFallback className="text-2xl">
-              {firstName[0]}
-              {lastName[0]}
-            </AvatarFallback>
-          </Avatar>
-        </div>
+        <ProfilePictureUser
+          imageUrl={user?.profile_url}
+          firstName={firstName}
+          lastName={lastName}
+        />
       </div>
 
       {/* Profile Info */}
@@ -110,13 +63,6 @@ export default function ProfileContentStudent({
         </div>
         <div className="mt-4 border rounded-md p-4">
           <p className="text-sm font-medium">{bio}</p>
-
-          {/* <Textarea
-            className="border-none p-0 resize-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            // placeholder="Bio will be here"
-            defaultValue=""
-            rows={3}
-          /> */}
         </div>
       </div>
     </div>

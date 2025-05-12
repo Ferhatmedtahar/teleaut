@@ -1,10 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { roles } from "@/types/roles.enum";
 import { UserProps } from "@/types/UserProps";
 import Image from "next/image";
 import EditProfileButton from "../EditProfileButton";
 
-export default function ProfileContentAdmin({
+export default async function ProfileContentAdmin({
   user,
   currentUserId,
 }: {
@@ -19,6 +20,7 @@ export default function ProfileContentAdmin({
   const profileUrl = user?.profile_url;
   const background_cover = user?.background_url;
   const userId = user?.id;
+
   return (
     <div className="w-full p-3">
       {/* max-w-6xl mx-auto */}

@@ -34,6 +34,7 @@ interface EditProfileModalProps {
   readonly isOpen: boolean;
   readonly onClose: () => void;
   readonly userRole: roles.admin | roles.student | roles.teacher;
+  readonly userId: string;
   readonly userData: {
     first_name: string;
     last_name: string;
@@ -58,6 +59,7 @@ export default function EditProfileModal({
   onClose,
   userRole,
   userData,
+  userId,
 }: EditProfileModalProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("general");
@@ -89,6 +91,7 @@ export default function EditProfileModal({
     formState: { errors, isSubmitting },
     setValue,
     watch,
+    reset,
   } = useForm<EditProfileSchema>({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {
@@ -165,6 +168,7 @@ export default function EditProfileModal({
       //userData to compare if user has updated their profile or no if no we dont show toast message and save.
       formData.append("prev_bio", userData.bio ?? "");
       formData.append("role", userRole);
+      formData.append("userId", userId);
       formData.append("bio", data.bio ?? "");
 
       // Add files if they exist
@@ -202,6 +206,7 @@ export default function EditProfileModal({
       const { success, message } = await updateUserProfile(formData);
       if (success) {
         toast.success(message);
+        reset();
       } else {
         toast.error(message);
       }

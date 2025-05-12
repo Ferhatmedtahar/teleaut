@@ -55,7 +55,7 @@ export default function UserDropDownMenu({
         {role === "admin" && (
           <DropdownMenuItem>
             <Link href="/admin">
-              <span>administrateur</span>
+              <span>Administrateur</span>
             </Link>
           </DropdownMenuItem>
         )}

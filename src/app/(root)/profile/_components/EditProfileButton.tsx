@@ -47,6 +47,7 @@ export default function EditProfileButton({
       </Button>
 
       <EditProfileModal
+        userId={userId}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         userRole={userRole}

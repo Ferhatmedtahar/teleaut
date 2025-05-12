@@ -1,5 +1,7 @@
 "use server";
 
+import { uploadFile } from "@/app/(auth)/_lib/uploadFile";
+import { createClient } from "@/lib/supabase/server";
 import { roles } from "@/types/roles.enum";
 import { revalidatePath } from "next/cache";
 
@@ -16,7 +18,7 @@ export async function updateUserProfile(formData: FormData) {
     let prev_branch: string = "";
 
     if (!userRole) {
-      return { success: false, error: "Failed to update profile" };
+      return { success: false, message: "Failed to update profile" };
     }
     //get the previous data sent within the form
     const prev_bio = formData.get("prev_bio") as string;
@@ -27,20 +29,9 @@ export async function updateUserProfile(formData: FormData) {
 
     //get the values
     const bio = formData.get("bio") as string;
+    const userId = formData.get("userId") as string;
     const classValue = formData.get("class") as string;
     const branch = formData.get("branch") as string;
-
-    if (!bio || !classValue || !branch) {
-      return { success: false, error: "Failed to update profile" };
-    }
-    if (userRole == roles.student && (!classValue || !branch)) {
-      return { success: false, error: "Failed to update profile" };
-    }
-
-    if (bio == prev_bio && classValue === prev_class && branch == prev_branch) {
-      return { success: false, error: "Failed to update profile" };
-    }
-
     const profileImage = formData.get("profileImage") as File;
     const backgroundImage = formData.get("backgroundImage") as File;
 
@@ -52,12 +43,67 @@ export async function updateUserProfile(formData: FormData) {
       branch,
     });
 
+    // if (userRole == roles.student && (!classValue || !branch)) {
+
+    //   return { success: false, message: "Failed to update profile" };
+    // }
+
+    // if (
+    //   !profileImage &&
+    //   !backgroundImage &&
+    //   bio == prev_bio &&
+    //   classValue === prev_class &&
+    //   branch == prev_branch
+    // ) {
+    //   return { success: false, message: "Failed to update profile" };
+    // }
+
+    const uploadsArray = [];
+    if (profileImage) {
+      uploadsArray.push(uploadFile(profileImage, "profile_picture", userId));
+    }
+    if (backgroundImage) {
+      uploadsArray.push(uploadFile(backgroundImage, "cover_picture", userId));
+    }
+
+    const uploadsUrls = await Promise.all(uploadsArray);
+
+    console.log("uploads", uploadsUrls);
+
+    const supabase = await createClient();
+
+    const { data: existingUser } = await supabase
+      .from("users")
+      .select("id")
+      .eq("id", userId)
+      .single();
+
+    if (!existingUser) {
+      return { success: false, message: "User not found" };
+    }
+
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({
+        bio,
+        profile_url: uploadsUrls[0],
+        background_url: uploadsUrls[1],
+        class: classValue,
+        branch,
+      })
+      .eq("id", userId);
+
+    if (updateError) {
+      console.error("Error updating profile:", updateError);
+      return { success: false, message: "Failed to update profile" };
+    }
+
     // Revalidate the profile page to show updated data
     revalidatePath("/profile");
 
     return { success: true, message: "Profile updated successfully" };
   } catch (error) {
     console.error("Error updating profile:", error);
-    return { success: false, error: "Failed to update profile" };
+    return { success: false, message: "Failed to update profile" };
   }
 }
