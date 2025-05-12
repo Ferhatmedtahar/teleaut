@@ -6,12 +6,6 @@ import { roles } from "@/types/roles.enum";
 import { revalidatePath } from "next/cache";
 
 export async function updateUserProfile(formData: FormData) {
-  // 1. Get the current user ID from your auth system.
-  // 2.get the values based on the role.
-  // 3.call api and updload the images to bunny.
-  // 4. Update the user record and urls.
-  //if error return { success: false, error: "Failed to update profile" };
-  //if success return { success: true , message: "Profile updated successfully" };
   try {
     const userRole = formData.get("role") as string;
     let prev_class: string = "";
@@ -71,8 +65,6 @@ export async function updateUserProfile(formData: FormData) {
     }
 
     const uploadsUrls = await Promise.all(uploadsArray);
-
-    console.log("uploads", uploadsUrls);
 
     const supabase = await createClient();
 

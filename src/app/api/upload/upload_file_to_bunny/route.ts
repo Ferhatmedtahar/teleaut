@@ -140,8 +140,6 @@ async function storeFileReference(
   const STORAGE_ZONE_NAME = process.env.BUNNY_STORAGE_ZONE!;
 
   const pullUrl = url.replace(`${STORAGE_ZONE_NAME}/`, "");
-  console.log("url", url);
-  console.log("pullUrl", pullUrl);
   const file_path = url.replace(`https://${hostname}/${STORAGE_ZONE_NAME}`, "");
   // Store file reference in Supabase
   const { error } = await supabase.from("user_files").insert({
@@ -151,7 +149,6 @@ async function storeFileReference(
     file_path,
     created_at: new Date().toISOString(),
   });
-
   if (error) {
     console.error("Failed to store file reference:", error);
     throw new Error("Failed to store file reference in database");
