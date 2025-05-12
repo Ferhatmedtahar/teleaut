@@ -1,21 +1,18 @@
 "use server";
 
-import { verifyToken } from "@/app/(auth)/_lib/verifyToken";
 import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
 
-export async function getUserById() {
-  const cookiesStore = await cookies();
+export async function getUserById(userId: string) {
+  if (!userId) {
+    return { success: false, message: "User not found" };
+  }
 
-  const token = cookiesStore.get("token")?.value;
-  if (!token) return { success: false, message: "Token not found" };
-  const payload = await verifyToken(token);
   const supabase = await createClient();
 
   const { data: user } = await supabase
     .from("users")
     .select("*")
-    .eq("id", payload.id)
+    .eq("id", userId)
     .single();
 
   if (!user) return { success: false, message: "User not found" };

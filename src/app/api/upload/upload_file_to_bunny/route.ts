@@ -5,9 +5,8 @@ import { join } from "path";
 import { v4 as uuidv4 } from "uuid";
 
 import fs from "fs";
-import https from "https";
-import { Http2ServerResponse } from "http2";
 import { IncomingMessage } from "http";
+import https from "https";
 export async function POST(request: NextRequest) {
   try {
     console.log("File upload route hit!");
@@ -31,10 +30,10 @@ export async function POST(request: NextRequest) {
     let folderPath = "";
     switch (fileType) {
       case "profile_picture":
-        folderPath = "profiles";
+        folderPath = "profiles/profile-pictures";
         break;
       case "cover_picture":
-        folderPath = "profiles";
+        folderPath = "profiles/cover-pictures";
         break;
       case "diploma":
         folderPath = "documents/diplomas";
@@ -67,7 +66,6 @@ export async function POST(request: NextRequest) {
     //   await requestVideoConversion(finalPath);
     // }
 
-    console.log("url", url);
     if (userId) {
       await storeFileReference(userId, fileType, url);
     }
@@ -118,9 +116,7 @@ async function uploadToBunny(
       res.on("end", () => {
         if (res.statusCode === 200 || res.statusCode === 201) {
           // Construct the CDN URL
-          const cdnUrl = `https://${
-            process.env.BUNNY_PULL_ZONE ?? HOSTNAME
-          }/${STORAGE_ZONE_NAME}/${destinationPath}`;
+          const cdnUrl = `https://${process.env.BUNNY_PULL_ZONE}/${destinationPath}`;
           resolve(cdnUrl);
         } else {
           reject(`Upload failed with status ${res.statusCode}: ${body}`);
@@ -140,18 +136,19 @@ async function storeFileReference(
 ): Promise<void> {
   console.log("storeFileReference called", userId, fileType, url);
   const supabase = await createClient();
+  const hostname = process.env.BUNNY_PULL_ZONE!;
   const STORAGE_ZONE_NAME = process.env.BUNNY_STORAGE_ZONE!;
-  const hostname = process.env.BUNNY_HOST!;
+
+  const pullUrl = url.replace(`${STORAGE_ZONE_NAME}/`, "");
   const file_path = url.replace(`https://${hostname}/${STORAGE_ZONE_NAME}`, "");
   // Store file reference in Supabase
   const { error } = await supabase.from("user_files").insert({
     user_id: userId,
     file_type: fileType,
-    file_url: url,
+    file_url: pullUrl,
     file_path,
     created_at: new Date().toISOString(),
   });
-
   if (error) {
     console.error("Failed to store file reference:", error);
     throw new Error("Failed to store file reference in database");

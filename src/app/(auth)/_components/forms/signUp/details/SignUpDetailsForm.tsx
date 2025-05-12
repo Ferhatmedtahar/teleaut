@@ -3,13 +3,6 @@ import { useSignUpStore } from "@/app/(auth)/sign-up/store";
 import { Button } from "@/components/common/buttons/Button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,6 +11,15 @@ import { z } from "zod";
 
 import { signUpStudent } from "@/actions/auth/sign-up/signUpStudent.action";
 import { signUpTeacher } from "@/actions/auth/sign-up/signUpTeacher.action";
+// import BranchSelector from "@/components/common/select/BranchSelector";
+import ClassSelector from "@/components/common/select/ClassSelector";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
 import { toast } from "sonner";
 import { SignUpSchema } from "../SignUp.schema";
@@ -339,18 +341,7 @@ export default function SignUpDetailsForm() {
           />
           <div className="flex flex-col gap-1">
             <Label>Classe</Label>
-            <Select onValueChange={handleClassChange}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Sélectionnez votre classe" />
-              </SelectTrigger>
-              <SelectContent>
-                {allClasses.map((classOption) => (
-                  <SelectItem key={classOption} value={classOption}>
-                    {classOption}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <ClassSelector handleClassChange={handleClassChange} />
             <Input type="hidden" {...register("class")} />
             {"class" in errors && errors.class && (
               <p className="text-red-500">{errors.class.message}</p>
@@ -359,6 +350,13 @@ export default function SignUpDetailsForm() {
 
           <div className="flex flex-col gap-1">
             <Label>Filière</Label>
+            {/* <BranchSelector
+              handleBranchChange={handleBranchChange}
+              selectedClass={
+                selectedClass as keyof typeof studentClassesAndBranches
+              }
+              availableBranches={availableBranches}
+            /> */}
             <Select
               disabled={!selectedClass || availableBranches.length <= 1}
               onValueChange={handleBranchChange}

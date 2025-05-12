@@ -10,10 +10,6 @@ export async function uploadFile(
   formData.append("file", file);
   formData.append("fileType", fileType);
   formData.append("userId", userId);
-  console.log(
-    "upload file function called with ",
-    Object.fromEntries(formData)
-  );
   try {
     const response = await fetch(
       `${BASE_URL}/api/upload/upload_file_to_bunny`,
