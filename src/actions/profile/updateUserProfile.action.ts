@@ -35,6 +35,10 @@ export async function updateUserProfile(formData: FormData) {
     const profileImage = formData.get("profileImage") as File;
     const backgroundImage = formData.get("backgroundImage") as File;
 
+    const removeProfileImage = formData.get("removeProfileImage") as string;
+    const removeBackgroundImage = formData.get(
+      "removeBackgroundImage"
+    ) as string;
     console.log("Updating profile with:", {
       bio,
       profileImage: profileImage,
@@ -82,15 +86,85 @@ export async function updateUserProfile(formData: FormData) {
       return { success: false, message: "User not found" };
     }
 
+    let profile: string = "";
+    let background: string = "";
+    uploadsUrls.forEach((url) => {
+      if (url.includes("profiles/profile-pictures")) {
+        profile = url;
+      } else if (url.includes("profiles/cover-pictures")) {
+        background = url;
+      }
+    });
+
+    const updateObject: {
+      bio: string;
+      profile_url?: string | null;
+      background_url?: string | null;
+      class?: string;
+      branch?: string;
+    } = {
+      bio,
+      class: classValue,
+      branch,
+    };
+
+    if (removeProfileImage === "true") {
+      updateObject.profile_url = null;
+      // Delete record in user_files if needed
+      const { error: deleteError } = await supabase
+        .from("user_files")
+        .delete()
+        .eq("user_id", userId)
+        .eq("file_type", "profile_picture");
+
+      if (deleteError) {
+        console.error("Error deleting profile file record:", deleteError);
+      }
+    }
+
+    if (removeBackgroundImage === "true") {
+      updateObject.background_url = null;
+      // Delete record in user_files if needed
+      const { error: deleteError } = await supabase
+        .from("user_files")
+        .delete()
+        .eq("user_id", userId)
+        .eq("file_type", "cover_picture");
+
+      if (deleteError) {
+        console.error("Error deleting profile file record:", deleteError);
+      }
+    }
+
+    if (profile) {
+      updateObject.profile_url = profile;
+      const { error: updateError } = await supabase
+        .from("user_files")
+        .delete()
+        .eq("user_id", userId)
+        .eq("file_type", "profile_picture");
+      if (updateError) {
+        console.error("Error updating profile:", updateError);
+        return { success: false, message: "Failed to update profile" };
+      }
+    }
+
+    if (background) {
+      updateObject.background_url = background;
+      const { error: updateError } = await supabase
+        .from("user_files")
+        .delete()
+        .eq("user_id", userId)
+        .eq("file_type", "cover_picture");
+      if (updateError) {
+        console.error("Error updating profile:", updateError);
+        return { success: false, message: "Failed to update profile" };
+      }
+    }
+
     const { error: updateError } = await supabase
       .from("users")
-      .update({
-        bio,
-        profile_url: uploadsUrls[0],
-        background_url: uploadsUrls[1],
-        class: classValue,
-        branch,
-      })
+      .update(updateObject)
       .eq("id", userId);
 
     if (updateError) {
