@@ -2,6 +2,7 @@
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
 import { TeacherFile } from "@/types/TeacherFile";
+import { revalidatePath } from "next/cache";
 // import { revalidatePath } from "next/cache";
 //! Admin statistics
 
@@ -111,29 +112,13 @@ export async function getStudentsList() {
 
     if (error) {
       console.error("Error fetching students:", error);
-      throw new Error("Failed to fetch students");
+      return { success: false, error: "Failed to fetch students" };
     }
 
-    return data || [];
+    return { success: true, data: data || [] };
   } catch (error) {
     console.error("Error in getStudentsList:", error);
-    // Return dummy data in case of error
-    return [
-      {
-        id: "1",
-        first_name: "John",
-        last_name: "Doe",
-        email: "john.doe@example.com",
-        created_at: "2023-01-15T10:30:00Z",
-      },
-      {
-        id: "2",
-        first_name: "Jane",
-        last_name: "Smith",
-        email: "jane.smith@example.com",
-        created_at: "2023-02-20T14:45:00Z",
-      },
-    ];
+    return { success: false, error: "Failed to fetch students" };
   }
 }
 
@@ -148,11 +133,11 @@ export async function deleteStudent(id: string) {
       throw new Error("Failed to delete student");
     }
 
-    // revalidatePath("/admin/students-list");
-    return { success: true };
+    revalidatePath("/admin/students-list");
+    return { success: true, message: "Student deleted successfully" };
   } catch (error) {
     console.error("Error in deleteStudent:", error);
-    return { success: false, error: "Failed to delete student" };
+    return { success: false, message: "Failed to delete student" };
   }
 }
 

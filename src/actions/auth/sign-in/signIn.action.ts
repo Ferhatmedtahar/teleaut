@@ -30,7 +30,7 @@ export async function signInAction(
     if (!data) {
       return {
         state: "ERROR",
-        error: "User not found",
+        error: "Invalid email or password",
         inputs: { email, password },
       };
     }
@@ -45,7 +45,7 @@ export async function signInAction(
     if (data?.verification_status !== VERIFICATION_STATUS.APPROVED) {
       return {
         state: "ERROR",
-        error: "Sign in Action not allowed",
+        error: "Account not verified",
         inputs: { email, password },
       };
     }

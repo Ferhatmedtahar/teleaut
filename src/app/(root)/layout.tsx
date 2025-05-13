@@ -4,6 +4,7 @@ import { Navbar } from "@/components/navigation/NavBar";
 import AppSidebar from "@/components/navigation/Sidebar";
 import { createClient } from "@/lib/supabase/server";
 import { UserProvider } from "@/providers/UserProvider";
+import { redirect } from "next/navigation";
 import AuthGuard from "../(auth)/_components/AuthGuardRouter";
 
 export default async function RootLayout({
@@ -11,6 +12,7 @@ export default async function RootLayout({
 }: {
   readonly children: React.ReactNode;
 }) {
+  const baseurl = process.env.NEXT_PUBLIC_SITE_URL!;
   const result = await getCurrentUser();
   if (!result.success || !result.user) return null;
 
@@ -24,7 +26,11 @@ export default async function RootLayout({
 
   // if (userInfo?.verification_status !== "approved") return redirect("/sign-in");
 
-  if (!user || !userInfo) return null;
+  if (!userInfo) {
+    console.log("User info not found, logging out.");
+    return redirect(`${baseurl}/api/auth/signout`);
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-background  selection:bg-yellow-100  selection:text-[#355869] ">
       <UserProvider user={user}>

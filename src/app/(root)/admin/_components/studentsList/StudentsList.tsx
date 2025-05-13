@@ -20,88 +20,97 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Trash2 } from "lucide-react";
+import { formatDate } from "@/lib/helpers/formatDate";
+import { Trash2, User } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
 import { deleteStudent } from "../../_lib/admin";
-// import { deleteStudent } from "../../_lib/admin";
 
+const deleteStudentSchema = z.string();
+type deleteStudentSchemaType = z.infer<typeof deleteStudentSchema>;
 interface Student {
   id: string;
   first_name: string;
   last_name: string;
   email: string;
+  class: string;
+  branch: string;
   created_at: string;
 }
 
 interface StudentsListClientProps {
-  initialStudents: Student[];
+  readonly students: Student[];
 }
 
 export default function StudentsListClient({
-  initialStudents,
+  students,
 }: StudentsListClientProps) {
-  const [students, setStudents] = useState(initialStudents);
+  // const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
-  const [studentToDelete, setStudentToDelete] = useState<string | null>(null);
 
-  const handleDeleteStudent = async (id: string) => {
-    setIsDeleting(true);
+  const onDelete = async (id: string) => {
     try {
+      setIsDeleting(true);
+      console.log(id, "id");
       const result = await deleteStudent(id);
       if (result.success) {
-        setStudents(students.filter((student) => student.id !== id));
+        toast.success(result.message);
       }
+      if (!result.success) {
+        toast.error(result.message);
+      }
+      // router.refresh();
     } catch (error) {
       console.error("Error deleting student:", error);
     } finally {
       setIsDeleting(false);
-      setStudentToDelete(null);
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Students List</h2>
-        <div className="flex gap-2">
-          <Button variant="outline">Export CSV</Button>
-        </div>
       </div>
 
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="hover:bg-primary-200/40 ">
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Joined</TableHead>
+              <TableHead>Class</TableHead>
+              <TableHead>Branch</TableHead>
+              <TableHead>Profile</TableHead>
               <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {students.map((student) => (
-              <TableRow key={student.id}>
+              <TableRow key={student.id} className="hover:bg-primary-200/40 ">
                 <TableCell className="font-medium">
                   {student.first_name} {student.last_name}
                 </TableCell>
                 <TableCell>{student.email}</TableCell>
                 <TableCell>{formatDate(student.created_at)}</TableCell>
+                <TableCell>{student.class}</TableCell>
+                <TableCell>{student.branch}</TableCell>
+                <TableCell>
+                  <Link href={`/profile/${student.id}`}>
+                    <User className="h-4 w-4" />
+                  </Link>
+                </TableCell>
                 <TableCell>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                        onClick={() => setStudentToDelete(student.id)}
+                        className="text-red-500 hover:text-red-700 "
+                        disabled={isDeleting}
                       >
                         <Trash2 className="h-4 w-4" />
                         <span className="sr-only">Delete</span>
@@ -123,7 +132,7 @@ export default function StudentsListClient({
                         </AlertDialogCancel>
                         <AlertDialogAction
                           className="bg-red-500 hover:bg-red-600"
-                          onClick={() => handleDeleteStudent(student.id)}
+                          onClick={() => onDelete(student.id)}
                           disabled={isDeleting}
                         >
                           {isDeleting ? "Deleting..." : "Delete"}

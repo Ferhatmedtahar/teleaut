@@ -30,7 +30,7 @@ export default function TeachersListLoading() {
           </TableHeader>
           <TableBody>
             {Array.from({ length: 5 }).map((_, index) => (
-              <TableRow key={index}>
+              <TableRow key={index * 2}>
                 <TableCell>
                   <Skeleton className="h-5 w-32" />
                 </TableCell>
