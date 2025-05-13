@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 
-import LoadingSkeleton from "./_components/LoadingDashboardSkeleton";
-import StatsCards from "./_components/StatsCards";
-import UserChart from "./_components/user-chart";
+import LoadingSkeleton from "./_components/dashboard/LoadingDashboardSkeleton";
+import StatsCards from "./_components/dashboard/StatsCards";
+import UserChart from "./_components/dashboard/user-chart";
 import { getAdminStats } from "./_lib/admin";
 
 export const metadata = {

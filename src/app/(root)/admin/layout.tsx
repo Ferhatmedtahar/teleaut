@@ -8,6 +8,8 @@ import type React from "react";
 function getTabFromPath(path: string): string {
   if (path.includes("/admin/unverified")) return "unverified";
   if (path.includes("/admin/videos")) return "videos";
+  if (path.includes("/admin/students-list")) return "students-list";
+  if (path.includes("/admin/teachers-list")) return "teachers-list";
   return "dashboard";
 }
 export default function AdminLayout({
@@ -16,9 +18,7 @@ export default function AdminLayout({
   readonly children: React.ReactNode;
 }) {
   const pathName = usePathname();
-
   const user = useUser();
-  console.log("admin layout user", user);
   if (!user || user.role !== "admin") {
     redirect("/");
   }
@@ -31,8 +31,9 @@ export default function AdminLayout({
         value={getTabFromPath(pathName)}
         defaultValue="dashboard"
         className="w-full mb-6"
+        key={pathName}
       >
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-5" key={pathName}>
           <TabsTrigger value="dashboard" key={"dashboard"} asChild>
             <Link href="/admin">Dashboard</Link>
           </TabsTrigger>
@@ -41,6 +42,20 @@ export default function AdminLayout({
           </TabsTrigger>
           <TabsTrigger value="videos" key={"/admin/videos"} asChild>
             <Link href="/admin/videos">Videos</Link>
+          </TabsTrigger>
+          <TabsTrigger
+            value="students-list"
+            key={"/admin/list-students"}
+            asChild
+          >
+            <Link href="/admin/students-list">Students List</Link>
+          </TabsTrigger>
+          <TabsTrigger
+            value="teachers-list"
+            key={"/admin/list-teachers"}
+            asChild
+          >
+            <Link href="/admin/teachers-list">Teachers List</Link>
           </TabsTrigger>
         </TabsList>
       </Tabs>

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { getTeacherById } from "../../_lib/admin";
-import VerifyTeacherButton from "../verify-teacher-button";
+import VerifyTeacherButton from "./verify-teacher-button";
 
 export default async function TeacherVerificationActions({
   teacher,

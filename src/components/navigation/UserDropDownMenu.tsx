@@ -30,7 +30,7 @@ export default function UserDropDownMenu({
     <DropdownMenu>
       <DropdownMenuTrigger
         asChild
-        className="p-5 focus:outline-none focus:ring-0 ring-0 shadow-none hover:bg-primary-200/50 dark:hover:bg-primary-50/20"
+        className="p-5 focus:outline-none focus:ring-0 ring-0 shadow-none hover:bg-primary-200/50 dark:hover:bg-primary-50/40 dark:text-white"
       >
         <Button variant="ghost" size="sm" className="gap-2">
           <Avatar className="h-8 w-8">
@@ -46,20 +46,24 @@ export default function UserDropDownMenu({
           <ChevronDown className="h-4 w-4 hidden sm:block" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>
+      <DropdownMenuContent
+        align="end"
+        className="dark:bg-background dark:border-primary-800"
+      >
+        <DropdownMenuItem className="hover:cursor-pointer ">
           <Link href="/profile">
             <span>Profile</span>
           </Link>
         </DropdownMenuItem>
         {role === "admin" && (
-          <DropdownMenuItem>
+          <DropdownMenuItem className="hover:cursor-pointer">
             <Link href="/admin">
               <span>Administrateur</span>
             </Link>
           </DropdownMenuItem>
         )}
         <DropdownMenuItem
+          className="hover:cursor-pointer"
           onClick={async () => {
             await signOut();
             redirect("/sign-in");

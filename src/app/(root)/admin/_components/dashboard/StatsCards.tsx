@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAdminStats } from "../_lib/admin";
+import { getAdminStats } from "../../_lib/admin";
 
 export default function StatsCards({
   stats,
@@ -14,7 +14,7 @@ export default function StatsCards({
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
       {statsArray.length > 0 &&
         statsArray.map(([key, value]) => (
-          <Card key={key}>
+          <Card key={`${key}-${value}`}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium capitalize">
                 {separateNameByCapitalLetter(key)}
