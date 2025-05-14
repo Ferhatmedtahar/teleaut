@@ -140,7 +140,7 @@ async function storeFileReference(
   const STORAGE_ZONE_NAME = process.env.BUNNY_STORAGE_ZONE!;
 
   const pullUrl = url.replace(`${STORAGE_ZONE_NAME}/`, "");
-  const file_path = url.replace(`https://${hostname}/${STORAGE_ZONE_NAME}`, "");
+  const file_path = url.replace(`https://${hostname}/`, "");
   // Store file reference in Supabase
   const { error } = await supabase.from("user_files").insert({
     user_id: userId,

@@ -33,44 +33,26 @@ export async function updateUserProfile(formData: FormData) {
     const removeBackgroundImage = formData.get(
       "removeBackgroundImage"
     ) as string;
-    console.log("Updating profile with:", {
+    console.table({
+      prev_bio,
+      prev_class,
+      prev_branch,
       bio,
-      profileImage: profileImage,
-      backgroundImage: backgroundImage,
-      class: classValue,
+      userId,
+      classValue,
       branch,
+      profileImage,
+      backgroundImage,
+      removeProfileImage,
+      removeBackgroundImage,
     });
 
-    // if (userRole == roles.student && (!classValue || !branch)) {
-
-    //   return { success: false, message: "Failed to update profile" };
-    // }
-
-    // if (
-    //   !profileImage &&
-    //   !backgroundImage &&
-    //   bio == prev_bio &&
-    //   classValue === prev_class &&
-    //   branch == prev_branch
-    // ) {
-    //   return { success: false, message: "Failed to update profile" };
-    // }
-
-    const uploadsArray = [];
-    if (profileImage) {
-      uploadsArray.push(uploadFile(profileImage, "profile_picture", userId));
-    }
-    if (backgroundImage) {
-      uploadsArray.push(uploadFile(backgroundImage, "cover_picture", userId));
-    }
-
-    const uploadsUrls = await Promise.all(uploadsArray);
-
+    //REVIEW
     const supabase = await createClient();
 
     const { data: existingUser } = await supabase
       .from("users")
-      .select("id")
+      .select("id, profile_url, background_url")
       .eq("id", userId)
       .single();
 
@@ -80,13 +62,6 @@ export async function updateUserProfile(formData: FormData) {
 
     let profile: string = "";
     let background: string = "";
-    uploadsUrls.forEach((url) => {
-      if (url.includes("profiles/profile-pictures")) {
-        profile = url;
-      } else if (url.includes("profiles/cover-pictures")) {
-        background = url;
-      }
-    });
 
     const updateObject: {
       bio: string;
@@ -116,7 +91,6 @@ export async function updateUserProfile(formData: FormData) {
 
     if (removeBackgroundImage === "true") {
       updateObject.background_url = null;
-      // Delete record in user_files if needed
       const { error: deleteError } = await supabase
         .from("user_files")
         .delete()
@@ -127,31 +101,50 @@ export async function updateUserProfile(formData: FormData) {
         console.error("Error deleting profile file record:", deleteError);
       }
     }
-
-    if (profile) {
-      updateObject.profile_url = profile;
-      const { error: updateError } = await supabase
+    if (profileImage && existingUser.profile_url) {
+      const { error: deleteError } = await supabase
         .from("user_files")
         .delete()
         .eq("user_id", userId)
         .eq("file_type", "profile_picture");
-      if (updateError) {
-        console.error("Error updating profile:", updateError);
-        return { success: false, message: "Failed to update profile" };
+      if (deleteError) {
+        console.error("Error deleting profile file record:", deleteError);
       }
     }
-
-    if (background) {
-      updateObject.background_url = background;
-      const { error: updateError } = await supabase
+    if (backgroundImage && existingUser.background_url) {
+      const { error: deleteError } = await supabase
         .from("user_files")
         .delete()
         .eq("user_id", userId)
         .eq("file_type", "cover_picture");
-      if (updateError) {
-        console.error("Error updating profile:", updateError);
-        return { success: false, message: "Failed to update profile" };
+      if (deleteError) {
+        console.error("Error deleting profile file record:", deleteError);
       }
+    }
+
+    const uploadsArray = [];
+    if (profileImage) {
+      uploadsArray.push(uploadFile(profileImage, "profile_picture", userId));
+    }
+    if (backgroundImage) {
+      uploadsArray.push(uploadFile(backgroundImage, "cover_picture", userId));
+    }
+
+    const uploadsUrls = await Promise.all(uploadsArray);
+
+    uploadsUrls.forEach((url) => {
+      if (url.includes("profiles/profile-pictures")) {
+        profile = url;
+      } else if (url.includes("profiles/cover-pictures")) {
+        background = url;
+      }
+    });
+
+    if (profile) {
+      updateObject.profile_url = profile;
+    }
+    if (background) {
+      updateObject.background_url = background;
     }
 
     const { error: updateError } = await supabase

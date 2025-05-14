@@ -1,7 +1,9 @@
+"use server";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
 import { TeacherFile } from "@/types/TeacherFile";
-
+import { revalidatePath } from "next/cache";
+// import { revalidatePath } from "next/cache";
 //! Admin statistics
 
 export async function getAdminStats() {
@@ -95,4 +97,104 @@ export async function getTeacherFiles(
   }
 
   return data || [];
+}
+
+//!Get all students
+export async function getStudentsList() {
+  "use server";
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("role", "student")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching students:", error);
+      return { success: false, error: "Failed to fetch students" };
+    }
+
+    return { success: true, data: data || [] };
+  } catch (error) {
+    console.error("Error in getStudentsList:", error);
+    return { success: false, error: "Failed to fetch students" };
+  }
+}
+
+//!Delete a student
+export async function deleteStudent(id: string) {
+  const supabase = await createClient();
+  try {
+    const { error } = await supabase.from("users").delete().eq("id", id);
+
+    if (error) {
+      console.error("Error deleting student:", error);
+      throw new Error("Failed to delete student");
+    }
+
+    revalidatePath("/admin/students-list");
+    return { success: true, message: "Student deleted successfully" };
+  } catch (error) {
+    console.error("Error in deleteStudent:", error);
+    return { success: false, message: "Failed to delete student" };
+  }
+}
+interface Teacher {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  verification_status: string;
+  specialties: string[];
+  created_at: string;
+}
+//!Get all teachers
+export async function getTeachersList(): Promise<{
+  data?: Teacher[];
+  success: boolean;
+  message?: string;
+}> {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("role", "teacher")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching teachers:", error);
+      return { success: false, message: "Failed to fetch teachers" };
+    }
+
+    return {
+      success: true,
+      message: "Teachers fetched successfully",
+      data: data || [],
+    };
+  } catch (error) {
+    console.error("Error in getTeachersList:", error);
+    return { success: false, message: "Failed to fetch teachers" };
+  }
+}
+
+//!Delete a teacher
+export async function deleteTeacher(id: string) {
+  try {
+    const supabase = await createClient();
+
+    const { error } = await supabase.from("users").delete().eq("id", id);
+
+    if (error) {
+      console.error("Error deleting teacher:", error);
+      return { success: false, message: "Failed to delete teacher" };
+    }
+    revalidatePath("/admin/teachers-list");
+    return { success: true, message: "Teacher deleted successfully" };
+  } catch (error) {
+    console.error("Error in deleteTeacher:", error);
+    return { success: false, message: "Failed to delete teacher" };
+  }
 }

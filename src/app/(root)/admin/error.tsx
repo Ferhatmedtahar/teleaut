@@ -3,12 +3,12 @@
 import { Button } from "@/components/common/buttons/Button";
 import { useEffect } from "react";
 
-export default function Error({
+export default function ErrorPage({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
-  reset: () => void;
+  readonly error: Error & { digest?: string };
+  readonly reset: () => void;
 }) {
   useEffect(() => {
     console.error(error);

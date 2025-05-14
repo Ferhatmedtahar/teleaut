@@ -3,8 +3,10 @@
 import { Button } from "@/components/common/buttons/Button";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@/providers/UserProvider";
-import { Bell, Plus, Search } from "lucide-react";
+import { Bell, Plus, Search, X } from "lucide-react";
+import Form from "next/form";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import UserDropDownMenu from "./UserDropDownMenu";
 
 interface NavbarProps {
@@ -18,6 +20,16 @@ interface NavbarProps {
 export function Navbar({ className, userInfo }: NavbarProps) {
   const user = useUser();
   const role = user?.role;
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Focus the search input when mobile search is shown
+  useEffect(() => {
+    if (showMobileSearch && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [showMobileSearch]);
+
   if (!user) return null;
 
   return (
@@ -27,64 +39,50 @@ export function Navbar({ className, userInfo }: NavbarProps) {
       <div className="flex w-full items-center justify-between">
         {/* Left side with menu toggle and logo */}
         <div className="flex items-center gap-4">
-          {/* <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className="md:hidden"
-            aria-label="Open sidebar"
-          >
-            <Menu className="h-5 w-5" />
-          </Button> */}
-
           <Link href="/" className="flex items-center">
             <span className="text-xl font-bold">LOGO</span>
           </Link>
         </div>
 
+        {/* Desktop search */}
         <div className="relative mx-auto hidden w-full max-w-md md:block">
-          <Input
-            type="search"
-            placeholder="Chercher"
-            className="pl-10 pr-10 rounded-full bg-muted"
-          />
-          <div className="absolute inset-y-0 left-3 flex items-center">
-            <Search className="h-5 w-5 text-muted-foreground" />
-          </div>
-          {/* <div className="absolute inset-y-0 right-3 flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="h-5 w-5 text-muted-foreground"
-            >
-              <path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z" />
-              <path d="M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z" />
-            </svg>
-          </div> */}
+          <Form action="/">
+            <Input
+              type="search"
+              name="query"
+              placeholder="Chercher"
+              className="pl-10 pr-10 rounded-full bg-muted"
+            />
+
+            <div className="absolute inset-y-0 left-3 flex items-center">
+              <Search className="h-5 w-5 dark:text-white/80 text-muted-foreground" />
+            </div>
+            <button type="submit" className="hidden">
+              Search
+            </button>
+          </Form>
         </div>
-        {/* TODO fix this on the phone to do the search correctly */}
-        {/* Mobile search button */}
-        <Link href="/search" passHref>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            aria-label="Go to search"
-          >
-            <Search className="h-5 w-5" />
-          </Button>
-        </Link>
+
+        {/* Mobile search trigger button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden"
+          aria-label="Open search"
+          onClick={() => setShowMobileSearch(true)}
+        >
+          <Search className="h-5 w-5" />
+        </Button>
 
         {/* Right side with buttons and profile */}
         <div className="flex items-center gap-2 md:gap-4">
-          {(role == "teacher" || role == "admin") && (
+          {(role === "teacher" || role === "admin") && (
             <>
               <Link href="/create" passHref>
                 <Button
                   variant="default"
                   size="lg"
-                  className="gap-1 hidden sm:flex "
+                  className="gap-1 hidden sm:flex"
                 >
                   <Plus className="h-4 w-4" />
                   <span>Publier</span>
@@ -103,13 +101,68 @@ export function Navbar({ className, userInfo }: NavbarProps) {
               </Link>
             </>
           )}
-          <Button variant="ghost" size="icon" className="relative  ">
-            <Bell className="h-5 w-5 " />
+          <Button variant="ghost" size="icon" className="relative">
+            <Bell className="h-5 w-5" />
             <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></span>
           </Button>
           <UserDropDownMenu userInfo={userInfo} />
         </div>
       </div>
+
+      {/* Mobile search overlay - YouTube style */}
+      {showMobileSearch && (
+        <div className="fixed inset-0 bg-background dark:bg-[#000211] z-50 flex flex-col">
+          <div className="flex items-center p-4 border-b">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowMobileSearch(false)}
+              className="mr-3"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+
+            <Form action="/" className="flex-1">
+              <div className="relative w-full">
+                <Input
+                  ref={searchInputRef}
+                  type="search"
+                  name="query"
+                  placeholder="Chercher"
+                  className="w-full pl-10 pr-4 rounded-full bg-muted"
+                  autoComplete="off"
+                />
+                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <Button
+                  type="submit"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 inset-y-0 my-auto"
+                >
+                  <Search className="h-5 w-5" />
+                </Button>
+              </div>
+            </Form>
+          </div>
+
+          {/* Recent searches could go here */}
+          <div className="flex-1 p-4 overflow-auto">
+            {/* This area could be populated with recent searches or trending topics */}
+            <p className="text-muted-foreground text-sm mb-2">
+              Recherches récentes
+            </p>
+            <div className="space-y-2">
+              {/* This would be a map of recent searches in a real implementation */}
+              <div className="flex items-center p-2 hover:bg-muted rounded-md cursor-pointer">
+                <Search className="h-4 w-4 mr-3 text-muted-foreground" />
+                <span>Exemple de recherche récente</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

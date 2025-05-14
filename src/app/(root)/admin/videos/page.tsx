@@ -1,3 +1,3 @@
-export default function page() {
+export default function VideosPage() {
   return <div>videos here</div>;
 }
