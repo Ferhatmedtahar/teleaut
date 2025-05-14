@@ -22,11 +22,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
-import { CheckCircle, Clock, Eye, Trash2, XCircle } from "lucide-react";
+import { formatDate } from "@/lib/helpers/formatDate";
+import { CheckCircle, Clock, Eye, Mail, Trash2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 import { deleteTeacher } from "../../_lib/admin";
-import { TeacherStatusDialog } from "./TeacherStatusDialog";
 
 interface Teacher {
   id: string;
@@ -39,47 +40,27 @@ interface Teacher {
 }
 
 interface TeachersListClientProps {
-  initialTeachers: Teacher[];
+  readonly teachers: Teacher[];
 }
 
-export default function TeachersListClient({
-  initialTeachers,
-}: TeachersListClientProps) {
-  const [teachers, setTeachers] = useState(initialTeachers);
+export default function TeachersList({ teachers }: TeachersListClientProps) {
   const [isDeleting, setIsDeleting] = useState(false);
-  const [teacherToDelete, setTeacherToDelete] = useState<string | null>(null);
 
   const handleDeleteTeacher = async (id: string) => {
-    setIsDeleting(true);
     try {
+      setIsDeleting(true);
       const result = await deleteTeacher(id);
       if (result.success) {
-        setTeachers(teachers.filter((teacher) => teacher.id !== id));
+        toast.success(result.message);
+      }
+      if (!result.success) {
+        toast.error(result.message);
       }
     } catch (error) {
-      console.error("Error deleting teacher:", error);
+      console.error("Error deleting student:", error);
     } finally {
       setIsDeleting(false);
-      setTeacherToDelete(null);
     }
-  };
-
-  const handleStatusChange = (teacherId: string, newStatus: string) => {
-    setTeachers(
-      teachers.map((teacher) =>
-        teacher.id === teacherId
-          ? { ...teacher, verification_status: newStatus }
-          : teacher
-      )
-    );
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
   };
 
   const getStatusBadge = (status: string) => {
@@ -107,9 +88,10 @@ export default function TeachersListClient({
         );
       case VERIFICATION_STATUS.EMAIL_SENT:
         return (
-          <Badge variant="outline" className="bg-blue-50 text-blue-600">
-            Email Sent
-          </Badge>
+          <div className="flex items-center gap-1">
+            <Mail className="h-4 w-4 text-blue-600" />
+            <span className="bg-blue-50 text-blue-600">Email Sent</span>
+          </div>
         );
       default:
         return <span>{status}</span>;
@@ -120,9 +102,6 @@ export default function TeachersListClient({
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Teachers List</h2>
-        <div className="flex gap-2">
-          <Button variant="outline">Export CSV</Button>
-        </div>
       </div>
 
       <div className="rounded-md border">
@@ -171,27 +150,13 @@ export default function TeachersListClient({
                       </Link>
                     </Button>
 
-                    <TeacherStatusDialog
-                      teacherId={teacher.id}
-                      currentStatus={teacher.verification_status}
-                      onStatusChange={() =>
-                        handleStatusChange(
-                          teacher.id,
-                          teacher.verification_status ===
-                            VERIFICATION_STATUS.PENDING
-                            ? VERIFICATION_STATUS.APPROVED
-                            : VERIFICATION_STATUS.REJECTED
-                        )
-                      }
-                    />
-
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button
                           variant="ghost"
                           size="icon"
                           className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => setTeacherToDelete(teacher.id)}
+                          // onClick={() => setTeacherToDelete(teacher.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                           <span className="sr-only">Delete</span>

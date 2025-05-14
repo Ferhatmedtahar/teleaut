@@ -34,7 +34,7 @@ export default async function TeacherDetails({
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Teacher Review</h2>
         <Button variant="outline" className="border-primary" asChild>
-          <Link href="/admin/unverified">Back to List</Link>
+          <Link href="/admin/teachers-list">Back to List</Link>
         </Button>
       </div>
 

@@ -1,4 +1,4 @@
-import StudentsListClient from "../_components/studentsList/StudentsList";
+import StudentsList from "../_components/studentsList/StudentsList";
 import { getStudentsList } from "../_lib/admin";
 
 export default async function StudentsListPage() {
@@ -12,7 +12,7 @@ export default async function StudentsListPage() {
   }
   return (
     <div className="space-y-6">
-      <StudentsListClient students={students} />
+      <StudentsList students={students} />
     </div>
   );
 }

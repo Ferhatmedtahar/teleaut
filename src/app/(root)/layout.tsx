@@ -27,7 +27,6 @@ export default async function RootLayout({
   // if (userInfo?.verification_status !== "approved") return redirect("/sign-in");
 
   if (!userInfo) {
-    console.log("User info not found, logging out.");
     return redirect(`${baseurl}/api/auth/signout`);
   }
 

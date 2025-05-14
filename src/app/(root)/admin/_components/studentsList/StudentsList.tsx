@@ -25,11 +25,8 @@ import { Trash2, User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import { z } from "zod";
 import { deleteStudent } from "../../_lib/admin";
 
-const deleteStudentSchema = z.string();
-type deleteStudentSchemaType = z.infer<typeof deleteStudentSchema>;
 interface Student {
   id: string;
   first_name: string;
@@ -44,16 +41,12 @@ interface StudentsListClientProps {
   readonly students: Student[];
 }
 
-export default function StudentsListClient({
-  students,
-}: StudentsListClientProps) {
-  // const router = useRouter();
+export default function StudentsList({ students }: StudentsListClientProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const onDelete = async (id: string) => {
     try {
       setIsDeleting(true);
-      console.log(id, "id");
       const result = await deleteStudent(id);
       if (result.success) {
         toast.success(result.message);
@@ -61,7 +54,6 @@ export default function StudentsListClient({
       if (!result.success) {
         toast.error(result.message);
       }
-      // router.refresh();
     } catch (error) {
       console.error("Error deleting student:", error);
     } finally {

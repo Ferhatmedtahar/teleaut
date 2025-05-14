@@ -1,17 +1,10 @@
 import { Button } from "@/components/common/buttons/Button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-import { Suspense } from "react";
-import { getUnverifiedTeachers } from "../_lib/admin";
+import { getUnverifiedTeachers } from "../../_lib/admin";
 
-export const metadata = {
-  title: "Unverified Teachers",
-  description: "Manage unverified teacher accounts",
-};
-
-function TeachersList({
+export default function UnverifiedTeachersList({
   teachers,
 }: {
   readonly teachers: Awaited<ReturnType<typeof getUnverifiedTeachers>>;
@@ -75,53 +68,6 @@ function TeachersList({
           </CardContent>
         </Card>
       ))}
-    </div>
-  );
-}
-
-function TeachersListSkeleton() {
-  return (
-    <div className="grid gap-4">
-      {[1, 2, 3].map((i) => (
-        <Card key={i}>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div>
-                  <Skeleton className="h-5 w-40" />
-                  <Skeleton className="h-4 w-32 mt-2" />
-                  <div className="flex gap-2 mt-2">
-                    <Skeleton className="h-4 w-16" />
-                    <Skeleton className="h-4 w-16" />
-                  </div>
-                </div>
-              </div>
-              <Skeleton className="h-10 w-24" />
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  );
-}
-
-async function UnverifiedTeachersContent() {
-  const teachers = await getUnverifiedTeachers();
-
-  return <TeachersList teachers={teachers} />;
-}
-
-export default function UnverifiedTeachers() {
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Unverified Teachers</h2>
-      </div>
-
-      <Suspense fallback={<TeachersListSkeleton />}>
-        <UnverifiedTeachersContent />
-      </Suspense>
     </div>
   );
 }

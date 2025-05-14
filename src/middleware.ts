@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
 
   // console.log("isAuthPage", isAuthPage);
   // console.log("url", request.url);
-  console.log("token", token);
+  // console.log("token", token);
   // If user is authenticated and tries to access auth pages -> redirect to /
   if (token && isAuthPage) {
     return NextResponse.redirect(new URL("/", request.url));
