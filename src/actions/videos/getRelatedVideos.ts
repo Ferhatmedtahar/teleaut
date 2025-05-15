@@ -1,5 +1,6 @@
 "use server";
 
+import { verifyToken } from "@/app/(auth)/_lib/verifyToken";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 
@@ -10,7 +11,18 @@ export async function getRelatedVideos(
   classValue: string,
   limit = 8
 ) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  if (!token) {
+    return { success: false, data: [], message: "Not authenticated" };
+  }
+
+  const decoded = await verifyToken(token);
+  if (!decoded || !decoded.id) {
+    return { success: false, data: [], message: "Invalid token" };
+  }
+
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -30,14 +42,23 @@ export async function getRelatedVideos(
     `
     )
     .neq("id", currentVideoId)
-    .or(`subject.eq.${subject},class.eq.${classValue}`)
+    .eq("subject", subject)
+    .eq("class", classValue)
     .order("views", { ascending: false })
     .limit(limit);
 
   if (error) {
     console.error("Error fetching related videos:", error);
-    return [];
+    return {
+      success: false,
+      data: [],
+      message: "Failed to fetch related videos",
+    };
   }
 
-  return data || [];
+  return {
+    success: true,
+    data: data || [],
+    message: "Related videos fetched successfully",
+  };
 }

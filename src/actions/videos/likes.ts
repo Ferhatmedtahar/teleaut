@@ -1,15 +1,26 @@
 "use server";
+
+import { verifyToken } from "@/app/(auth)/_lib/verifyToken";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 // Get user's like status for a video
 export async function getUserLikeStatus(videoId: string) {
-  const cookieStore = cookies();
-  const supabase = await createClient();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
-  //todo
-  const userId = "";
+  if (!token) {
+    return { success: false, data: null, message: "Not authenticated" };
+  }
+
+  const decoded = await verifyToken(token);
+  if (!decoded || !decoded.id) {
+    return { success: false, data: null, message: "Invalid token" };
+  }
+
+  const supabase = await createClient();
+  const userId = decoded.id;
 
   const { data, error } = await supabase
     .from("video_likes")
@@ -20,22 +31,35 @@ export async function getUserLikeStatus(videoId: string) {
 
   if (error) {
     if (error.code === "PGRST116") {
-      // No record found
-      return null;
+      return { success: true, data: null, message: "No like status found" };
     }
     console.error("Error fetching user like status:", error);
-    return null;
+    return {
+      success: false,
+      data: null,
+      message: "Failed to fetch like status",
+    };
   }
 
-  return data.is_like;
+  return { success: true, data: data.is_like, message: "Fetched like status" };
 }
 
 // Toggle like/dislike
 export async function toggleVideoLike(videoId: string, isLike: boolean) {
-  const cookieStore = cookies();
-  const supabase = await createClient();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
-  const userId = "";
+  if (!token) {
+    return { success: false, message: "Not authenticated" };
+  }
+
+  const decoded = await verifyToken(token);
+  if (!decoded || !decoded.id) {
+    return { success: false, message: "Invalid token" };
+  }
+
+  const supabase = await createClient();
+  const userId = decoded.id;
 
   // Check if user already liked/disliked
   const { data: existingLike, error: fetchError } = await supabase
@@ -47,27 +71,27 @@ export async function toggleVideoLike(videoId: string, isLike: boolean) {
 
   if (fetchError && fetchError.code !== "PGRST116") {
     console.error("Error checking existing like:", fetchError);
-    return { success: false, error: "Failed to check existing like" };
+    return { success: false, message: "Failed to check existing like" };
   }
 
   let result;
 
   if (existingLike) {
     if (existingLike.is_like === isLike) {
-      // Remove like/dislike if clicking the same button
+      // Remove like/dislike
       result = await supabase
         .from("video_likes")
         .delete()
         .eq("id", existingLike.id);
     } else {
-      // Update like/dislike if changing opinion
+      // Update to new like/dislike
       result = await supabase
         .from("video_likes")
         .update({ is_like: isLike })
         .eq("id", existingLike.id);
     }
   } else {
-    // Create new like/dislike
+    // Insert new like/dislike
     result = await supabase.from("video_likes").insert({
       video_id: videoId,
       user_id: userId,
@@ -77,9 +101,40 @@ export async function toggleVideoLike(videoId: string, isLike: boolean) {
 
   if (result.error) {
     console.error("Error toggling like:", result.error);
-    return { success: false, error: "Failed to update like status" };
+    return { success: false, message: "Failed to update like status" };
   }
 
   revalidatePath(`/videos/${videoId}`);
-  return { success: true };
+  return { success: true, message: "Like status updated" };
+}
+
+// Get video likes count
+export async function getVideoLikesCount(videoId: string) {
+  const supabase = await createClient();
+
+  const { count: likesCount, error: likesError } = await supabase
+    .from("video_likes")
+    .select("*", { count: "exact", head: true })
+    .eq("video_id", videoId)
+    .eq("is_like", true);
+
+  const { count: dislikesCount, error: dislikesError } = await supabase
+    .from("video_likes")
+    .select("*", { count: "exact", head: true })
+    .eq("video_id", videoId)
+    .eq("is_like", false);
+
+  if (likesError || dislikesError) {
+    console.error("Error fetching likes count:", likesError || dislikesError);
+    return {
+      success: false,
+      data: { likes: 0, dislikes: 0 },
+      message: "Failed to fetch likes count",
+    };
+  }
+
+  return {
+    success: true,
+    data: { likes: likesCount ?? 0, dislikes: dislikesCount ?? 0 },
+  };
 }

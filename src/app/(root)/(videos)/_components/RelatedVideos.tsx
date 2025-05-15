@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { getRelatedVideos } from "@/actions/videos/getRelatedVideos";
+import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
-import { formatDistanceToNow } from "date-fns";
-import { getRelatedVideos } from "@/actions/videos/action";
+import { useEffect, useState } from "react";
 
 interface RelatedVideo {
   id: string;
@@ -24,9 +24,9 @@ export default function RelatedVideos({
   subject,
   classValue,
 }: {
-  currentVideoId: string;
-  subject: string;
-  classValue: string;
+  readonly currentVideoId: string;
+  readonly subject: string;
+  readonly classValue: string;
 }) {
   const [videos, setVideos] = useState<RelatedVideo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +34,7 @@ export default function RelatedVideos({
   useEffect(() => {
     const fetchRelatedVideos = async () => {
       setIsLoading(true);
-      const relatedVideos = await getRelatedVideos(
+      const { data: relatedVideos } = await getRelatedVideos(
         currentVideoId,
         subject,
         classValue
@@ -50,8 +50,8 @@ export default function RelatedVideos({
     return (
       <div className="space-y-4">
         <h2 className="text-xl font-semibold mb-4">Explorer</h2>
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="animate-pulse">
+        {[...Array(4)].map((i) => (
+          <div key={i * 2} className="animate-pulse">
             <div className="flex gap-2">
               <div className="bg-gray-200 rounded-lg w-32 h-20"></div>
               <div className="flex-1">

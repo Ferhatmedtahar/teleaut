@@ -4,7 +4,7 @@ import {
   getUserLikeStatus,
   getVideoLikesCount,
   toggleVideoLike,
-} from "@/actions/videos/action";
+} from "@/actions/videos/likes";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { Clock, ThumbsDown, ThumbsUp } from "lucide-react";
@@ -33,7 +33,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
 
   useEffect(() => {
     const fetchLikesData = async () => {
-      const [likesData, userStatus] = await Promise.all([
+      const [{ data: likesData }, { data: userStatus }] = await Promise.all([
         getVideoLikesCount(video.id),
         getUserLikeStatus(video.id),
       ]);
@@ -94,7 +94,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
       setLikesCount(prevLikesCount);
 
       toast.error("Failed to like/dislike video", {
-        description: result.error,
+        description: result.message,
       });
     }
 

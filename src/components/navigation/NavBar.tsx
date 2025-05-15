@@ -40,7 +40,9 @@ export function Navbar({ className, userInfo }: NavbarProps) {
         {/* Left side with menu toggle and logo */}
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center">
-            <span className="text-xl font-bold">LOGO</span>
+            <span className="text-xl font-bold text-black dark:text-white">
+              LOGO
+            </span>
           </Link>
         </div>
 
@@ -102,7 +104,7 @@ export function Navbar({ className, userInfo }: NavbarProps) {
             </>
           )}
           <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
+            <Bell className="h-5 w-5 dark:text-white/80 text-black" />
             <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></span>
           </Button>
           <UserDropDownMenu userInfo={userInfo} />

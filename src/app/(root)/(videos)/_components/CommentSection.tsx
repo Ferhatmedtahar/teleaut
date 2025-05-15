@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  addComment,
-  getVideoComments,
-  togglePinComment,
-} from "@/actions/videos/action";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +12,11 @@ import { z } from "zod";
 
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import {
+  addComment,
+  getVideoComments,
+  togglePinComment,
+} from "@/actions/videos/comments";
 
 const commentSchema = z.object({
   content: z
@@ -60,7 +60,7 @@ export default function CommentSection({ videoId }: { videoId: string }) {
   useEffect(() => {
     const fetchComments = async () => {
       setIsLoading(true);
-      const result = await getVideoComments(videoId, 1);
+      const { data: result } = await getVideoComments(videoId, 1);
       setPinnedComments(result.pinnedComments);
       setComments(result.comments);
       setHasMore(result.hasMore);
@@ -91,7 +91,7 @@ export default function CommentSection({ videoId }: { videoId: string }) {
   const loadMoreComments = async () => {
     setIsLoading(true);
     const nextPage = page + 1;
-    const result = await getVideoComments(videoId, nextPage);
+    const { data: result } = await getVideoComments(videoId, nextPage);
     setComments((prev) => [...prev, ...result.comments]);
     setHasMore(result.hasMore);
     setPage(nextPage);
@@ -151,7 +151,7 @@ export default function CommentSection({ videoId }: { videoId: string }) {
       );
 
       toast.error("Failed to add comment", {
-        description: result.error,
+        description: result.message,
       });
     }
 
@@ -165,14 +165,14 @@ export default function CommentSection({ videoId }: { videoId: string }) {
 
     if (result.success) {
       // Refetch comments to get updated pinned status
-      const commentsData = await getVideoComments(videoId, 1);
+      const { data: commentsData } = await getVideoComments(videoId, 1);
       setPinnedComments(commentsData.pinnedComments);
       setComments(commentsData.comments);
       setHasMore(commentsData.hasMore);
       setPage(1);
     } else {
       toast.error("Failed to pin/unpin comment", {
-        description: result.error,
+        description: result.message,
       });
     }
   };

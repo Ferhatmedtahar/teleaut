@@ -1,4 +1,5 @@
-import { getVideoById, incrementVideoView } from "@/actions/videos/action";
+import { getVideoById } from "@/actions/videos/getVideoById";
+import { incrementVideoView } from "@/actions/videos/views";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import CommentSection from "../../_components/CommentSection";
@@ -26,10 +27,10 @@ export default async function VideoPage({
   );
 }
 
-async function VideoContent({ id }: { id: string }) {
-  const video = await getVideoById(id);
+async function VideoContent({ id }: { readonly id: string }) {
+  const { success, data: video } = await getVideoById(id);
 
-  if (!video) {
+  if (!success) {
     notFound();
   }
 

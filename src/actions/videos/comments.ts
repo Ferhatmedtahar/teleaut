@@ -53,7 +53,87 @@ export async function addComment(videoId: string, formData: FormData) {
   return { success: true, message: "Comment added successfully" };
 }
 
-// Pin or unpin a comment
+//!Get all comments
+export async function getVideoComments(
+  videoId: string,
+  page = 1,
+  pageSize = 10
+) {
+  const supabase = await createClient();
+
+  try {
+    // Fetch pinned comments
+    const { data: pinnedComments, error: pinnedError } = await supabase
+      .from("video_comments")
+      .select(
+        `
+        *,
+        user:user_id (
+          id,
+          name,
+          avatar_url
+        )
+      `
+      )
+      .eq("video_id", videoId)
+      .eq("is_pinned", true)
+      .order("created_at", { ascending: false });
+
+    if (pinnedError) throw pinnedError;
+
+    // Fetch regular comments with pagination
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    const {
+      data: comments,
+      error: commentsError,
+      count,
+    } = await supabase
+      .from("video_comments")
+      .select(
+        `
+        *,
+        user:user_id (
+          id,
+          name,
+          avatar_url
+        )
+      `,
+        { count: "exact" }
+      )
+      .eq("video_id", videoId)
+      .eq("is_pinned", false)
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (commentsError) throw commentsError;
+
+    const hasMore = count ? from + (comments?.length || 0) < count : false;
+
+    return {
+      success: true,
+      data: {
+        pinnedComments: pinnedComments || [],
+        comments: comments || [],
+        hasMore,
+      },
+      message: "Comments fetched successfully",
+    };
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    return {
+      success: false,
+      data: {
+        pinnedComments: [],
+        comments: [],
+        hasMore: false,
+      },
+      message: "Failed to fetch comments",
+    };
+  }
+}
+//!Pin or unpin a comment
 export async function togglePinComment(commentId: string, videoId: string) {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
