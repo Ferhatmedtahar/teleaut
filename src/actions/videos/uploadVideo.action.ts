@@ -1,6 +1,7 @@
 "use server";
 
 import { uploadFile } from "@/app/(auth)/_lib/uploadFile";
+import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 type VideoUploadParams = {
@@ -12,7 +13,7 @@ type VideoUploadParams = {
   subject: string;
   classValue: string;
   description: string;
-  userId: string;
+  teacher_id: string;
 };
 
 export async function uploadVideo({
@@ -22,20 +23,31 @@ export async function uploadVideo({
   subject,
   classValue,
   description,
-  userId,
-}: VideoUploadParams) {
+  notesFile,
+  documentsFile,
+  teacher_id,
+}: VideoUploadParams): Promise<{
+  success: boolean;
+  message?: string;
+  id?: string;
+}> {
   try {
     // Upload video file to Bunny CDN
-    const videoUrl = await uploadFile(videoFile, "video", userId);
+    const videoUrl = await uploadFile(videoFile, "video", teacher_id);
 
-    // Upload thumbnail if provided
     let thumbnailUrl = null;
     if (thumbnailFile) {
-      thumbnailUrl = await uploadFile(thumbnailFile, "thumbnail", userId);
+      thumbnailUrl = await uploadFile(thumbnailFile, "thumbnail", teacher_id);
+    }
+    let notesUrl = null;
+    if (notesFile) {
+      notesUrl = await uploadFile(notesFile, "notes", teacher_id);
+    }
+    let documentsUrl = null;
+    if (documentsFile) {
+      documentsUrl = await uploadFile(documentsFile, "documents", teacher_id);
     }
 
-    // Store video metadata in your database (e.g., Supabase)
-    // This would depend on your database structure
     const videoData = {
       title,
       subject,
@@ -43,21 +55,30 @@ export async function uploadVideo({
       description,
       video_url: videoUrl,
       thumbnail_url: thumbnailUrl,
-      user_id: userId,
+      notes_url: notesUrl,
+      documents_url: documentsUrl,
+      teacher_id,
       created_at: new Date().toISOString(),
     };
 
-    // Example: Store in Supabase
-    // const supabase = await createClient();
-    // const { data, error } = await supabase.from("videos").insert(videoData);
-    // if (error) throw new Error(error.message);
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("videos")
+      .insert(videoData)
+      .select("id")
+      .single();
 
-    // For now, just return the data
-    revalidatePath("/videos");
+    if (error) {
+      console.error("Error storing video in Supabase:", error);
+      return { success: false, message: "Failed to store video in Supabase" };
+    }
+
+    revalidatePath("/");
+    // revalidatePath("/videos");
     return {
       success: true,
       message: "Video uploaded successfully",
-      data: videoData,
+      id: data.id,
     };
   } catch (error) {
     console.error("Error uploading video:", error);

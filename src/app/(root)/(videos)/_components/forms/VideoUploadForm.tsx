@@ -18,7 +18,13 @@ import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { uploadVideo } from "@/actions/videos/uploadVideo.action";
+import { useRouter } from "next/navigation";
 import { uploadVideoSchema, UploadVideoSchemaType } from "./UploadVideoSchema";
+
+function capitalizeFirstLetter(val: string) {
+  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
 
 export default function VideoUploadForm({
   userSpecialties,
@@ -27,6 +33,7 @@ export default function VideoUploadForm({
   readonly userSpecialties: string[];
   readonly userId: string;
 }) {
+  const router = useRouter();
   const subjectOptions = userSpecialties.map((spec) => {
     // Extract the subject from the string
     const match = spec.match(/Professeur d'(.*)/i);
@@ -67,6 +74,8 @@ export default function VideoUploadForm({
   const thumbnailFile = watch("thumbnailFile");
   const notesFile = watch("notesFile");
   const documentsFile = watch("documentsFile");
+
+  console.log("studentClasses", studentClasses);
 
   // Handle file selection for video
   const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,11 +134,17 @@ export default function VideoUploadForm({
       toast.error("Veuillez choisir un fichier vidéo");
       return;
     }
-    if (!data.class) {
+    if (
+      !data.class ||
+      !studentClasses.map((c) => c.toLocaleLowerCase()).includes(data.class)
+    ) {
       toast.error("Veuillez choisir une classe");
       return;
     }
-    if (!data.subject) {
+    if (
+      !data.subject ||
+      !subjectOptions.includes(capitalizeFirstLetter(data.subject))
+    ) {
       toast.error("Veuillez choisir un matière");
       return;
     }
@@ -143,38 +158,37 @@ export default function VideoUploadForm({
     }
 
     try {
-      // Upload video and related files
-      // const result = await uploadVideo({
-      //   videoFile: data.videoFile,
-      //   thumbnailFile: data.thumbnailFile || null,
-      //   notesFile: data.notesFile || null,
-      //   documentsFile: data.documentsFile || null,
-      //   title: data.title,
-      //   subject: data.subject,
-      //   classValue: data.class,
-      //   description: data.description ?? "",
-      //   userId,
-      // });
-      const result = {
-        success: true,
-        message: "video uploaded",
-      };
+      toast.loading("Téléchargement en cours...");
 
-      // Show success message
-      toast.success("Vidéo téléchargée avec succès!");
+      const result = await uploadVideo({
+        videoFile: data.videoFile,
+        thumbnailFile: data.thumbnailFile,
+        notesFile: data.notesFile ?? null,
+        documentsFile: data.documentsFile ?? null,
+        title: data.title,
+        subject: data.subject,
+        classValue: data.class,
+        description: data.description ?? "",
+        teacher_id: userId,
+      });
 
-      // Reset form
-      reset();
+      if (result.success) {
+        toast.success("Vidéo téléchargée avec succès!");
+        toast.dismiss();
+        //reset form
+        reset();
+        setThumbnailPreview(null);
+        if (videoInputRef.current) videoInputRef.current.value = "";
+        if (thumbnailInputRef.current) thumbnailInputRef.current.value = "";
+        if (notesInputRef.current) notesInputRef.current.value = "";
+        if (documentsInputRef.current) documentsInputRef.current.value = "";
 
-      setThumbnailPreview(null);
-
-      // Reset file inputs
-      if (videoInputRef.current) videoInputRef.current.value = "";
-      if (thumbnailInputRef.current) thumbnailInputRef.current.value = "";
-      if (notesInputRef.current) notesInputRef.current.value = "";
-      if (documentsInputRef.current) documentsInputRef.current.value = "";
+        console.table(result.id);
+        router.push(`/videos/${result?.id}`);
+      }
     } catch (err) {
       console.error("Upload error:", err);
+
       toast.error(
         err instanceof Error
           ? err.message
@@ -322,7 +336,8 @@ export default function VideoUploadForm({
                       <SelectItem key={subject} value={subject.toLowerCase()}>
                         {subject}
                       </SelectItem>
-                    ))}
+                    ))}{" "}
+                    {/* <SelectItem value="none">Aucune Matiere</SelectItem> */}
                   </SelectContent>
                 </Select>
               )}

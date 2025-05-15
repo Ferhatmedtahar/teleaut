@@ -44,6 +44,19 @@ export async function POST(request: NextRequest) {
       case "idBack":
         folderPath = "documents/id-cards/back";
         break;
+
+      case "video":
+        folderPath = "videos";
+        break;
+      case "thumbnail":
+        folderPath = "thumbnails";
+        break;
+      case "notes":
+        folderPath = "notes";
+        break;
+      case "documents":
+        folderPath = "documents";
+        break;
       default:
         folderPath = "other";
     }

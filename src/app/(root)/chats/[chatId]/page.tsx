@@ -27,7 +27,7 @@ export default function ChatPage() {
     };
 
     fetchChat();
-  }, [chatId as string, loadMessages]);
+  }, [chatId as string]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
