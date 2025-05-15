@@ -14,19 +14,21 @@ import { toast } from "sonner";
 
 interface VideoInfoProps {
   video: {
-    id: string;
-    title: string;
-    created_at: string;
-    views: number;
-    teacher: {
+    readonly id: string;
+    readonly title: string;
+    readonly created_at: string;
+    readonly views: number;
+    readonly teacher: {
       id: string;
-      name: string;
-      avatar_url: string | null;
+      first_name: string;
+      last_name?: string;
+      profile_url: string | null;
     };
   };
 }
 
 export default function VideoInfo({ video }: VideoInfoProps) {
+  console.log(video);
   const [likesCount, setLikesCount] = useState({ likes: 0, dislikes: 0 });
   const [userLikeStatus, setUserLikeStatus] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -108,10 +110,10 @@ export default function VideoInfo({ video }: VideoInfoProps) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center">
-            {video.teacher.avatar_url ? (
+            {video.teacher.profile_url ? (
               <Image
-                src={video.teacher.avatar_url || "/placeholder.svg"}
-                alt={video.teacher.name}
+                src={video.teacher.profile_url}
+                alt={video.teacher.first_name}
                 width={48}
                 height={48}
                 className="rounded-full object-cover"
@@ -119,12 +121,14 @@ export default function VideoInfo({ video }: VideoInfoProps) {
             ) : (
               <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
                 <span className="text-gray-500 font-medium">
-                  {video.teacher.name.charAt(0)}
+                  {video.teacher.first_name.charAt(0)}
                 </span>
               </div>
             )}
             <div className="ml-3">
-              <p className="font-medium">{video.teacher.name}</p>
+              <p className="font-medium">
+                {video.teacher.first_name} {video.teacher.last_name}
+              </p>
               <p className="text-sm text-gray-500">
                 {formatDistanceToNow(new Date(video.created_at), {
                   addSuffix: true,

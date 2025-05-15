@@ -14,8 +14,9 @@ interface RelatedVideo {
   views: number;
   teacher: {
     id: string;
-    name: string;
-    avatar_url: string | null;
+    first_name: string;
+    last_name?: string;
+    profile_url: string | null;
   };
 }
 
@@ -93,7 +94,10 @@ export default function RelatedVideos({
                 {video.title}
               </h3>
 
-              <p className="text-xs text-gray-500 mt-1">{video.teacher.name}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                {video.teacher.first_name}
+                {video.teacher.last_name}
+              </p>
 
               <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
                 <span>{video.views} views</span>

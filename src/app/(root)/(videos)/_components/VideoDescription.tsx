@@ -1,7 +1,7 @@
 export default function VideoDescription({
   description,
 }: {
-  description: string | null;
+  readonly description: string | null;
 }) {
   if (!description) {
     return null;
