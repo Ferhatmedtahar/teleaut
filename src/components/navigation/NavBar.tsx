@@ -78,7 +78,7 @@ export function Navbar({ className, userInfo }: NavbarProps) {
         <div className="flex items-center gap-2 md:gap-4">
           {(role === "teacher" || role === "admin") && (
             <>
-              <Link href="/create" passHref>
+              <Link href="/create-video" passHref>
                 <Button
                   variant="default"
                   size="lg"
@@ -90,7 +90,7 @@ export function Navbar({ className, userInfo }: NavbarProps) {
               </Link>
 
               {/* Mobile-only publish button */}
-              <Link href="/create" passHref>
+              <Link href="/create-video" passHref>
                 <Button
                   variant="outline"
                   size="icon"
