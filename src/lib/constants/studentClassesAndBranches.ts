@@ -30,3 +30,5 @@ export const studentClassesAndBranches = {
     "Sciences sportives",
   ],
 };
+
+export const studentClasses = Object.keys(studentClassesAndBranches);

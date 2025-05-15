@@ -34,13 +34,15 @@ export function Navbar({ className, userInfo }: NavbarProps) {
 
   return (
     <header
-      className={`sticky top-0 z-50 flex h-16 w-full items-center border-b bg-background px-4 md:px-6 lg:px-10 ${className}`}
+      className={`sticky top-0 z-50 flex h-16 w-full items-center border-b  border-border/20 bg-background px-4 md:px-6 lg:px-10 ${className}`}
     >
       <div className="flex w-full items-center justify-between">
         {/* Left side with menu toggle and logo */}
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center">
-            <span className="text-xl font-bold">LOGO</span>
+            <span className="text-xl font-bold text-black dark:text-white">
+              LOGO
+            </span>
           </Link>
         </div>
 
@@ -78,7 +80,7 @@ export function Navbar({ className, userInfo }: NavbarProps) {
         <div className="flex items-center gap-2 md:gap-4">
           {(role === "teacher" || role === "admin") && (
             <>
-              <Link href="/create" passHref>
+              <Link href="/create-video" passHref>
                 <Button
                   variant="default"
                   size="lg"
@@ -90,7 +92,7 @@ export function Navbar({ className, userInfo }: NavbarProps) {
               </Link>
 
               {/* Mobile-only publish button */}
-              <Link href="/create" passHref>
+              <Link href="/create-video" passHref>
                 <Button
                   variant="outline"
                   size="icon"
@@ -102,7 +104,7 @@ export function Navbar({ className, userInfo }: NavbarProps) {
             </>
           )}
           <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
+            <Bell className="h-5 w-5 dark:text-white/80 text-black" />
             <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></span>
           </Button>
           <UserDropDownMenu userInfo={userInfo} />

@@ -30,7 +30,7 @@ export default function UserDropDownMenu({
     <DropdownMenu>
       <DropdownMenuTrigger
         asChild
-        className="p-5 focus:outline-none focus:ring-0 ring-0 shadow-none hover:bg-primary-200/50 dark:hover:bg-primary-50/40 dark:text-white"
+        className="p-5 focus:outline-none focus:ring-0 ring-0 shadow-none  text-black bg-primary-100/10  hover:bg-primary-200/50 dark:hover:bg-primary-50/40 dark:text-white"
       >
         <Button variant="ghost" size="sm" className="gap-2">
           <Avatar className="h-8 w-8">

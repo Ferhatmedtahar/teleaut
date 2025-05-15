@@ -78,7 +78,7 @@ const AppSidebar: React.FC<SidebarProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col w-60 md:w-64 bg-background border-r border-border h-full overflow-hidden",
+        "flex flex-col w-60 md:w-64 bg-background border-r border-border/20 h-full overflow-hidden",
         className
       )}
       {...props}
