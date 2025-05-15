@@ -6,6 +6,8 @@ import { revalidatePath } from "next/cache";
 type VideoUploadParams = {
   videoFile: File;
   thumbnailFile: File | null;
+  notesFile: File | null;
+  documentsFile: File | null;
   title: string;
   subject: string;
   classValue: string;
