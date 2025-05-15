@@ -1,9 +1,7 @@
 "use client";
 
-import { uploadVideo } from "@/actions/videos/uploadVideo.action";
 import { Button } from "@/components/common/buttons/Button";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -12,49 +10,37 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { studentClasses } from "@/lib/constants/studentClassesAndBranches";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileText, ImagePlus, Loader2, Plus, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 
-// Define the schema with proper file validation
-const uploadVideoSchema = z.object({
-  title: z.string().min(1, "Le titre est requis"),
-  subject: z.string().min(1, "La matière est requise"),
-  class: z.string().min(1, "La classe est requise"),
-  description: z.string().optional(),
-  // We'll handle file validation separately since zod doesn't handle File objects well
-});
+import { uploadVideoSchema, UploadVideoSchemaType } from "./UploadVideoSchema";
 
-type FormValues = z.infer<typeof uploadVideoSchema> & {
-  videoFile?: File;
-  thumbnailFile?: File;
-  notesFile?: File;
-  documentsFile?: File;
-};
-
-export default function VideoUploadForm() {
-  // State for file uploads
-  const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-  const [notesFile, setNotesFile] = useState<File | null>(null);
-  const [documentsFile, setDocumentsFile] = useState<File | null>(null);
-
-  // State for previews
-  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
-
-  // State for upload progress
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [isUploading, setIsUploading] = useState(false);
+export default function VideoUploadForm({
+  userSpecialties,
+  userId,
+}: {
+  readonly userSpecialties: string[];
+  readonly userId: string;
+}) {
+  const subjectOptions = userSpecialties.map((spec) => {
+    // Extract the subject from the string
+    const match = spec.match(/Professeur d'(.*)/i);
+    return match?.[1] ?? spec;
+  });
 
   // Refs for file inputs
   const videoInputRef = useRef<HTMLInputElement>(null);
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
   const notesInputRef = useRef<HTMLInputElement>(null);
   const documentsInputRef = useRef<HTMLInputElement>(null);
+
+  // State for previews
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
 
   // Setup react-hook-form
   const {
@@ -64,7 +50,8 @@ export default function VideoUploadForm() {
     formState: { errors, isSubmitting },
     reset,
     setValue,
-  } = useForm<FormValues>({
+    watch,
+  } = useForm<UploadVideoSchemaType>({
     resolver: zodResolver(uploadVideoSchema),
     defaultValues: {
       title: "",
@@ -74,8 +61,12 @@ export default function VideoUploadForm() {
     },
   });
 
-  // Mock user for now - replace with your actual user context
-  const user = { id: "user123" };
+  console.log("errors", errors);
+  // Watch form fields to access their values
+  const videoFile = watch("videoFile");
+  const thumbnailFile = watch("thumbnailFile");
+  const notesFile = watch("notesFile");
+  const documentsFile = watch("documentsFile");
 
   // Handle file selection for video
   const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +76,7 @@ export default function VideoUploadForm() {
         toast.error("Le fichier sélectionné n'est pas une vidéo");
         return;
       }
-      setVideoFile(file);
+      setValue("videoFile", file);
     }
   };
 
@@ -97,7 +88,7 @@ export default function VideoUploadForm() {
         toast.error("Le fichier sélectionné n'est pas une image");
         return;
       }
-      setThumbnailFile(file);
+      setValue("thumbnailFile", file);
       setThumbnailPreview(URL.createObjectURL(file));
     }
   };
@@ -106,7 +97,7 @@ export default function VideoUploadForm() {
   const handleNotesSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setNotesFile(file);
+      setValue("notesFile", file);
     }
   };
 
@@ -114,7 +105,7 @@ export default function VideoUploadForm() {
   const handleDocumentsSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setDocumentsFile(file);
+      setValue("documentsFile", file);
     }
   };
 
@@ -128,53 +119,60 @@ export default function VideoUploadForm() {
   }, [thumbnailPreview]);
 
   // Handle form submission
-  const onSubmit = async (data: FormValues) => {
-    if (!videoFile) {
+  const onSubmit = async (data: UploadVideoSchemaType) => {
+    console.log("data", data);
+    if (!data.videoFile) {
       toast.error("Veuillez choisir un fichier vidéo");
       return;
     }
-
-    setIsUploading(true);
-    setUploadProgress(0);
+    if (!data.class) {
+      toast.error("Veuillez choisir une classe");
+      return;
+    }
+    if (!data.subject) {
+      toast.error("Veuillez choisir un matière");
+      return;
+    }
+    if (!data.title) {
+      toast.error("Veuillez choisir un titre");
+      return;
+    }
+    if (!data.thumbnailFile) {
+      toast.error("Veuillez choisir une thumbnail");
+      return;
+    }
 
     try {
-      // Simulate progress updates
-      const progressInterval = setInterval(() => {
-        setUploadProgress((prev) => {
-          if (prev >= 95) {
-            clearInterval(progressInterval);
-            return prev;
-          }
-          return prev + 5;
-        });
-      }, 500);
-
       // Upload video and related files
-      const result = await uploadVideo({
-        videoFile,
-        thumbnailFile: thumbnailFile || null,
-        notesFile: notesFile || null,
-        documentsFile: documentsFile || null,
-        title: data.title,
-        subject: data.subject,
-        classValue: data.class,
-        description: data.description || "",
-        userId: user.id,
-      });
-
-      clearInterval(progressInterval);
-      setUploadProgress(100);
+      // const result = await uploadVideo({
+      //   videoFile: data.videoFile,
+      //   thumbnailFile: data.thumbnailFile || null,
+      //   notesFile: data.notesFile || null,
+      //   documentsFile: data.documentsFile || null,
+      //   title: data.title,
+      //   subject: data.subject,
+      //   classValue: data.class,
+      //   description: data.description ?? "",
+      //   userId,
+      // });
+      const result = {
+        success: true,
+        message: "video uploaded",
+      };
 
       // Show success message
       toast.success("Vidéo téléchargée avec succès!");
 
       // Reset form
       reset();
-      setVideoFile(null);
-      setThumbnailFile(null);
+
       setThumbnailPreview(null);
-      setNotesFile(null);
-      setDocumentsFile(null);
+
+      // Reset file inputs
+      if (videoInputRef.current) videoInputRef.current.value = "";
+      if (thumbnailInputRef.current) thumbnailInputRef.current.value = "";
+      if (notesInputRef.current) notesInputRef.current.value = "";
+      if (documentsInputRef.current) documentsInputRef.current.value = "";
     } catch (err) {
       console.error("Upload error:", err);
       toast.error(
@@ -182,30 +180,26 @@ export default function VideoUploadForm() {
           ? err.message
           : "Une erreur s'est produite lors du téléchargement"
       );
-    } finally {
-      setIsUploading(false);
-      setUploadProgress(0);
     }
   };
 
-  // Clear a selected file
   const clearFile = (type: "video" | "thumbnail" | "notes" | "documents") => {
     switch (type) {
       case "video":
-        setVideoFile(null);
+        setValue("videoFile", undefined);
         if (videoInputRef.current) videoInputRef.current.value = "";
         break;
       case "thumbnail":
-        setThumbnailFile(null);
+        setValue("thumbnailFile", undefined);
         setThumbnailPreview(null);
         if (thumbnailInputRef.current) thumbnailInputRef.current.value = "";
         break;
       case "notes":
-        setNotesFile(null);
+        setValue("notesFile", undefined);
         if (notesInputRef.current) notesInputRef.current.value = "";
         break;
       case "documents":
-        setDocumentsFile(null);
+        setValue("documentsFile", undefined);
         if (documentsInputRef.current) documentsInputRef.current.value = "";
         break;
     }
@@ -214,8 +208,8 @@ export default function VideoUploadForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Video Upload Area */}
-      <div className="gradient-bg-light  rounded-lg overflow-hidden shadow-lg">
-        <div className="p-12 flex flex-col items-center justify-center text-white">
+      <div className="gradient-bg-light rounded-lg overflow-hidden shadow-lg">
+        <div className="p-6 flex flex-col items-center justify-center text-white">
           {videoFile ? (
             <div className="flex flex-col items-center space-y-4 w-full">
               <div className="flex items-center justify-between w-full max-w-md">
@@ -235,7 +229,7 @@ export default function VideoUploadForm() {
                   variant="ghost"
                   size="icon"
                   onClick={() => clearFile("video")}
-                  className="text-white hover:bg-white/20"
+                  className="text-white hover:bg-primary/20 hover:text-white"
                 >
                   <X className="w-5 h-5" />
                 </Button>
@@ -244,7 +238,7 @@ export default function VideoUploadForm() {
                 type="button"
                 variant="outline"
                 onClick={() => videoInputRef.current?.click()}
-                className="bg-transparent border-white text-white hover:bg-white hover:text-indigo-700"
+                className="bg-transparent border-white text-white hover:bg-white hover:text-primary-700"
               >
                 Changer la vidéo
               </Button>
@@ -261,7 +255,7 @@ export default function VideoUploadForm() {
                 type="button"
                 variant="outline"
                 onClick={() => videoInputRef.current?.click()}
-                className="bg-transparent border-white text-white hover:bg-white hover:text-indigo-700"
+                className="bg-transparent border-white text-white hover:bg-white hover:text-primary-700"
               >
                 Sélectionner un fichier
               </Button>
@@ -274,6 +268,11 @@ export default function VideoUploadForm() {
             className="hidden"
             accept="video/*"
           />
+          {errors.videoFile && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.videoFile.message as string}
+            </p>
+          )}
         </div>
       </div>
 
@@ -319,14 +318,11 @@ export default function VideoUploadForm() {
                     <SelectValue placeholder="La matière" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="math">Mathématiques</SelectItem>
-                    <SelectItem value="physics">Physique</SelectItem>
-                    <SelectItem value="chemistry">Chimie</SelectItem>
-                    <SelectItem value="biology">Biologie</SelectItem>
-                    <SelectItem value="history">Histoire</SelectItem>
-                    <SelectItem value="geography">Géographie</SelectItem>
-                    <SelectItem value="french">Français</SelectItem>
-                    <SelectItem value="english">Anglais</SelectItem>
+                    {subjectOptions.map((subject) => (
+                      <SelectItem key={subject} value={subject.toLowerCase()}>
+                        {subject}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
@@ -357,13 +353,14 @@ export default function VideoUploadForm() {
                     <SelectValue placeholder="La classe" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="6">6ème</SelectItem>
-                    <SelectItem value="5">5ème</SelectItem>
-                    <SelectItem value="4">4ème</SelectItem>
-                    <SelectItem value="3">3ème</SelectItem>
-                    <SelectItem value="2">2nde</SelectItem>
-                    <SelectItem value="1">1ère</SelectItem>
-                    <SelectItem value="terminal">Terminale</SelectItem>
+                    {studentClasses.map((classOption) => (
+                      <SelectItem
+                        key={classOption}
+                        value={classOption.toLowerCase()}
+                      >
+                        {classOption}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
@@ -381,7 +378,8 @@ export default function VideoUploadForm() {
               htmlFor="description"
               className="block text-sm font-medium mb-1"
             >
-              Veuillez insérer une description (optionnel)
+              Veuillez insérer une description
+              <span className="text-gray-500 text-xs"> (optionnel)</span>
             </label>
             <Textarea
               id="description"
@@ -389,22 +387,120 @@ export default function VideoUploadForm() {
               placeholder="Description"
               className="w-full min-h-[120px]"
             />
+            {errors.description && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
+
+          {/* Notes File Upload */}
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="notes"
+              className="text-sm font-medium text-gray-700"
+            >
+              Upload Notes
+              <span className="text-gray-500 text-xs"> (optionnel)</span>
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="file"
+                id="notes"
+                ref={notesInputRef}
+                onChange={handleNotesSelect}
+                accept=".pdf,.png,.jpg,.jpeg"
+                className="block w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-primary-800 hover:file:bg-primary-50 border border-gray-300 rounded-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+              {notesFile && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => clearFile("notes")}
+                  className="flex-shrink-0"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              )}
+            </div>
+            {notesFile && (
+              <p className="text-sm text-gray-500">
+                {notesFile.name} ({(notesFile.size / 1024).toFixed(2)} KB)
+              </p>
+            )}
+            {errors.notesFile && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.notesFile.message as string}
+              </p>
+            )}
+          </div>
+
+          {/* Other Documents File Upload */}
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="documents"
+              className="text-sm font-medium text-gray-700"
+            >
+              Upload Other Documents
+              <span className="text-gray-500 text-xs"> (optionnel)</span>
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="file"
+                id="documents"
+                ref={documentsInputRef}
+                onChange={handleDocumentsSelect}
+                accept=".pdf,.png,.jpg,.jpeg"
+                className="block w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-primary-800 hover:file:bg-primary-50 border border-gray-300 rounded-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+              {documentsFile && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => clearFile("documents")}
+                  className="flex-shrink-0"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              )}
+            </div>
+            {documentsFile && (
+              <p className="text-sm text-gray-500">
+                {documentsFile.name} ({(documentsFile.size / 1024).toFixed(2)}{" "}
+                KB)
+              </p>
+            )}
+            {errors.documentsFile && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.documentsFile.message as string}
+              </p>
+            )}
           </div>
         </div>
 
         {/* Thumbnail Upload */}
         <div>
-          <label className="block text-sm font-medium mb-1">Thumbnail</label>
+          <label htmlFor="thumbnail" className="block text-sm font-medium mb-1">
+            Thumbnail <span className="text-red-500">*</span>
+          </label>
+          {errors.thumbnailFile && (
+            <p className="mt-1 text-sm mb-1 text-red-500">
+              {errors.thumbnailFile.message as string}
+            </p>
+          )}
           <div
             className={`border-2 border-dashed rounded-md h-48 flex flex-col items-center justify-center cursor-pointer relative overflow-hidden ${
               thumbnailPreview
-                ? "border-indigo-300 bg-indigo-50"
-                : "hover:bg-gray-50"
+                ? "border-primary-400 bg-indigo-50"
+                : "hover:bg-gray-50 border-primary-400"
             }`}
             onClick={() => thumbnailInputRef.current?.click()}
           >
             <input
               type="file"
+              id="thumbnail"
               ref={thumbnailInputRef}
               onChange={handleThumbnailSelect}
               className="hidden"
@@ -419,12 +515,12 @@ export default function VideoUploadForm() {
                   fill
                   className="object-cover rounded-md"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <div className="absolute inset-0 gradient-bg-light bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 duration-200 transition-all">
                   <Button
                     type="button"
-                    variant="secondary"
+                    variant={`secondary`}
                     size="sm"
-                    className="z-10"
+                    className="z-10 font-medium text-sm"
                     onClick={(e) => {
                       e.stopPropagation();
                       clearFile("thumbnail");
@@ -446,98 +542,15 @@ export default function VideoUploadForm() {
         </div>
       </div>
 
-      {/* Notes File Upload */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="notes" className="text-sm font-medium text-gray-700">
-          Upload Notes <span className="text-red-500">*</span>
-        </label>
-        <div className="flex items-center gap-2">
-          <input
-            type="file"
-            id="notes"
-            ref={notesInputRef}
-            onChange={handleNotesSelect}
-            accept=".pdf,.png,.jpg,.jpeg"
-            className="block w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          {notesFile && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => clearFile("notes")}
-              className="flex-shrink-0"
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          )}
-        </div>
-        {notesFile && (
-          <p className="text-sm text-gray-500">
-            {notesFile.name} ({(notesFile.size / 1024).toFixed(2)} KB)
-          </p>
-        )}
-      </div>
-
-      {/* Other Documents File Upload */}
-      <div className="flex flex-col gap-2">
-        <label
-          htmlFor="documents"
-          className="text-sm font-medium text-gray-700"
-        >
-          Upload Other Documents
-        </label>
-        <div className="flex items-center gap-2">
-          <input
-            type="file"
-            id="documents"
-            ref={documentsInputRef}
-            onChange={handleDocumentsSelect}
-            accept=".pdf,.png,.jpg,.jpeg"
-            className="block w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          {documentsFile && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => clearFile("documents")}
-              className="flex-shrink-0"
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          )}
-        </div>
-        {documentsFile && (
-          <p className="text-sm text-gray-500">
-            {documentsFile.name} ({(documentsFile.size / 1024).toFixed(2)} KB)
-          </p>
-        )}
-      </div>
-
-      {/* Upload Progress */}
-      {isUploading && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Téléchargement en cours...</span>
-            </div>
-            <span className="text-sm font-medium">{uploadProgress}%</span>
-          </div>
-          <Progress value={uploadProgress} className="h-2" />
-        </div>
-      )}
-
       {/* Submit Button */}
       <Button
         type="submit"
         variant="default"
         size="lg"
-        className="w-full md:w-auto "
-        disabled={isSubmitting || isUploading}
+        className="w-full md:w-auto"
+        disabled={isSubmitting}
       >
-        {isSubmitting || isUploading ? (
+        {isSubmitting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Téléchargement...
