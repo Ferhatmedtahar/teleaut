@@ -1,18 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { File, FileText } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import CommentSection from "./CommentSection";
+import FileCard from "./FileCard";
 
 interface DocumentsTabProps {
-  documentsUrl: string | null;
-  notesUrl: string | null;
+  readonly documentsUrl: string | null;
+  readonly notesUrl: string | null;
+  readonly currentVideoId: string;
 }
 
 export default function DocumentsTab({
   documentsUrl,
   notesUrl,
+  currentVideoId,
 }: DocumentsTabProps) {
   const [activeTab, setActiveTab] = useState("documents");
 
@@ -30,13 +32,13 @@ export default function DocumentsTab({
         <TabsTrigger value="documents" disabled={!documentsUrl}>
           Documents
         </TabsTrigger>
-        <TabsTrigger value="notes" disabled={!notesUrl}>
-          Notes
+        <TabsTrigger value="comments" disabled={!currentVideoId}>
+          Commentaires
         </TabsTrigger>
       </TabsList>
 
       <TabsContent value="documents" className="p-4 border rounded-b-lg">
-        {documentsUrl ? (
+        {/* {documentsUrl ? (
           <div className="flex flex-col items-center">
             <File size={48} className="text-blue-500 mb-2" />
             <p className="text-sm text-center mb-4">
@@ -53,9 +55,7 @@ export default function DocumentsTab({
             No documents available
           </p>
         )}
-      </TabsContent>
 
-      <TabsContent value="notes" className="p-4 border rounded-b-lg">
         {notesUrl ? (
           <div className="flex flex-col items-center">
             <FileText size={48} className="text-green-500 mb-2" />
@@ -70,7 +70,26 @@ export default function DocumentsTab({
           </div>
         ) : (
           <p className="text-center text-gray-500 py-8">No notes available</p>
-        )}
+        )} */}
+        <div className="space-y-4">
+          {documentsUrl ? (
+            <FileCard url={documentsUrl} key={documentsUrl} />
+          ) : (
+            <p className="text-center text-gray-500 py-8">
+              No documents available
+            </p>
+          )}
+
+          {notesUrl ? (
+            <FileCard url={notesUrl} key={notesUrl} />
+          ) : (
+            <p className="text-center text-gray-500 py-8">No notes available</p>
+          )}
+        </div>
+      </TabsContent>
+
+      <TabsContent value="comments" className="p-4 border rounded-b-lg">
+        <CommentSection videoId={currentVideoId} />
       </TabsContent>
     </Tabs>
   );

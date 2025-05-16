@@ -28,7 +28,6 @@ interface VideoInfoProps {
 }
 
 export default function VideoInfo({ video }: VideoInfoProps) {
-  console.log(video);
   const [likesCount, setLikesCount] = useState({ likes: 0, dislikes: 0 });
   const [userLikeStatus, setUserLikeStatus] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);

@@ -2,16 +2,16 @@
 
 import type React from "react";
 
-import { useState, useRef, useEffect } from "react";
 import {
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
   Maximize,
+  Pause,
+  Play,
   SkipBack,
   SkipForward,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface VideoPlayerProps {
   videoUrl: string;
