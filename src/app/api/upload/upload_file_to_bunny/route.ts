@@ -3,10 +3,10 @@ import { writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
 import { v4 as uuidv4 } from "uuid";
-
 import fs from "fs";
 import { IncomingMessage } from "http";
 import https from "https";
+
 export async function POST(request: NextRequest) {
   try {
     console.log("File upload route hit!");

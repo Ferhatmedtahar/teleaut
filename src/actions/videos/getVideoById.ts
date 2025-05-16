@@ -7,7 +7,7 @@ export async function getVideoById(id: string): Promise<{
   data?: any;
 }> {
   const supabase = await createClient();
-  console.log(id, "id");
+
   const { data: video, error: videoError } = await supabase
     .from("videos")
     .select("*")
@@ -19,7 +19,6 @@ export async function getVideoById(id: string): Promise<{
     return { success: false };
   }
 
-  console.log(video, video.teacher_id, "teacher di");
   const { data: teacher, error: teacherError } = await supabase
     .from("users")
     .select("id, first_name, last_name, profile_url")

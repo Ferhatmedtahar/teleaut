@@ -52,7 +52,7 @@ export default function RelatedVideos({
       <div className="space-y-4">
         <h2 className="text-xl font-semibold mb-4">Explorer</h2>
         {[...Array(4)].map((i) => (
-          <div key={i * 2} className="animate-pulse">
+          <div key={i + 1} className="animate-pulse">
             <div className="flex gap-2">
               <div className="bg-gray-200 rounded-lg w-32 h-20"></div>
               <div className="flex-1">

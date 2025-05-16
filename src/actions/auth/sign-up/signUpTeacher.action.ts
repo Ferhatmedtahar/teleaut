@@ -2,8 +2,8 @@
 
 import { SignUpSchema } from "@/app/(auth)/_components/forms/signUp/SignUp.schema";
 import { hashPassword } from "@/app/(auth)/_lib/hashComparePassword";
-import { uploadFile } from "@/app/(auth)/_lib/uploadFile";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
+import { uploadFile } from "@/lib/helpers/uploadFile";
 import { createClient } from "@/lib/supabase/server"; // adjust the path to your client
 import { z } from "zod";
 const TeacherSchema = SignUpSchema.pick({

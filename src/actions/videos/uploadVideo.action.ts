@@ -1,6 +1,7 @@
 "use server";
 
-import { uploadFile } from "@/app/(auth)/_lib/uploadFile";
+import { uploadFile } from "@/lib/helpers/uploadFile";
+import { uploadVideoUtil } from "@/lib/helpers/uploadVideo";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
@@ -33,7 +34,8 @@ export async function uploadVideo({
 }> {
   try {
     // Upload video file to Bunny CDN
-    const videoUrl = await uploadFile(videoFile, "video", teacher_id);
+    // const videoUrl = await uploadFile(videoFile, "video", teacher_id);
+    const videoUrl = await uploadVideoUtil(videoFile, teacher_id);
 
     let thumbnailUrl = null;
     if (thumbnailFile) {
