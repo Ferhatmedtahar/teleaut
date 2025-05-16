@@ -39,7 +39,11 @@ interface Comment {
   };
 }
 
-export default function CommentSection({ videoId }: { videoId: string }) {
+export default function CommentSection({
+  videoId,
+}: {
+  readonly videoId: string;
+}) {
   const [pinnedComments, setPinnedComments] = useState<Comment[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [page, setPage] = useState(1);

@@ -1,6 +1,6 @@
 "use server";
 
-import { uploadFile } from "@/app/(auth)/_lib/uploadFile";
+import { uploadFile } from "@/lib/helpers/uploadFile";
 import { createClient } from "@/lib/supabase/server";
 import { roles } from "@/types/roles.enum";
 import { revalidatePath } from "next/cache";

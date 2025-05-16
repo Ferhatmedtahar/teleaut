@@ -31,7 +31,7 @@ export default async function RootLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background  selection:bg-yellow-100  selection:text-[#355869] ">
+    <div className="flex min-h-screen flex-col bg-background  selection:bg-yellow-100 selection:text-[#355869] ">
       <UserProvider user={user}>
         <Navbar
           userInfo={{

@@ -26,8 +26,6 @@ export async function uploadFile(
     }
 
     const result = await response.json();
-
-    console.log("result", result);
     return result.url;
   } catch (e) {
     console.log(e);

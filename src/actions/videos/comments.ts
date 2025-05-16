@@ -54,6 +54,7 @@ export async function addComment(videoId: string, formData: FormData) {
 }
 
 //!Get all comments
+
 export async function getVideoComments(
   videoId: string,
   page = 1,
@@ -63,45 +64,26 @@ export async function getVideoComments(
 
   try {
     // Fetch pinned comments
-    const { data: pinnedComments, error: pinnedError } = await supabase
+    const { data: pinnedCommentsRaw, error: pinnedError } = await supabase
       .from("video_comments")
-      .select(
-        `
-        *,
-        user:user_id (
-          id,
-          name,
-          avatar_url
-        )
-      `
-      )
+      .select("*")
       .eq("video_id", videoId)
       .eq("is_pinned", true)
       .order("created_at", { ascending: false });
 
     if (pinnedError) throw pinnedError;
 
-    // Fetch regular comments with pagination
+    // Fetch regular comments (paginated)
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
     const {
-      data: comments,
+      data: commentsRaw,
       error: commentsError,
       count,
     } = await supabase
       .from("video_comments")
-      .select(
-        `
-        *,
-        user:user_id (
-          id,
-          name,
-          avatar_url
-        )
-      `,
-        { count: "exact" }
-      )
+      .select("*", { count: "exact" })
       .eq("video_id", videoId)
       .eq("is_pinned", false)
       .order("created_at", { ascending: false })
@@ -109,13 +91,45 @@ export async function getVideoComments(
 
     if (commentsError) throw commentsError;
 
-    const hasMore = count ? from + (comments?.length || 0) < count : false;
+    // Get all unique user IDs from both pinned and regular comments
+    const userIds = [
+      ...new Set([
+        ...(pinnedCommentsRaw || []).map((c) => c.user_id),
+        ...(commentsRaw || []).map((c) => c.user_id),
+      ]),
+    ];
+
+    // Fetch user data in a single query
+    const { data: users, error: usersError } = await supabase
+      .from("users")
+      .select("id, first_name, last_name, profile_url")
+      .in("id", userIds);
+
+    if (usersError) throw usersError;
+
+    // Create a map of user_id -> user
+    const userMap = new Map(users.map((u) => [u.id, u]));
+
+    // Enrich comments with user info
+    const pinnedComments =
+      pinnedCommentsRaw?.map((comment) => ({
+        ...comment,
+        user: userMap.get(comment.user_id) || null,
+      })) || [];
+
+    const comments =
+      commentsRaw?.map((comment) => ({
+        ...comment,
+        user: userMap.get(comment.user_id) || null,
+      })) || [];
+
+    const hasMore = count ? from + comments.length < count : false;
 
     return {
       success: true,
       data: {
-        pinnedComments: pinnedComments || [],
-        comments: comments || [],
+        pinnedComments,
+        comments,
         hasMore,
       },
       message: "Comments fetched successfully",
@@ -133,6 +147,7 @@ export async function getVideoComments(
     };
   }
 }
+
 //!Pin or unpin a comment
 export async function togglePinComment(commentId: string, videoId: string) {
   const cookieStore = await cookies();
