@@ -9,11 +9,12 @@ import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { Clock, ThumbsDown, ThumbsUp } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface VideoInfoProps {
-  video: {
+  readonly video: {
     readonly id: string;
     readonly title: string;
     readonly created_at: string;
@@ -103,27 +104,35 @@ export default function VideoInfo({ video }: VideoInfoProps) {
   };
 
   return (
-    <div className="mb-6">
+    <div className="">
       <h1 className="text-2xl font-bold mb-2">{video.title}</h1>
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center">
-            {video.teacher.profile_url ? (
-              <Image
-                src={video.teacher.profile_url}
-                alt={video.teacher.first_name}
-                width={48}
-                height={48}
-                className="rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500 font-medium">
-                  {video.teacher.first_name.charAt(0)}
-                </span>
-              </div>
-            )}
+            <Link
+              target="_blank"
+              href={`/profile/${video.teacher.id}`}
+              className="shrink-0 w-12 h-12"
+            >
+              {video.teacher.profile_url ? (
+                <Image
+                  src={video.teacher.profile_url}
+                  alt={video.teacher.first_name}
+                  width={48}
+                  height={48}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-500 font-medium">
+                    {video.teacher.first_name.charAt(0) +
+                      video.teacher.last_name?.charAt(0)}
+                  </span>
+                </div>
+              )}
+            </Link>
+
             <div className="ml-3">
               <p className="font-medium">
                 {video.teacher.first_name} {video.teacher.last_name}
@@ -173,7 +182,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
         </div>
       </div>
 
-      <div className="h-px bg-gray-200 w-full my-4" />
+      <div className="h-px bg-gray-200 w-full mt-4" />
     </div>
   );
 }

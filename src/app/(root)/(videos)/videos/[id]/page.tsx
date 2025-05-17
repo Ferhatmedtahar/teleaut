@@ -34,7 +34,7 @@ async function VideoContent({ id }: { readonly id: string }) {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full ">
       <div className="lg:col-span-2 flex flex-col gap-3">
         <VideoPlayer
           videoUrl={video.video_url}
@@ -51,6 +51,8 @@ async function VideoContent({ id }: { readonly id: string }) {
             currentVideoId={video.id}
           />
         </div>
+      </div>
+      <div className="col-span-3">
         <RelatedVideos
           currentVideoId={video.id}
           subject={video.subject}

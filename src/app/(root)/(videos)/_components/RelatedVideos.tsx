@@ -1,24 +1,9 @@
 "use client";
 
 import { getRelatedVideos } from "@/actions/videos/getRelatedVideos";
-import { formatDistanceToNow } from "date-fns";
-import Image from "next/image";
-import Link from "next/link";
+import { RelatedVideo } from "@/types/RelatedVideos.interface";
 import { useEffect, useState } from "react";
-
-interface RelatedVideo {
-  id: string;
-  title: string;
-  thumbnail_url: string | null;
-  created_at: string;
-  views: number;
-  teacher: {
-    id: string;
-    first_name: string;
-    last_name?: string;
-    profile_url: string | null;
-  };
-}
+import ExplorerVideo from "./ExplorerVideo";
 
 export default function RelatedVideos({
   currentVideoId,
@@ -49,8 +34,8 @@ export default function RelatedVideos({
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold mb-4">Explorer</h2>
+      <div className="space-y-4 w-full">
+        <h2 className="text-2xl font-semibold ">Explorer</h2>
         {[...Array(4)].map((i) => (
           <div key={i + 1} className="animate-pulse">
             <div className="flex gap-2">
@@ -68,56 +53,19 @@ export default function RelatedVideos({
   }
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Explorer</h2>
-
-      <div className="space-y-4">
+    <div className="space-y-6 w-full ">
+      <h2 className="text-xl md:text-2xl  font-semibold ">Explorer</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {videos.map((video) => (
-          <Link
-            href={`/videos/${video.id}`}
-            key={video.id}
-            className="flex gap-3 group"
-          >
-            <div className="relative w-32 h-20 rounded-lg overflow-hidden flex-shrink-0">
-              <Image
-                src={
-                  video.thumbnail_url || "/placeholder.svg?height=80&width=128"
-                }
-                alt={video.title}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform"
-              />
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-sm line-clamp-2 group-hover:text-blue-600 transition-colors">
-                {video.title}
-              </h3>
-
-              <p className="text-xs text-gray-500 mt-1">
-                {video.teacher.first_name}
-                {video.teacher.last_name}
-              </p>
-
-              <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
-                <span>{video.views} views</span>
-                <span>•</span>
-                <span>
-                  {formatDistanceToNow(new Date(video.created_at), {
-                    addSuffix: true,
-                  })}
-                </span>
-              </div>
-            </div>
-          </Link>
+          <ExplorerVideo key={video.id} video={video} />
         ))}
-
-        {videos.length === 0 && (
-          <p className="text-gray-500 text-center py-4">
-            No related videos found
-          </p>
-        )}
       </div>
+
+      {videos.length === 0 && (
+        <p className="text-gray-500 text-center py-4">
+          No related videos found
+        </p>
+      )}
     </div>
   );
 }

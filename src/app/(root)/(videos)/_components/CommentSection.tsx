@@ -143,9 +143,9 @@ export default function CommentSection({
   return (
     <div className="flex flex-col h-[500px] rounded-md overflow-hidden">
       <div className="flex-1 overflow-y-auto overflow-x-hidden p-1 space-y-4">
-        {pinnedComments.map((comment, index) => (
+        {pinnedComments.map((comment) => (
           <CommentItem
-            key={comment.id + index}
+            key={comment.id + Math.random()}
             comment={comment}
             isTeacher={isTeacher}
             onPin={handlePinComment}
@@ -154,9 +154,9 @@ export default function CommentSection({
         {pinnedComments.length > 0 && comments.length > 0 && (
           <div className="h-px bg-gray-200 my-4" />
         )}
-        {comments.map((comment, index) => (
+        {comments.map((comment) => (
           <CommentItem
-            key={comment.id + index}
+            key={comment.id + Math.random()}
             comment={comment}
             isTeacher={isTeacher}
             onPin={handlePinComment}
