@@ -41,7 +41,7 @@ export async function addComment(videoId: string, formData: FormData) {
   const { error } = await supabase.from("video_comments").insert({
     video_id: videoId,
     user_id: decoded.id,
-    content: content.trim(),
+    content: content,
   });
 
   if (error) {

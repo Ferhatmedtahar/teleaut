@@ -14,7 +14,7 @@ export default function VideoPlayer({
       <iframe
         title={videoUrl}
         src={`${videoUrl}?autoplay=true&loop=false&muted=false&preload=true&responsive=true`}
-        className="absolute top-0 left-0 h-full w-full border-0 rounded-lg overflow-hidden"
+        className="absolute top-0 left-0 h-full w-full  rounded-lg overflow-hidden border border-border/20"
         allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
         allowFullScreen
       ></iframe>
