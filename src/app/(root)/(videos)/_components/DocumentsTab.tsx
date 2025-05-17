@@ -11,7 +11,7 @@ interface DocumentsTabProps {
   readonly currentVideoId: string;
 }
 
-export default function DocumentsTab({
+export default function DocumentsCommentsTab({
   documentsUrl,
   notesUrl,
   currentVideoId,
@@ -25,70 +25,35 @@ export default function DocumentsTab({
   return (
     <Tabs
       defaultValue="documents"
-      className="w-full"
+      className="w-full   border border-border/20 rounded-xl p-2"
       onValueChange={setActiveTab}
     >
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="documents" disabled={!documentsUrl}>
+      <TabsList className="grid w-full grid-cols-2 rounded-xl ">
+        <TabsTrigger
+          className=" rounded-xl"
+          value="documents"
+          disabled={!documentsUrl && !notesUrl}
+        >
           Documents
         </TabsTrigger>
-        <TabsTrigger value="comments" disabled={!currentVideoId}>
+        <TabsTrigger
+          className=" rounded-xl"
+          value="comments"
+          disabled={!currentVideoId}
+        >
           Commentaires
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="documents" className="p-4 border rounded-b-lg">
-        {/* {documentsUrl ? (
-          <div className="flex flex-col items-center">
-            <File size={48} className="text-blue-500 mb-2" />
-            <p className="text-sm text-center mb-4">
-              Course materials and resources
-            </p>
-            <Button asChild>
-              <a href={documentsUrl} target="_blank" rel="noopener noreferrer">
-                Download Documents
-              </a>
-            </Button>
-          </div>
-        ) : (
-          <p className="text-center text-gray-500 py-8">
-            No documents available
-          </p>
-        )}
-
-        {notesUrl ? (
-          <div className="flex flex-col items-center">
-            <FileText size={48} className="text-green-500 mb-2" />
-            <p className="text-sm text-center mb-4">
-              Lecture notes and summaries
-            </p>
-            <Button asChild>
-              <a href={notesUrl} target="_blank" rel="noopener noreferrer">
-                Download Notes
-              </a>
-            </Button>
-          </div>
-        ) : (
-          <p className="text-center text-gray-500 py-8">No notes available</p>
-        )} */}
+      <TabsContent value="documents" className="p-1">
         <div className="space-y-4">
-          {documentsUrl ? (
-            <FileCard url={documentsUrl} key={documentsUrl} />
-          ) : (
-            <p className="text-center text-gray-500 py-8">
-              No documents available
-            </p>
-          )}
+          {documentsUrl && <FileCard url={documentsUrl} key={documentsUrl} />}
 
-          {notesUrl ? (
-            <FileCard url={notesUrl} key={notesUrl} />
-          ) : (
-            <p className="text-center text-gray-500 py-8">No notes available</p>
-          )}
+          {notesUrl && <FileCard url={notesUrl} key={notesUrl} />}
         </div>
       </TabsContent>
 
-      <TabsContent value="comments" className="p-4 border rounded-b-lg">
+      <TabsContent value="comments" className="p-1">
         <CommentSection videoId={currentVideoId} />
       </TabsContent>
     </Tabs>

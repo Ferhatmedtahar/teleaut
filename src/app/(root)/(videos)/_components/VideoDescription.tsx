@@ -8,9 +8,14 @@ export default function VideoDescription({
   }
 
   return (
-    <div className="mb-8 bg-gray-50 p-4 rounded-lg">
-      <h2 className="text-lg font-medium mb-2">Description</h2>
-      <p className="text-gray-700 whitespace-pre-line">{description}</p>
-    </div>
+    <>
+      <div className="   flex flex-col gap-2">
+        <h2 className="text-2xl font-semibold ">Description</h2>
+        <p className="text-gray-700 whitespace-pre-line text-sm">
+          {description}
+        </p>
+      </div>
+      <div className="h-px bg-gray-200 w-full mt-4 " />
+    </>
   );
 }

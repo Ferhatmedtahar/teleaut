@@ -3,7 +3,6 @@
 import { uploadFile } from "@/lib/helpers/uploadFile";
 import { uploadVideoUtil } from "@/lib/helpers/uploadVideo";
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
 
 type VideoUploadParams = {
   videoFile: File;
@@ -75,7 +74,7 @@ export async function uploadVideo({
       return { success: false, message: "Failed to store video in Supabase" };
     }
 
-    revalidatePath("/");
+    // revalidatePath("/");
     // revalidatePath("/videos");
     return {
       success: true,
