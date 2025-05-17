@@ -1,4 +1,4 @@
-import { FileText } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function FileCard({ url }: { url: string }) {
@@ -22,7 +22,12 @@ export default function FileCard({ url }: { url: string }) {
           <p className="font-medium text-gray-800">{fileName}</p>
           {/* <p className="text-gray-600 text-sm mt-1">{url}</p> */}
         </div>
-        <FileText className="text-blue-500 w-5 h-5" />
+        <Image
+          src={`/icons/document.svg`}
+          height={26}
+          width={26}
+          alt="File icon"
+        />
       </div>
     </Link>
   );

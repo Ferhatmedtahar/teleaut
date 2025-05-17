@@ -2,7 +2,7 @@ import { getVideoById } from "@/actions/videos/getVideoById";
 import { incrementVideoView } from "@/actions/videos/views";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import DocumentsTab from "../../_components/DocumentsTab";
+import DocumentsCommentsTab from "../../_components/DocumentsTab";
 import RelatedVideos from "../../_components/RelatedVideos";
 import VideoDescription from "../../_components/VideoDescription";
 import VideoInfo from "../../_components/VideoInfo";
@@ -45,7 +45,7 @@ async function VideoContent({ id }: { readonly id: string }) {
       </div>
       <div className="lg:col-span-1">
         <div className="mb-6">
-          <DocumentsTab
+          <DocumentsCommentsTab
             documentsUrl={video.documents_url}
             notesUrl={video.notes_url}
             currentVideoId={video.id}
