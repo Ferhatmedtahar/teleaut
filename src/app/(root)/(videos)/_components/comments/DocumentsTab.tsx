@@ -41,7 +41,8 @@ export default function DocumentsCommentsTab({
           value="comments"
           disabled={!currentVideoId}
         >
-          <span className="dark:text-white/90">Commentaires</span>
+          {/* <span className="dark:text-white/90">Commentaires</span> */}
+          <span className="dark:text-white/90">Questions & Réponses</span>
         </TabsTrigger>
       </TabsList>
 

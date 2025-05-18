@@ -11,7 +11,7 @@ export default function StatsCards({
     return name.replace(/([a-z])([A-Z])/g, "$1 $2");
   };
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 ">
       {statsArray.length > 0 &&
         statsArray.map(([key, value]) => (
           <Card key={`${key}-${value}`}>

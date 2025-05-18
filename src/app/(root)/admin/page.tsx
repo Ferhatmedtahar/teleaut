@@ -3,7 +3,8 @@ import { Suspense } from "react";
 import LoadingSkeleton from "./_components/dashboard/LoadingDashboardSkeleton";
 import StatsCards from "./_components/dashboard/StatsCards";
 import UserChart from "./_components/dashboard/user-chart";
-import { getAdminStats } from "./_lib/admin";
+import VideoChart from "./_components/dashboard/VideoChart";
+import { getAdminStats, getVideoStatsOverTime } from "./_lib/admin";
 
 export const metadata = {
   title: "Admin Dashboard",
@@ -12,11 +13,13 @@ export const metadata = {
 
 async function DashboardContent() {
   const stats = await getAdminStats();
+  const videosOverTime = await getVideoStatsOverTime();
 
   return (
     <>
       <StatsCards stats={stats} />
       <UserChart stats={stats} />
+      <VideoChart videosOverTime={videosOverTime} />
     </>
   );
 }

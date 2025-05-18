@@ -104,7 +104,7 @@ export default function TeachersList({ teachers }: TeachersListClientProps) {
         <h2 className="text-2xl font-bold">Teachers List</h2>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-md border border-border/50 dark:border-border/80">
         <Table>
           <TableHeader>
             <TableRow>
@@ -129,7 +129,11 @@ export default function TeachersList({ teachers }: TeachersListClientProps) {
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {teacher.specialties.map((specialty) => (
-                      <Badge key={specialty} variant="outline">
+                      <Badge
+                        className="border-border/70 dark:border-border/90 text-gray-700 dark:text-gray-400"
+                        key={specialty}
+                        variant="outline"
+                      >
                         {specialty}
                       </Badge>
                     ))}
