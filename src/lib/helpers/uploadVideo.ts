@@ -17,14 +17,14 @@ export async function uploadVideoUtil(
 
     if (!response.ok) {
       const error = await response.json();
-      console.log("error", error);
+      console.error("error", error);
       throw new Error(error.message ?? "Failed to upload video");
     }
 
     const result = await response.json();
     return result.videoUrl;
   } catch (error) {
-    console.log("error", error);
+    console.error("error", error);
     throw new Error("Failed to upload video");
   }
 }

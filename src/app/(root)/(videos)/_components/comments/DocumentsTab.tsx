@@ -25,23 +25,23 @@ export default function DocumentsCommentsTab({
   return (
     <Tabs
       defaultValue="documents"
-      className="w-full   border border-border/20 rounded-xl p-2"
+      className="w-full   border border-border/20  dark:border-border/90 rounded-xl p-2"
       onValueChange={setActiveTab}
     >
-      <TabsList className="grid w-full grid-cols-2 rounded-xl ">
+      <TabsList className="grid w-full grid-cols-2 rounded-xl dark:bg-primary-900/40 ">
         <TabsTrigger
           className=" rounded-xl"
           value="documents"
           disabled={!documentsUrl && !notesUrl}
         >
-          Documents
+          <span className="dark:text-white/90">Documents</span>
         </TabsTrigger>
         <TabsTrigger
           className=" rounded-xl"
           value="comments"
           disabled={!currentVideoId}
         >
-          Commentaires
+          <span className="dark:text-white/90">Commentaires</span>
         </TabsTrigger>
       </TabsList>
 

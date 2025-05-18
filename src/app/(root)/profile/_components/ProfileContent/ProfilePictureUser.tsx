@@ -12,7 +12,6 @@ export default function ProfilePictureUser({
   readonly firstName: string;
   readonly lastName: string;
 }) {
-  console.log("image url", imageUrl);
   return (
     <div className="absolute left-8 -bottom-12">
       <Avatar className="h-24 w-24 border-4 border-white">

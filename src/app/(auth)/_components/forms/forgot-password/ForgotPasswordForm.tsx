@@ -27,7 +27,7 @@ export default function ForgotPasswordForm() {
     },
   });
   async function onSubmit(data: ForgotPasswordSchema) {
-    console.log(data);
+    // console.log(data);
     const result = await forgotPassword(data.email);
 
     if (result.success) {

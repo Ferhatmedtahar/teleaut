@@ -19,7 +19,7 @@ export default function CommentItem({
 }) {
   console.table(comment);
   return (
-    <div className="flex gap-4 p-2 border  border-border/20 rounded-xl">
+    <div className="flex gap-4 p-2 border  border-border/20 dark:border-border/90 rounded-xl">
       <Link
         target="_blank"
         href={`/profile/${comment.user.id}`}
@@ -35,7 +35,7 @@ export default function CommentItem({
           />
         ) : (
           <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-500 font-medium">
+            <span className="text-gray-500 dark:text-gray-400 font-medium">
               {comment.user.first_name.charAt(0) +
                 comment.user.last_name?.charAt(0)}
             </span>
@@ -47,19 +47,19 @@ export default function CommentItem({
           <span className="font-medium capitalize">
             {comment.user.first_name}
           </span>
-          <span className="text-[10px] text-gray-500">
+          <span className="text-[10px] text-gray-500 dark:text-gray-400/85">
             {formatDistanceToNow(new Date(comment.created_at), {
               addSuffix: true,
             })}
           </span>
           {comment.is_pinned && (
-            <span className="text-sm text-primary-800 flex items-center gap-1">
+            <span className="text-sm text-primary-800 dark:text-primary-500 flex items-center gap-1">
               <Pin size={14} />
               Pinned
             </span>
           )}
         </div>
-        <p className="mt-1 text-gray-700 text-sm whitespace-pre-line break-words max-w-[calc(100%-5rem)]">
+        <p className="mt-1 dark:text-gray-300 text-gray-700 text-sm whitespace-pre-line break-words max-w-[calc(100%-5rem)]">
           {comment.content}
         </p>
 

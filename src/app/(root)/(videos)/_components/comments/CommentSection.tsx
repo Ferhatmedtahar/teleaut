@@ -152,7 +152,7 @@ export default function CommentSection({
           />
         ))}
         {pinnedComments.length > 0 && comments.length > 0 && (
-          <div className="h-px bg-gray-200 my-4" />
+          <div className="h-px bg-gray-200 dark:bg-primary-700/40 w-full mt-4" />
         )}
         {comments.map((comment) => (
           <CommentItem

@@ -67,14 +67,14 @@ export default function VideoUploadForm({
     },
   });
 
-  console.log("errors", errors);
+  // console.log("errors", errors);
   // Watch form fields to access their values
   const videoFile = watch("videoFile");
   const thumbnailFile = watch("thumbnailFile");
   const notesFile = watch("notesFile");
   const documentsFile = watch("documentsFile");
 
-  console.log("studentClasses", studentClasses);
+  // console.log("studentClasses", studentClasses);
 
   // Handle file selection for video
   const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {

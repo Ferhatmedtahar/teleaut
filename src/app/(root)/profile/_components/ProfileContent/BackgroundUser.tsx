@@ -25,7 +25,6 @@ export default function BackgroundUser({
   readonly classValue?: string;
   readonly branch?: string;
 }) {
-  console.log("background_cover", background_cover);
   return (
     <>
       {background_cover ? (

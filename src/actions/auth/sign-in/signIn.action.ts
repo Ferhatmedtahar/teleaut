@@ -18,14 +18,14 @@ export async function signInAction(
     const parsed = SignInSchema.parse(values);
 
     const { email, password } = parsed;
-    console.log(email, password);
+    // console.log(email, password);
 
     const { data, error } = await supabase
       .from("users")
       .select("email, password,role, id,verification_status")
       .eq("email", email)
       .single();
-    console.log(data, error);
+    // console.log(data, error);
 
     if (!data) {
       return {
@@ -69,7 +69,7 @@ export async function signInAction(
       maxAge: 60 * 60 * 24 * 30,
     });
 
-    console.log(token);
+    // console.log(token);
 
     return { state: "SUCCESS", error: "", token };
   } catch (error) {

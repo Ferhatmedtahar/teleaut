@@ -16,7 +16,7 @@ export default function TeacherProfile({
 }: {
   readonly teacher: NonNullable<Awaited<ReturnType<typeof getTeacherById>>>;
 }) {
-  console.log("teacher admin profile", teacher);
+  // console.log("teacher admin profile", teacher);
   return (
     <Card>
       <CardHeader className="flex flex-row items-center gap-4">

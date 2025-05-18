@@ -34,7 +34,7 @@ export function Navbar({ className, userInfo }: NavbarProps) {
 
   return (
     <header
-      className={`sticky top-0 z-50 flex h-16 w-full items-center border-b  border-border/20 bg-background px-4 md:px-6 lg:px-10 ${className}`}
+      className={`sticky top-0 z-50 flex h-16 w-full items-center border-b  border-border/20 dark:border-border/90 bg-background px-4 md:px-6 lg:px-10 ${className}`}
     >
       <div className="flex w-full items-center justify-between">
         {/* Left side with menu toggle and logo */}
