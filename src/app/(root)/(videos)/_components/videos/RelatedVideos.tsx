@@ -62,7 +62,7 @@ export default function RelatedVideos({
       </div>
 
       {videos.length === 0 && (
-        <p className="text-gray-500 text-center py-4">
+        <p className="text-gray-500 dark:text-gray-400 text-center py-4">
           No related videos found
         </p>
       )}

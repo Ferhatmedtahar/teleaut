@@ -21,14 +21,14 @@ export async function uploadFile(
 
     if (!response.ok) {
       const error = await response.json();
-      console.log("error", error);
+
       throw new Error(error.message ?? `Failed to upload ${fileType}`);
     }
 
     const result = await response.json();
     return result.url;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw new Error(`Failed to upload ${fileType}`);
   }
 }

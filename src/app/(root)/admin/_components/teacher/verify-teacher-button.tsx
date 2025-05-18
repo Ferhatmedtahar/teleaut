@@ -88,12 +88,12 @@ export default function VerifyTeacherButton({
   const [isLoading, setIsLoading] = useState(false);
   const user = useUser();
   const router = useRouter();
-  console.log(
-    verificationStatus,
-    "verificationStatus",
-    teacherId,
-    teacherEmail
-  );
+  // console.log(
+  //   verificationStatus,
+  //   "verificationStatus",
+  //   teacherId,
+  //   teacherEmail
+  // );
   const handleApprove = async () => {
     if (!user?.id || user.role !== "admin") return;
     setIsLoading(true);

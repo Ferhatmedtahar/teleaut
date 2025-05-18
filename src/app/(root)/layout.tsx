@@ -31,7 +31,7 @@ export default async function RootLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background  selection:bg-yellow-100 selection:text-[#355869] ">
+    <div className="flex min-h-screen flex-col bg-background selection:bg-yellow-100 selection:text-[#355869]">
       <UserProvider user={user}>
         <Navbar
           userInfo={{
@@ -42,12 +42,13 @@ export default async function RootLayout({
 
         <MobileSidebarDrawer />
 
-        <div className="flex flex-grow overflow-hidden">
+        {/* Layout container */}
+        <div className="flex flex-grow h-[calc(100vh-4rem)]">
           <div className="hidden md:block md:flex-shrink-0">
-            <AppSidebar className="h-[calc(100vh-4rem)]" />
+            <AppSidebar className="h-full" />
           </div>
 
-          <main className="flex-1 overflow-auto w-full border-l  border-border/20">
+          <main className="flex-1 overflow-auto border-l border-border/20 dark:border-border/90">
             <AuthGuard />
             {children}
           </main>

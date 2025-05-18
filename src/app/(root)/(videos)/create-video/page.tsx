@@ -9,7 +9,7 @@ export default async function UploadVideoPage() {
   if (user?.role !== roles.teacher) return redirect("/");
   const result = await getCurrentUserById();
   const { user: currentUser } = result;
-  console.log(currentUser);
+  // console.log(currentUser);
   return (
     <div className=" mx-auto p-8">
       <VideoUploadForm

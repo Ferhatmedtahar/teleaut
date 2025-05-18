@@ -16,7 +16,7 @@ export async function forgotPassword(email: string) {
       .eq("email", email)
       .single();
 
-    console.log(existingUser);
+    // console.log(existingUser);
     if (!existingUser) {
       console.error("User does not exist");
       return { success: false, message: "User does not exist." };
@@ -32,7 +32,7 @@ export async function forgotPassword(email: string) {
       id: existingUser.id,
       role: existingUser.role,
     });
-    console.log(token);
+    // console.log(token);
     const { emailSent, message } = await sendResetPasswordEmail(
       existingUser.id,
       email,

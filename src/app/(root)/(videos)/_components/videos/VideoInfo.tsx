@@ -7,12 +7,14 @@ import {
 } from "@/actions/videos/likes";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
-import { Clock, ThumbsDown, ThumbsUp } from "lucide-react";
+import { ThumbsDown, ThumbsUp } from "lucide-react";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { FaClockRotateLeft } from "react-icons/fa6";
 import { toast } from "sonner";
-
+import ShareLink from "./ShareLink";
 interface VideoInfoProps {
   readonly video: {
     readonly id: string;
@@ -32,7 +34,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
   const [likesCount, setLikesCount] = useState({ likes: 0, dislikes: 0 });
   const [userLikeStatus, setUserLikeStatus] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { theme } = useTheme();
   useEffect(() => {
     const fetchLikesData = async () => {
       const [{ data: likesData }, { data: userStatus }] = await Promise.all([
@@ -50,13 +52,10 @@ export default function VideoInfo({ video }: VideoInfoProps) {
   const handleLike = async (isLike: boolean) => {
     setIsLoading(true);
 
-    // Optimistic UI update
     const prevUserLikeStatus = userLikeStatus;
     const prevLikesCount = { ...likesCount };
 
-    // Update UI immediately
     if (userLikeStatus === isLike) {
-      // User is unliking/undisliking
       setUserLikeStatus(null);
       if (isLike) {
         setLikesCount((prev) => ({ ...prev, likes: prev.likes - 1 }));
@@ -64,7 +63,6 @@ export default function VideoInfo({ video }: VideoInfoProps) {
         setLikesCount((prev) => ({ ...prev, dislikes: prev.dislikes - 1 }));
       }
     } else if (userLikeStatus === null) {
-      // User is liking/disliking for the first time
       setUserLikeStatus(isLike);
       if (isLike) {
         setLikesCount((prev) => ({ ...prev, likes: prev.likes + 1 }));
@@ -72,7 +70,6 @@ export default function VideoInfo({ video }: VideoInfoProps) {
         setLikesCount((prev) => ({ ...prev, dislikes: prev.dislikes + 1 }));
       }
     } else {
-      // User is changing from like to dislike or vice versa
       setUserLikeStatus(isLike);
       if (isLike) {
         setLikesCount((prev) => ({
@@ -87,11 +84,8 @@ export default function VideoInfo({ video }: VideoInfoProps) {
       }
     }
 
-    // Make the actual API call
     const result = await toggleVideoLike(video.id, isLike);
-
     if (!result.success) {
-      // Revert to previous state if there was an error
       setUserLikeStatus(prevUserLikeStatus);
       setLikesCount(prevLikesCount);
 
@@ -108,7 +102,48 @@ export default function VideoInfo({ video }: VideoInfoProps) {
       <h1 className="text-2xl font-bold mb-2">{video.title}</h1>
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center flex-col gap-4">
+          <div className="flex items-center gap-6 text-gray-500">
+            <div className="flex items-center gap-1">
+              {theme === "dark" ? (
+                <Image
+                  src="/icons/views-dark.svg"
+                  alt="Views"
+                  width={19}
+                  height={19}
+                />
+              ) : (
+                <Image
+                  src="/icons/views.svg"
+                  alt="Views"
+                  width={19}
+                  height={19}
+                />
+              )}
+
+              <span className="text-sm">{video.views} views</span>
+            </div>
+
+            <div className="flex gap-2 items-center">
+              {theme === "dark" ? (
+                <FaClockRotateLeft size={18} className="text-white/85 " />
+              ) : (
+                <Image
+                  src="/icons/Clock.svg"
+                  alt="Time"
+                  width={19}
+                  height={19}
+                />
+              )}
+
+              <p className="text-sm text-gray-500">
+                {formatDistanceToNow(new Date(video.created_at), {
+                  addSuffix: true,
+                })}
+              </p>
+            </div>
+          </div>
+
           <div className="flex items-center">
             <Link
               target="_blank"
@@ -137,52 +172,43 @@ export default function VideoInfo({ video }: VideoInfoProps) {
               <p className="font-medium">
                 {video.teacher.first_name} {video.teacher.last_name}
               </p>
-              <p className="text-sm text-gray-500">
-                {formatDistanceToNow(new Date(video.created_at), {
-                  addSuffix: true,
-                })}
-              </p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 text-gray-500">
-            <Clock size={18} />
-            <span>{video.views} views</span>
-          </div>
-
-          <div className="flex items-center ml-4">
+        <div className="flex items-center gap-4 ">
+          <div className="flex items-center gap-1">
             <Button
               variant="ghost"
-              size="sm"
-              className={`flex items-center gap-1 ${
+              size="icon"
+              className={`flex items-center gap-1  ${
                 userLikeStatus === true ? "text-blue-600" : ""
               }`}
               onClick={() => handleLike(true)}
               disabled={isLoading}
             >
-              <ThumbsUp size={18} />
+              <ThumbsUp size={19} />
               <span>{likesCount.likes}</span>
             </Button>
 
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               className={`flex items-center gap-1 ${
                 userLikeStatus === false ? "text-red-600" : ""
               }`}
               onClick={() => handleLike(false)}
               disabled={isLoading}
             >
-              <ThumbsDown size={18} />
+              <ThumbsDown size={19} />
               <span>{likesCount.dislikes}</span>
             </Button>
           </div>
+          <ShareLink isLoading={isLoading} />
         </div>
       </div>
 
-      <div className="h-px bg-gray-200 w-full mt-4" />
+      <div className="h-px bg-gray-200 dark:bg-primary-700/30 w-full mt-4" />
     </div>
   );
 }

@@ -20,7 +20,7 @@ const StudentSchema = SignUpSchema.pick({
 });
 
 export async function signUpStudent(formData: FormData) {
-  console.log("Start the server action");
+  // console.log("Start the server action");
 
   const data = Object.fromEntries(formData.entries());
   try {
@@ -44,14 +44,14 @@ export async function signUpStudent(formData: FormData) {
       .eq("email", email)
       .single();
 
-    console.log(existingUser);
+    // console.log(existingUser);
     if (existingUser) {
       console.error("User already exists");
       return { success: false, message: "Email is already registered." };
     }
 
     const hashedPassword = await hashPassword(password);
-    console.log(hashedPassword);
+    // console.log(hashedPassword);
     const { data: newUser, error: insertError } = await supabase
       .from("users")
       .insert({
@@ -69,7 +69,7 @@ export async function signUpStudent(formData: FormData) {
       .select()
       .single();
 
-    console.log(newUser);
+    // console.log(newUser);
     if (insertError || !newUser) {
       console.error(insertError);
       return { success: false, message: "Failed to create user." };
@@ -77,13 +77,13 @@ export async function signUpStudent(formData: FormData) {
 
     //!generate token and send email server action call
     const token = await generateToken({ id: newUser.id, role: "student" });
-    console.log(token);
+    // console.log(token);
     const { emailSent, message } = await sendVerificationEmail(
       newUser.id,
       newUser.email,
       token
     );
-    console.log(emailSent);
+    // console.log(emailSent);
 
     if (!emailSent) {
       //$Rollback user creation

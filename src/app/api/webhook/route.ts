@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    console.log("📩 Webhook received:", body);
+    // console.log("📩 Webhook received:", body);
 
     const { VideoGuid, Status } = body;
 

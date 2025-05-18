@@ -2,12 +2,12 @@ import { getVideoById } from "@/actions/videos/getVideoById";
 import { incrementVideoView } from "@/actions/videos/views";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import DocumentsCommentsTab from "../../_components/DocumentsTab";
-import RelatedVideos from "../../_components/RelatedVideos";
-import VideoDescription from "../../_components/VideoDescription";
-import VideoInfo from "../../_components/VideoInfo";
-import VideoPlayer from "../../_components/VIdeoPlayer";
-import VideoSkeleton from "../../_components/VideoSkeleton";
+import DocumentsCommentsTab from "../../_components/comments/DocumentsTab";
+import RelatedVideos from "../../_components/videos/RelatedVideos";
+import VideoDescription from "../../_components/videos/VideoDescription";
+import VideoInfo from "../../_components/videos/VideoInfo";
+import VideoPlayer from "../../_components/videos/VIdeoPlayer";
+import VideoSkeleton from "../../_components/videos/VideoSkeleton";
 
 export default async function VideoPage({
   params,
@@ -41,6 +41,7 @@ async function VideoContent({ id }: { readonly id: string }) {
           thumbnailUrl={video.thumbnail_url}
         />
         <VideoInfo video={video} />
+
         <VideoDescription description={video.description} />
       </div>
       <div className="lg:col-span-1">

@@ -7,8 +7,6 @@ export default function VideoPlayer({
   readonly videoUrl: string;
   readonly thumbnailUrl?: string | null;
 }) {
-  console.log("video url", videoUrl);
-
   return (
     <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
       <iframe

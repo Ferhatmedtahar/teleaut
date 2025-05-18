@@ -5,7 +5,6 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ videoId: string }> }
 ) {
-  console.log("excuted the api route now");
   const { videoId } = await params;
   const supabase = await createClient();
 
@@ -15,7 +14,6 @@ export async function GET(
     .eq("id", videoId)
     .single();
 
-  console.log(data);
   if (error) {
     console.error("Error fetching video status from Supabase:", error);
     return NextResponse.json(

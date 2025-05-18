@@ -101,24 +101,11 @@ const AppSidebar: React.FC<SidebarProps> = ({
               href={item.href}
               className={cn(
                 "flex items-center rounded-sm px-3 py-3 text-sm font-medium transition-colors",
-                "hover:bg-primary-200/50 dark:hover:bg-primary-50/20",
+                "hover:bg-primary-200/50 dark:hover:bg-primary-50/20 ",
                 isActive
                   ? "gradient-sidebar-light   text-foreground"
-                  : "text-muted-foreground  hover:text-foreground"
-                // isActive
-                //   ? theme === "light"
-                //     ? "gradient-sidebar-light text-foreground"
-                //     : "gradient-sidebar-dark text-foreground"
-                //   : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground  dark:text-primary-100/85 hover:text-foreground"
               )}
-              // className={cn(
-              //   "flex items-center  rounded-sm px-3 py-3 text-sm font-medium transition-colors",
-              //   "hover:bg-muted/80",
-              //   isActive
-              //     ? "  gradient-sidebar-light   text-foreground"
-              //     : "text-muted-foreground  hover:text-foreground"
-              //   // "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
-              // )}
             >
               <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
               <span>{item.title}</span>
@@ -133,10 +120,6 @@ const AppSidebar: React.FC<SidebarProps> = ({
           />
         </li>
       </nav>
-      {/* <div className="p-4 border-t border-border mt-auto">
-   
-      </div>
-      */}
     </div>
   );
 };
