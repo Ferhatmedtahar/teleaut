@@ -33,11 +33,16 @@ export async function getAdminStats() {
     .eq("role", "teacher")
     .eq("verification_status", VERIFICATION_STATUS.PENDING);
 
+  const { count: videos } = await supabase
+    .from("videos")
+    .select("*", { count: "exact", head: true });
+
   return {
     totalUsers: totalUsers ?? 0,
     totalTeachers: totalTeachers ?? 0,
     totalStudents: totalStudents ?? 0,
     pendingVerifications: pendingVerifications ?? 0,
+    totalVideos: videos,
   };
 }
 
@@ -197,4 +202,83 @@ export async function deleteTeacher(id: string) {
     console.error("Error in deleteTeacher:", error);
     return { success: false, message: "Failed to delete teacher" };
   }
+}
+
+//! get all videos
+
+export async function getVideosList() {
+  "use server";
+  const supabase = await createClient();
+
+  try {
+    const { data, error } = await supabase
+      .from("videos")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching videos:", error);
+      return { success: false, message: "Failed to fetch videos" };
+    }
+
+    return { success: true, data: data || [] };
+  } catch (error) {
+    console.error("Error in getVideosList:", error);
+    return { success: false, message: "Failed to fetch videos" };
+  }
+}
+
+//! Delete a video
+export async function deleteVideo(id: string) {
+  const supabase = await createClient();
+
+  try {
+    const { error } = await supabase.from("videos").delete().eq("id", id);
+
+    if (error) {
+      console.error("Error deleting video:", error);
+      throw new Error("Failed to delete video");
+    }
+
+    revalidatePath("/admin/videos-list");
+    return { success: true, message: "Video deleted successfully" };
+  } catch (error) {
+    console.error("Error in deleteVideo:", error);
+    return { success: false, message: "Failed to delete video" };
+  }
+}
+
+//! Get video stats
+export async function getVideoStatsOverTime() {
+  "use server";
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("videos")
+    .select("id, created_at");
+
+  if (error) {
+    console.error("Error fetching video stats:", error);
+    return [];
+  }
+
+  // Group by month
+  const statsByMonth: Record<string, number> = {};
+  data?.forEach((video) => {
+    const month = new Date(video.created_at).toLocaleString("default", {
+      month: "short",
+      year: "numeric",
+    });
+    statsByMonth[month] = (statsByMonth[month] || 0) + 1;
+  });
+
+  // Format for Recharts
+  const chartData = Object.entries(statsByMonth).map(([name, count]) => ({
+    name,
+    count,
+  }));
+
+  return chartData.sort(
+    (a, b) => new Date(a.name).getTime() - new Date(b.name).getTime()
+  );
 }

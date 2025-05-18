@@ -145,7 +145,7 @@ export default function CommentSection({
       <div className="flex-1 overflow-y-auto overflow-x-hidden p-1 space-y-4">
         {pinnedComments.map((comment) => (
           <CommentItem
-            key={comment.id + Math.random()}
+            key={comment.id}
             comment={comment}
             isTeacher={isTeacher}
             onPin={handlePinComment}
@@ -156,7 +156,7 @@ export default function CommentSection({
         )}
         {comments.map((comment) => (
           <CommentItem
-            key={comment.id + Math.random()}
+            key={comment.id}
             comment={comment}
             isTeacher={isTeacher}
             onPin={handlePinComment}
@@ -181,7 +181,7 @@ export default function CommentSection({
       >
         <div className="flex-center gap-2">
           <Textarea
-            placeholder="Ajouter un commentaire..."
+            placeholder="Ajouter une question..."
             className=" resize-none"
             {...register("content")}
           />
