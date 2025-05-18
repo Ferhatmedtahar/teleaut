@@ -40,3 +40,31 @@ export const professorSpecialties: Record<string, string[]> = {
     "Professeur d'Éducation Physique",
   ],
 };
+
+export const subjectToSpecialty: Record<string, string> = {
+  Arabe: "Professeur d'Arabe",
+  Français: "Professeur de Français",
+  Anglais: "Professeur d'Anglais",
+  Espagnol: "Professeur d'Espagnol",
+  Allemand: "Professeur d'Allemand",
+  Italien: "Professeur d'Italien",
+  Chinois: "Professeur de Chinois",
+  Russe: "Professeur de Russe",
+  Turc: "Professeur de Turc",
+  Japonais: "Professeur de Japonais",
+  Mathématiques: "Professeur de Mathématiques",
+  "Sciences Physiques": "Professeur de Sciences Physiques",
+  "Sciences de la Vie et de la Terre":
+    "Professeur de Sciences de la Vie et de la Terre",
+  "Histoire-Géographie": "Professeur d'Histoire-Géographie",
+  Philosophie: "Professeur de Philosophie",
+  Économie: "Professeur d'Économie",
+  Gestion: "Professeur de Gestion",
+  Comptabilité: "Professeur de Comptabilité",
+  Technologie: "Professeur de Technologie",
+  Informatique: "Professeur d'Informatique",
+  "Éducation Civique": "Professeur d'Éducation Civique",
+  "Éducation Islamique": "Professeur d'Éducation Islamique",
+  "Éducation Artistique": "Professeur d'Éducation Artistique",
+  "Éducation Physique": "Professeur d'Éducation Physique",
+};

@@ -6,7 +6,7 @@ import ErrorProfile from "./_components/ErrorProfile";
 import ProfileContentAdmin from "./_components/ProfileContent/ProfileContentAdmin";
 import ProfileContentStudent from "./_components/ProfileContent/ProfileContentStudent";
 import ProfileContentTeacher from "./_components/ProfileContent/ProfileContentTeacher";
-import SugguestionProfileStudent from "./_components/SugguestionProfileStudent";
+import SugguestionProfileStudent from "./_components/stduentSugguestion/SugguestionProfileStudentList";
 import TeacherVideosList from "./_components/TeacherVideosList";
 
 async function ProfileContent() {
@@ -38,7 +38,7 @@ async function ProfileContent() {
     return (
       <>
         <ProfileContentStudent user={user} currentUserId={currentUser.id} />
-        <SugguestionProfileStudent />
+        <SugguestionProfileStudent user={user} />
       </>
     );
   }
