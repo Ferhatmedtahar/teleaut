@@ -1,17 +1,20 @@
+import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { getUserById } from "@/actions/profile/getUserById.action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import ErrorProfile from "../_components/ErrorProfile";
-// import EditProfileButton from "../_components/EditProfileButton";
 
 async function ProfileContent({ userId }: { readonly userId: string }) {
+  const { success: currentSuccess, user: currentUser } = await getCurrentUser();
+
+  if (currentSuccess && currentUser && userId === currentUser.id) {
+    return redirect("/profile");
+  }
+
   const { user, success } = await getUserById(userId);
   if (!success) return <ErrorProfile />;
-
-  // const { user: currentUser, success: userSuccess } = await getCurrentUser();
-  // if (!userSuccess || typeof currentUser?.id !== "string")
-  // return <ErrorProfile />;
 
   //based on the role take data if teacher or student ,  if admin take nothing basic info.
 
@@ -83,13 +86,6 @@ async function ProfileContent({ userId }: { readonly userId: string }) {
         </div>
         <div className="mt-4 border rounded-md p-4">
           <p className="text-sm font-medium">{bio}</p>
-
-          {/* <Textarea
-            className="border-none p-0 resize-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            // placeholder="Bio will be here"
-            defaultValue=""
-            rows={3}
-          /> */}
         </div>
       </div>
     </div>

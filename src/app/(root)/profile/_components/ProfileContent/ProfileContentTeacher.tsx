@@ -1,9 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { roles } from "@/types/roles.enum";
 import { UserProps } from "@/types/UserProps";
-import Image from "next/image";
-import EditProfileButton from "../EditProfileButton";
 import ErrorProfile from "../ErrorProfile";
 import BackgroundUser from "./BackgroundUser";
 import ProfilePictureUser from "./ProfilePictureUser";
@@ -66,19 +63,12 @@ export default function ProfileContentTeacher({
             </div>
             {/* Bio Section */}
           </div>
-          <p className="text-background text-sm capitalize bg-[#355869] w-fit px-3 py-1 rounded-md">
+          <p className="text-white/95 text-sm capitalize bg-[#355869] w-fit px-3 py-1 rounded-md">
             {role}
           </p>
         </div>
         <div className="mt-4 border rounded-md p-4">
           <p className="text-sm font-medium">{bio}</p>
-
-          {/* <Textarea
-            className="border-none p-0 resize-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            // placeholder="Bio will be here"
-            defaultValue=""
-            rows={3}
-          /> */}
         </div>
       </div>
     </div>
