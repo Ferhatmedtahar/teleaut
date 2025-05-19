@@ -1,19 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Star, GraduationCap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { extractSubjectFromSpecialty } from "@/lib/helpers/extractSubject";
+import { GraduationCap } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 interface TeacherProps {
   id: string;
-  name: string;
-  avatar_url?: string;
+  first_name: string;
+  last_name?: string;
+  profile_url?: string;
   specialties: string[];
-  rating?: number;
-  bio?: string;
+  // rating?: number;
+  // bio?: string;
 }
 
 interface TeacherCardProps {
@@ -24,7 +25,7 @@ export default function TeacherCard({ teacher }: TeacherCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   // Format the rating to 1 decimal place if needed
-  const formattedRating = teacher.rating ? teacher.rating.toFixed(1) : "N/A";
+  // const formattedRating = teacher.rating ? teacher.rating.toFixed(1) : "N/A";
 
   // Get subjects from specialties
   const subjects = teacher.specialties
@@ -42,8 +43,8 @@ export default function TeacherCard({ teacher }: TeacherCardProps) {
           {/* Teacher Avatar */}
           <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-muted">
             <Image
-              src={teacher.avatar_url || "/placeholder-avatar.jpg"}
-              alt={teacher.name}
+              src={teacher.profile_url || "/placeholder-avatar.jpg"}
+              alt={teacher.first_name}
               fill
               className="object-cover"
             />
@@ -52,23 +53,23 @@ export default function TeacherCard({ teacher }: TeacherCardProps) {
           {/* Teacher Info */}
           <div>
             <h3 className="font-medium text-lg group-hover:text-primary transition-colors">
-              {teacher.name}
+              {teacher.first_name} {teacher.last_name}
             </h3>
 
-            {/* Rating */}
+            {/* Rating
             <div className="flex items-center mt-1">
               <Star className="w-4 h-4 text-yellow-500 fill-yellow-500 mr-1" />
-              <span className="text-sm">{formattedRating}</span>
-            </div>
+               <span className="text-sm">{formattedRating}</span>
+            </div> */}
           </div>
         </div>
 
-        {/* Teacher Bio (truncated) */}
+        {/* Teacher Bio (truncated)
         {teacher.bio && (
           <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
             {teacher.bio}
           </p>
-        )}
+        )} */}
 
         {/* Teacher Specialties */}
         <div className="mt-auto">

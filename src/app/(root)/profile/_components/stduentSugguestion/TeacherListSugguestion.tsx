@@ -15,13 +15,7 @@ export default async function TeachersListSugguestion({
     teachers: suggestedTeachersResponse,
     message,
   } = await getSuggestedTeachers(userId, userClass, userBranch);
-  console.log(
-    userId,
-    userClass,
-    userBranch,
-    success,
-    suggestedTeachersResponse
-  );
+
   if (suggestedTeachersResponse?.length === 0) return null;
   return (
     <section>

@@ -4,21 +4,16 @@ import { subjectToSpecialty } from "../constants/specialties";
 export function getApplicableSubjects(
   studentClass: string,
   studentBranch?: string
-): string[] {
-  if (!educationMapping[studentClass]) {
-    return [];
-  }
+) {
+  const classData = educationMapping[studentClass];
+  if (!classData) return [];
 
-  // If branch is provided and exists in the mapping, use it; otherwise use default
-  if (studentBranch && educationMapping[studentClass][studentBranch]) {
-    return educationMapping[studentClass][studentBranch];
-  } else if (educationMapping[studentClass]["_default"]) {
-    return educationMapping[studentClass]["_default"];
+  if (studentBranch && classData[studentBranch]) {
+    return classData[studentBranch];
   }
-
-  return [];
+  console.log(classData["_default"]);
+  return classData["_default"] ?? [];
 }
-
 /**
  * Get teacher specialties applicable for given subjects
  */
