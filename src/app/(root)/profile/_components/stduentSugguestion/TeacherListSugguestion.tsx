@@ -19,9 +19,8 @@ export default async function TeachersListSugguestion({
   if (suggestedTeachersResponse?.length === 0) return null;
   return (
     <section>
-      <h3 className="text-lg font-medium mb-4">Professeurs recommandés</h3>
       {success ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {suggestedTeachersResponse?.map((teacher) => (
             <TeacherCard key={teacher.id} teacher={teacher} />
           ))}

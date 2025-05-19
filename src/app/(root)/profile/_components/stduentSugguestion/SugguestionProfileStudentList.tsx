@@ -1,25 +1,3 @@
-// import { getSuggestedVideos } from "@/actions/profile/getSugguestionsStudentAll.action";
-// import { UserProps } from "@/types/UserProps";
-
-// export default async function SugguestionProfileStudentList({
-//   user,
-// }: {
-//   readonly user: UserProps;
-// }) {
-//   const SugguestedTeachers = await getSuggestedTeachers(
-//     user.id,
-//     user.class,
-//     user.branch,
-//     6
-//   );
-//   const SugguestedVideos = await getSuggestedVideos(user.id, user.class, 6);
-//   return (
-//     <div className="px-8 py-6">
-//       <h2 className="text-lg font-semibold mb-6">Explorer des professeur</h2>
-//     </div>
-//   );
-// }
-
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserProps } from "@/types/UserProps";
 import { Suspense } from "react";
@@ -31,10 +9,10 @@ export default function SuggestionProfileStudentList({
   readonly user: UserProps;
 }) {
   return (
-    <div className="space-y-10 py-6">
+    <div className="space-y-10 p-6">
       {/* Recommended Teachers Section */}
       <div>
-        <h2 className="text-xl font-semibold mb-6">Explorer des professeurs</h2>
+        <h2 className="text-xl font-semibold mb-6">Professeurs recommandés</h2>
         <Suspense
           fallback={
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -54,7 +32,7 @@ export default function SuggestionProfileStudentList({
 
       {/* Videos Section */}
       <div>
-        <h2 className="text-xl font-semibold mb-6">Explorer des vidéos</h2>
+        <h2 className="text-xl font-semibold mb-6">Vidéos recommandées</h2>
         <Suspense
           fallback={
             <div className="space-y-8">
