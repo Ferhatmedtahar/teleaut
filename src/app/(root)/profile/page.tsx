@@ -6,8 +6,8 @@ import ErrorProfile from "./_components/ErrorProfile";
 import ProfileContentAdmin from "./_components/ProfileContent/ProfileContentAdmin";
 import ProfileContentStudent from "./_components/ProfileContent/ProfileContentStudent";
 import ProfileContentTeacher from "./_components/ProfileContent/ProfileContentTeacher";
-import SugguestionProfileStudent from "./_components/SugguestionProfileStudent";
-import TeacherVideos from "./_components/TeacherVideos";
+import SuggestionProfileStudentList from "./_components/stduentSugguestion/SugguestionProfileStudentList";
+import TeacherVideosList from "./_components/TeacherVideosList";
 
 async function ProfileContent() {
   const {
@@ -19,25 +19,31 @@ async function ProfileContent() {
   const { user: currentUser, success: userSuccess } = await getCurrentUser();
 
   if (!success) return <ErrorProfile />;
-  if (!userSuccess || typeof currentUser?.id !== "string")
+  if (!userSuccess || typeof currentUser?.id !== "string") {
     return <ErrorProfile />;
+  }
 
+  //teacher profile
   if (user?.role == roles.teacher) {
     return (
       <>
         <ProfileContentTeacher user={user} currentUserId={currentUser.id} />
-        <TeacherVideos />
+        <TeacherVideosList user={user} />
       </>
     );
   }
+
+  //student profile
   if (user?.role == roles.student) {
     return (
       <>
         <ProfileContentStudent user={user} currentUserId={currentUser.id} />
-        <SugguestionProfileStudent />
+        <SuggestionProfileStudentList user={user} />
       </>
     );
   }
+
+  //admin profile like the student because he has no videos
   if (user?.role == roles.admin) {
     return (
       <>
