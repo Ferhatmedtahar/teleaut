@@ -37,13 +37,13 @@ import { UserProps } from "@/types/UserProps";
 import { useEffect, useState } from "react";
 import ExplorerVideo from "../../(videos)/_components/videos/ExplorerVideo";
 
-interface Props {
-  user: UserProps;
-}
-
 const LIMIT = 6;
 
-export default function TeacherVideosList({ user }: Props) {
+export default function TeacherVideosList({
+  user,
+}: {
+  readonly user: UserProps;
+}) {
   const [videos, setVideos] = useState<RelatedVideo[]>([]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -68,7 +68,7 @@ export default function TeacherVideosList({ user }: Props) {
   };
 
   useEffect(() => {
-    loadVideos(); // Load initial videos
+    loadVideos();
   }, []);
 
   return (
@@ -77,15 +77,14 @@ export default function TeacherVideosList({ user }: Props) {
 
       <div className="grid md:grid-cols-3 gap-6 w-full">
         {videos.length > 0 ? (
-          videos.map((video: RelatedVideo) => (
-            <ExplorerVideo key={video.id} video={video} user={user} />
+          videos.map((video: RelatedVideo, index: number) => (
+            <ExplorerVideo key={video.id + index} video={video} user={user} />
           ))
         ) : (
           <p>Teacher has no videos yet!</p>
         )}
       </div>
 
-      {/* Load More Button */}
       {hasMore && (
         <Button
           onClick={loadVideos}

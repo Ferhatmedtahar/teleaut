@@ -4,6 +4,9 @@ export interface RelatedVideo {
   thumbnail_url: string | null;
   created_at: string;
   views: number;
+  branch?: string;
+  class?: string;
+  subject?: string;
   teacher: {
     id: string;
     first_name: string;

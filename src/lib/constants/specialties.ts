@@ -68,3 +68,9 @@ export const subjectToSpecialty: Record<string, string> = {
   "Éducation Artistique": "Professeur d'Éducation Artistique",
   "Éducation Physique": "Professeur d'Éducation Physique",
 };
+
+export const specialtyToSubject: Record<string, string> = Object.fromEntries(
+  Object.entries(subjectToSpecialty).map(([key, value]) => [value, key])
+);
+
+export const specialties = Object.values(subjectToSpecialty);
