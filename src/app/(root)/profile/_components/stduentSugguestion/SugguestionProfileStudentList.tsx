@@ -1,12 +1,12 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { UserProps } from "@/types/UserProps";
+import { SuggestionList } from "@/types/UserProps";
 import { Suspense } from "react";
 import TeachersListSugguestion from "./TeacherListSugguestion";
 import VideosListSugguestion from "./VideoListSugguestion";
 export default function SuggestionProfileStudentList({
   user,
 }: {
-  readonly user: UserProps;
+  readonly user: SuggestionList;
 }) {
   return (
     <div className="space-y-10 p-6">

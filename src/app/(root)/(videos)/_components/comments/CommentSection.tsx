@@ -170,7 +170,7 @@ export default function CommentSection({
           </div>
         )}
         {!isLoading && comments.length === 0 && pinnedComments.length === 0 && (
-          <p className="text-gray-500 text-center">No comments yet.</p>
+          <p className="text-gray-500 text-center">Pas encore de questions.</p>
         )}
       </div>
 

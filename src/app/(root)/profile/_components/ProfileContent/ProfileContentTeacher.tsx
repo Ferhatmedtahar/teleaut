@@ -17,8 +17,6 @@ export default function ProfileContentTeacher({
   const role = user?.role;
   const specialties = user?.specialties;
   const bio = user?.bio ?? `Hi, i'm ${firstName} ${lastName}.`;
-  const profileUrl = user?.profile_url;
-  const background_cover = user?.background_url;
 
   const userId = user?.id;
 

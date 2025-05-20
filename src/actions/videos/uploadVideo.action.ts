@@ -14,6 +14,7 @@ type VideoUploadParams = {
   classValue: string;
   description: string;
   teacher_id: string;
+  branch: string;
 };
 
 export async function uploadVideo({
@@ -26,6 +27,7 @@ export async function uploadVideo({
   notesFile,
   documentsFile,
   teacher_id,
+  branch,
 }: VideoUploadParams): Promise<{
   success: boolean;
   message?: string;
@@ -59,6 +61,7 @@ export async function uploadVideo({
       notes_url: notesUrl,
       documents_url: documentsUrl,
       teacher_id,
+      branch,
       created_at: new Date().toISOString(),
     };
 

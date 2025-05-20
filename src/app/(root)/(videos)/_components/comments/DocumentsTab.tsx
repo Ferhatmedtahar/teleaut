@@ -18,10 +18,6 @@ export default function DocumentsCommentsTab({
 }: DocumentsTabProps) {
   const [activeTab, setActiveTab] = useState("documents");
 
-  if (!documentsUrl && !notesUrl) {
-    return null;
-  }
-
   return (
     <Tabs
       defaultValue="documents"
@@ -32,7 +28,7 @@ export default function DocumentsCommentsTab({
         <TabsTrigger
           className=" rounded-xl"
           value="documents"
-          disabled={!documentsUrl && !notesUrl}
+          disabled={!currentVideoId}
         >
           <span className="dark:text-white/90">Documents</span>
         </TabsTrigger>
@@ -49,8 +45,13 @@ export default function DocumentsCommentsTab({
       <TabsContent value="documents" className="p-1">
         <div className="space-y-4">
           {documentsUrl && <FileCard url={documentsUrl} key={documentsUrl} />}
-
           {notesUrl && <FileCard url={notesUrl} key={notesUrl} />}
+
+          {!documentsUrl && !notesUrl && (
+            <p className="text-center text-muted-foreground">
+              aucun document n&apos;a été soumis
+            </p>
+          )}
         </div>
       </TabsContent>
 

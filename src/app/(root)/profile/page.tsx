@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { getCurrentUserById } from "@/actions/profile/getCurrentUserById.action";
 import { roles } from "@/types/roles.enum";
-import { UserProps } from "@/types/UserProps";
+import { SuggestionList } from "@/types/UserProps";
 import ErrorProfile from "./_components/ErrorProfile";
 import ProfileContentAdmin from "./_components/ProfileContent/ProfileContentAdmin";
 import ProfileContentStudent from "./_components/ProfileContent/ProfileContentStudent";
@@ -13,7 +13,7 @@ async function ProfileContent() {
   const {
     user,
     success,
-  }: { user?: UserProps; success: boolean; message?: string } =
+  }: { user?: SuggestionList; success: boolean; message?: string } =
     await getCurrentUserById();
 
   const { user: currentUser, success: userSuccess } = await getCurrentUser();

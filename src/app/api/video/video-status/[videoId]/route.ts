@@ -7,7 +7,6 @@ export async function GET(
 ) {
   const { videoId } = await params;
   const supabase = await createClient();
-
   const { data, error } = await supabase
     .from("videos")
     .select("status")

@@ -9,7 +9,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { studentClasses } from "@/lib/constants/studentClassesAndBranches";
+import {
+  studentClasses,
+  studentClassesAndBranches,
+} from "@/lib/constants/studentClassesAndBranches";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileText, ImagePlus, Loader2, Plus, Upload, X } from "lucide-react";
 import Image from "next/image";
@@ -18,6 +21,8 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { uploadVideo } from "@/actions/videos/uploadVideo.action";
+import ClassSelector from "@/components/common/select/ClassSelector";
+import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { uploadVideoSchema, UploadVideoSchemaType } from "./UploadVideoSchema";
 
@@ -44,10 +49,22 @@ export default function VideoUploadForm({
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
   const notesInputRef = useRef<HTMLInputElement>(null);
   const documentsInputRef = useRef<HTMLInputElement>(null);
+  const allBranches = Object.values(studentClassesAndBranches);
 
+  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [availableBranches, setAvailableBranches] = useState<string[]>([]);
+  const handleClassChange = (value: keyof typeof studentClassesAndBranches) => {
+    setSelectedClass(value);
+    setAvailableBranches(studentClassesAndBranches[value] ?? []);
+    setValue("class", value);
+    setValue("branch", "");
+  };
+
+  const handleBranchChange = (value: string) => {
+    setValue("branch", value);
+  };
   // State for previews
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
-
   // Setup react-hook-form
   const {
     register,
@@ -126,8 +143,18 @@ export default function VideoUploadForm({
     };
   }, [thumbnailPreview]);
 
-  const onSubmit = async (data: UploadVideoSchemaType) => {
+  async function onSubmit(data: UploadVideoSchemaType) {
     // Validation
+    console.log("data", data);
+
+    if (
+      data.branch == "" &&
+      availableBranches.length != 1 &&
+      availableBranches[0] != "Aucune filière"
+    ) {
+      toast.error("Please select a branch");
+      return;
+    }
     if (!data.videoFile) {
       toast.error("Veuillez choisir un fichier vidéo");
       return;
@@ -174,6 +201,7 @@ export default function VideoUploadForm({
         classValue: data.class,
         description: data.description ?? "",
         teacher_id: userId,
+        branch: data.branch,
       });
 
       toast.dismiss(uploadToastId);
@@ -296,7 +324,7 @@ export default function VideoUploadForm({
           : "Une erreur s'est produite lors du téléchargement"
       );
     }
-  };
+  }
   const clearFile = (type: "video" | "thumbnail" | "notes" | "documents") => {
     switch (type) {
       case "video":
@@ -449,8 +477,54 @@ export default function VideoUploadForm({
             )}
           </div>
 
+          <div className="flex flex-col gap-1">
+            <Label>Classe</Label>
+            <ClassSelector handleClassChange={handleClassChange} />
+            <Input type="hidden" {...register("class")} />
+            {"class" in errors && errors.class && (
+              <p className="text-red-500">{errors.class.message}</p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <Label>Filière</Label>
+            {/* <BranchSelector
+              handleBranchChange={handleBranchChange}
+              selectedClass={
+                selectedClass as keyof typeof studentClassesAndBranches
+              }
+              availableBranches={availableBranches}
+            /> */}
+            <Select
+              disabled={!selectedClass || availableBranches.length <= 1}
+              onValueChange={handleBranchChange}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue
+                  placeholder={
+                    !selectedClass
+                      ? "Sélectionnez d'abord une classe"
+                      : availableBranches.length <= 1
+                      ? availableBranches[0]
+                      : "Sélectionnez votre filière"
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {availableBranches.map((branch) => (
+                  <SelectItem key={branch} value={branch}>
+                    {branch}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Input type="hidden" {...register("branch")} />
+            {"branch" in errors && errors.branch && (
+              <p className="text-red-500">{errors.branch.message}</p>
+            )}
+          </div>
           {/* Class Dropdown */}
-          <div>
+          {/* <div>
             <label htmlFor="class" className="block text-sm font-medium mb-1">
               Veuillez entrer la classe <span className="text-red-500">*</span>
             </label>
@@ -486,6 +560,44 @@ export default function VideoUploadForm({
               </p>
             )}
           </div>
+
+          <div>
+            <label htmlFor="branch" className="block text-sm font-medium mb-1">
+              Veuillez entrer la classe <span className="text-red-500">*</span>
+            </label>
+            <Controller
+              name="branch"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger
+                    className={`w-full ${errors.class ? "border-red-500" : ""}`}
+                  >
+                    <SelectValue placeholder="La branche" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {/*todo BRANCH ADD /}
+                    {studentClasses.map((branchOption) => (
+                      <SelectItem
+                        key={branchOption}
+                        value={branchOption.toLowerCase()}
+                      >
+                        {branchOption}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.branch && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.branch.message}
+              </p>
+            )}
+          </div> */}
 
           {/* Description Textarea */}
           <div>

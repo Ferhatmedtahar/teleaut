@@ -2,7 +2,11 @@
 
 import { createClient } from "@/lib/supabase/server";
 
-export async function getTeacherVideos(teacherId: string, limit = 6 as number) {
+export async function getTeacherVideos(
+  teacherId: string,
+  limit = 6,
+  offset = 0
+) {
   if (!teacherId) {
     return { success: false, message: "No teacher ID" };
   }
@@ -13,19 +17,15 @@ export async function getTeacherVideos(teacherId: string, limit = 6 as number) {
     .from("videos")
     .select("*")
     .eq("teacher_id", teacherId)
-    .limit(limit);
+    .range(offset, offset + limit - 1);
 
   if (error) {
     console.error("Error fetching videos:", error);
     return { success: false, message: "Failed to fetch videos" };
   }
 
-  if (!videos) {
-    return { success: false, message: "No Videos Found!" };
-  }
-
-  if (videos.length === 0) {
-    return { success: false, message: "Teacher has no videos" };
+  if (!videos || videos.length === 0) {
+    return { success: false, message: "No more videos" };
   }
 
   return { success: true, message: "Videos found", videos };

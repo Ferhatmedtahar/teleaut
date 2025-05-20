@@ -1,7 +1,7 @@
 "use client";
 
 import { RelatedVideo } from "@/types/RelatedVideos.interface";
-import { UserProps } from "@/types/UserProps";
+import { RelatedVideoUser } from "@/types/UserProps";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,8 +11,9 @@ export default function ExplorerVideo({
   user,
 }: {
   readonly video: RelatedVideo;
-  readonly user: UserProps;
+  readonly user?: RelatedVideoUser;
 }) {
+  if (!video || !user) return null;
   return (
     <Link
       href={`/videos/${video.id}`}
@@ -34,7 +35,7 @@ export default function ExplorerVideo({
         </h3>
         <div className="flex  items-center gap-2">
           <Image
-            src={user.profile_url}
+            src={user.profile_url || "/images/placeholder-avatar.png"}
             alt={user.first_name}
             width={24}
             height={24}

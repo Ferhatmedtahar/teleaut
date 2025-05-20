@@ -6,6 +6,7 @@ export const uploadVideoSchema = z.object({
   title: z.string().min(1, "Le titre est requis"),
   subject: z.string().min(1, "La matière est requise"),
   class: z.string().min(1, "La classe est requise"),
+  branch: z.string(),
   description: z
     .string()
     .max(2000, "La description ne doit pas dépasser 2000 caractères")
