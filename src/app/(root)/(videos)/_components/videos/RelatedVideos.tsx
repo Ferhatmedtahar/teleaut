@@ -56,9 +56,14 @@ export default function RelatedVideos({
     <div className="space-y-6 w-full ">
       <h2 className="text-xl md:text-2xl  font-semibold ">Explorer</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {videos.map((video) => (
-          <ExplorerVideo key={video.id} user={video.teacher} video={video} />
-        ))}
+        {videos.length !== 0 &&
+          videos.map((video, index) => (
+            <ExplorerVideo
+              key={video.id + index}
+              user={video.teacher}
+              video={video}
+            />
+          ))}
       </div>
 
       {videos.length === 0 && (
