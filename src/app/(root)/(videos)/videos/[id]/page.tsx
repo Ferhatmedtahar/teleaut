@@ -1,3 +1,5 @@
+import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
+import { addToHistory } from "@/actions/history/addToHistory.action";
 import { getVideoById } from "@/actions/videos/getVideoById";
 import { incrementVideoView } from "@/actions/videos/views";
 import { notFound } from "next/navigation";
@@ -15,7 +17,17 @@ export default async function VideoPage({
   readonly params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await incrementVideoView(id);
+  const { success, user } = await getCurrentUser();
+  if (!success || !user) {
+    notFound();
+  }
+  const [_, history] = await Promise.all([
+    await incrementVideoView(id),
+    await addToHistory(user.id, id),
+  ]);
+  if (!history.success) {
+    console.error("Error adding video to history:", history.message);
+  }
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
