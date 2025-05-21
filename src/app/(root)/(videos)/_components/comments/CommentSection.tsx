@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/providers/UserProvider";
 import { Comment } from "@/types/Comment.interface";
+import { useRouter } from "next/navigation";
 import CommentItem from "./CommentItem";
 
 const commentSchema = z.object({
@@ -34,6 +35,7 @@ export default function CommentSection({
 }: {
   readonly videoId: string;
 }) {
+  const router = useRouter();
   const user = useUser();
   const [pinnedComments, setPinnedComments] = useState<Comment[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -95,8 +97,10 @@ export default function CommentSection({
     }
 
     const { user: userData } = await getUserById(user.id);
+
+    const tempId = "temp-" + Date.now();
     const optimisticComment: Comment = {
-      id: "temp-" + Date.now(),
+      id: tempId,
       content: data.content,
       created_at: new Date().toISOString(),
       is_pinned: false,
@@ -109,23 +113,65 @@ export default function CommentSection({
 
     setComments((prev) => [optimisticComment, ...prev]);
     reset();
-    const formData = new FormData();
 
+    const formData = new FormData();
     formData.append("content", data.content);
+
     const result = await addComment(videoId, formData);
 
-    if (!result.success) {
-      setComments((prev) =>
-        prev.filter((comment) => comment.id !== optimisticComment.id)
-      );
-      toast.error("Failed to add comment", {
-        description: result.message,
-      });
+    if (!result.success || !result.comment) {
+      // Remove the temp one on failure
+      setComments((prev) => prev.filter((c) => c.id !== tempId));
+      toast.error("Failed to add comment", { description: result.message });
+      return;
     }
-  };
+
+    // Replace the temp comment with the real one
+    setComments((prev) =>
+      prev.map((comment) => (comment.id === tempId ? result.comment : comment))
+    );
+  }; // const onSubmit = async (data: CommentFormValues) => {
+  //   if (!user?.id) {
+  //     toast.error("You must be logged in to comment");
+  //     return;
+  //   }
+
+  //   const { user: userData } = await getUserById(user.id);
+  //   const optimisticComment: Comment = {
+  //     id: "temp-" + Date.now(),
+  //     content: data.content,
+  //     created_at: new Date().toISOString(),
+  //     is_pinned: false,
+  //     user: {
+  //       id: user.id,
+  //       first_name: userData?.first_name ?? "User",
+  //       profile_url: userData?.profile_url ?? null,
+  //     },
+  //   };
+
+  //   setComments((prev) => [optimisticComment, ...prev]);
+  //   reset();
+  //   const formData = new FormData();
+
+  //   formData.append("content", data.content);
+  //   const result = await addComment(videoId, formData);
+
+  //   if (!result.success) {
+  //     setComments((prev) =>
+  //       prev.filter((comment) => comment.id !== optimisticComment.id)
+  //     );
+
+  //     toast.error("Failed to add comment", {
+  //       description: result.message,
+  //     });
+  //   }
+  //   router.refresh();
+  // };
 
   const handlePinComment = async (commentId: string) => {
+    console.log("commentId", commentId);
     if (!isTeacher) return;
+
     const result = await togglePinComment(commentId, videoId);
     if (result.success) {
       const { data } = await getVideoComments(videoId, 1);

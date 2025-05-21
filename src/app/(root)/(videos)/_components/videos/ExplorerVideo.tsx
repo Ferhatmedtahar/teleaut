@@ -30,12 +30,17 @@ export default function ExplorerVideo({
       </div>
 
       <div className="mt-2 px-2 pb-2">
-        <h3 className="font-semibold text-base line-clamp-2 group-hover:text-primary-800 dark:group-hover:text-primary-300 transition-colors">
-          {video.title}
-        </h3>
+        <div className="flex justify-between pb-2">
+          <h3 className="font-semibold text-base line-clamp-2 group-hover:text-primary-800 dark:group-hover:text-primary-300 transition-colors">
+            {video.title}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            {video.branch}
+          </p>
+        </div>
         <div className="flex  items-center gap-2">
           <Image
-            src={user.profile_url || "/images/placeholder-avatar.png"}
+            src={user.profile_url ?? "/images/placeholder-profile.png"}
             alt={user.first_name}
             width={24}
             height={24}

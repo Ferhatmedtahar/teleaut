@@ -199,7 +199,7 @@ export async function getSubjectVideos(
     return {
       success: false,
       message: `No videos found for ${subject} in ${studentClass} ${
-        studentBranch || ""
+        studentBranch ?? ""
       }`,
     };
   }
@@ -232,84 +232,3 @@ export async function getSubjectVideos(
     videos: enrichedVideos,
   };
 }
-
-// async function enrichVideosWithTeachers(videos: any[], supabase: SupabaseClient) {
-//   const teacherIds = [...new Set(videos.map((v) => v.teacher_id))];
-
-//   const { data: teachers, error } = await supabase
-//     .from("profiles")
-//     .select("id, first_name, last_name, profile_url, rating")
-//     .in("id", teacherIds);
-
-//   if (error) throw new Error("Failed to fetch teachers");
-
-//   const teacherMap = new Map(teachers.map((t) => [t.id, t]));
-
-//   return videos.map((video) => ({
-//     ...video,
-//     teacher: teacherMap.get(video.teacher_id) || null,
-//   }));
-// }
-// export async function getSubjectVideos(
-//   subject: string,
-//   studentClass: string,
-//   studentBranch?: string,
-//   limit = 6
-// ) {
-//   if (!subject || !studentClass) {
-//     return {
-//       success: false,
-//       message: !subject ? "No subject provided" : "No class provided",
-//     };
-//   }
-
-//   const supabase = await createClient();
-
-//   // Check if subject is applicable for this class and branch
-//   const applicableSubjects = getApplicableSubjects(studentClass, studentBranch);
-//   if (!applicableSubjects.includes(subject)) {
-//     return {
-//       success: false,
-//       message: `Subject ${subject} is not applicable for ${studentClass} ${
-//         studentBranch || ""
-//       }`,
-//     };
-//   }
-
-//   // Find videos matching class and the requested subject
-//   const query = supabase
-//     .from("videos")
-//     .select(
-//       `
-//       *,
-//       teacher:teacher_id(id, first_name, last_name, profile_url, rating)
-//     `
-//     )
-//     .eq("class", studentClass)
-//     .eq("subject", subject)
-//     .order("created_at", { ascending: false })
-//     .limit(limit);
-
-//   // Add branch filter if provided
-//   if (studentBranch && studentBranch !== "Tous") {
-//     query.eq("branch", studentBranch);
-//   }
-
-//   const { data: videos, error } = await query;
-
-//   if (error) {
-//     console.error("Error fetching subject videos:", error);
-//     return { success: false, message: "Failed to fetch subject videos" };
-//   }
-
-//   if (!videos || videos.length === 0) {
-//     return {
-//       success: false,
-//       message: `No videos found for ${subject} in ${studentClass} ${
-//         studentBranch || ""
-//       }`,
-//     };
-//   }
-
-//   return { success: true, message: "Subject videos found", videos };
-// }

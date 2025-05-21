@@ -23,7 +23,7 @@ export async function addComment(videoId: string, formData: FormData) {
   }
 
   const decoded = await verifyToken(token);
-  if (!decoded || !decoded.id) {
+  if (!decoded?.id) {
     return { success: false, message: "Invalid token" };
   }
 
@@ -38,20 +38,90 @@ export async function addComment(videoId: string, formData: FormData) {
     };
   }
 
-  const { error } = await supabase.from("video_comments").insert({
-    video_id: videoId,
-    user_id: decoded.id,
-    content: content,
-  });
+  // Step 1: Insert the comment
+  const { data: inserted, error: insertError } = await supabase
+    .from("video_comments")
+    .insert({
+      video_id: videoId,
+      user_id: decoded.id,
+      content,
+    })
+    .select("id, content, created_at, is_pinned, user_id")
+    .single();
 
-  if (error) {
-    console.error("Error adding comment:", error);
-    return { success: false, message: "Failed to add comment" };
+  if (insertError || !inserted) {
+    console.error("Insert error:", insertError);
+    return { success: false, message: "Failed to insert comment" };
+  }
+
+  // Step 2: Fetch user separately
+  const { data: userData, error: userError } = await supabase
+    .from("users")
+    .select("id, first_name, profile_url")
+    .eq("id", inserted.user_id)
+    .single();
+
+  if (userError || !userData) {
+    console.error("User fetch error:", userError);
+    return { success: false, message: "Failed to fetch user data" };
   }
 
   revalidatePath(`/videos/${videoId}`);
-  return { success: true, message: "Comment added successfully" };
+
+  // Step 3: Combine and return
+  return {
+    success: true,
+    comment: {
+      id: inserted.id,
+      content: inserted.content,
+      created_at: inserted.created_at,
+      is_pinned: inserted.is_pinned ?? false,
+      user: {
+        id: userData.id,
+        first_name: userData.first_name,
+        profile_url: userData.profile_url,
+      },
+    },
+  };
 }
+// export async function addComment(videoId: string, formData: FormData) {
+//   const cookieStore = await cookies();
+//   const token = cookieStore.get("token")?.value;
+
+//   if (!token) {
+//     return { success: false, message: "Not authenticated" };
+//   }
+
+//   const decoded = await verifyToken(token);
+//   if (!decoded || !decoded.id) {
+//     return { success: false, message: "Invalid token" };
+//   }
+
+//   const supabase = await createClient();
+//   const content = formData.get("content") as string;
+
+//   const validation = CommentSchema.safeParse({ content });
+//   if (!validation.success) {
+//     return {
+//       success: false,
+//       message: validation.error.errors[0]?.message || "Invalid comment",
+//     };
+//   }
+
+//   const { error } = await supabase.from("video_comments").insert({
+//     video_id: videoId,
+//     user_id: decoded.id,
+//     content: content,
+//   });
+
+//   if (error) {
+//     console.error("Error adding comment:", error);
+//     return { success: false, message: "Failed to add comment" };
+//   }
+
+//   revalidatePath(`/videos/${videoId}`);
+//   return { success: true, message: "Comment added successfully" };
+// }
 
 //!Get all comments
 

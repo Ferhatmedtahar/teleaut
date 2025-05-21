@@ -20,7 +20,7 @@ export default async function TeachersListSugguestion({
   return (
     <section>
       {success ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
           {suggestedTeachersResponse?.map((teacher) => (
             <TeacherCard key={teacher.id} teacher={teacher} />
           ))}
