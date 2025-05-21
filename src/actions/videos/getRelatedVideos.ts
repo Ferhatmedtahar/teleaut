@@ -31,7 +31,7 @@ export async function getRelatedVideos(
     .select("*")
     .neq("id", currentVideoId)
     .eq("subject", subject)
-    .eq("class", classValue)
+    .eq("class", classValue.toLowerCase())
     .order("views", { ascending: false })
     .limit(limit);
 

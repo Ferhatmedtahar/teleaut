@@ -34,11 +34,18 @@ export default function CommentItem({
             className="w-12 h-12 rounded-full object-cover"
           />
         ) : (
-          <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-500 dark:text-gray-400 font-medium">
+          <div className="w-12 h-12 rounded-full  flex items-center justify-center">
+            <Image
+              src={"/images/profile.png"}
+              alt={comment.user.first_name}
+              width={48}
+              height={48}
+              className="w-12 h-12 rounded-full object-cover"
+            />
+            {/* <span className="text-gray-500 dark:text-gray-400 font-medium">
               {comment.user.first_name.charAt(0) +
                 comment.user.last_name?.charAt(0)}
-            </span>
+            </span> */}
           </div>
         )}
       </Link>

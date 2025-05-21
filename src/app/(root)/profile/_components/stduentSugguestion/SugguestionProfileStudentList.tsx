@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SuggestionList } from "@/types/UserProps";
 import { Suspense } from "react";
 import TeachersListSugguestion from "./TeacherListSugguestion";
-import VideosListSugguestion from "./VideoListSugguestion";
+// import VideosListSugguestion from "./VideoListSugguestion";
 export default function SuggestionProfileStudentList({
   user,
 }: {
@@ -31,7 +31,7 @@ export default function SuggestionProfileStudentList({
       </div>
 
       {/* Videos Section */}
-      <div>
+      {/* <div>
         <h2 className="text-xl font-semibold mb-6">Vidéos recommandées</h2>
         <Suspense
           fallback={
@@ -63,7 +63,7 @@ export default function SuggestionProfileStudentList({
             userBranch={user.branch}
           />
         </Suspense>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -25,20 +25,25 @@ export default function TeacherCard({ teacher }: TeacherCardProps) {
     .filter((subject, index, self) => self.indexOf(subject) === index);
 
   return (
-    <div className="flex flex-col     border border-border/5 dark:border-border/10 rounded-xl  p-2 hover:shadow-sm hover:shadow-border/15 transition-all duration-200">
-      {/* Top section: avatar + name */}
+    <div className="flex flex-col   border border-border/5 dark:border-border/10 rounded-xl p-2 hover:shadow-sm hover:shadow-border/15 transition-all duration-200">
       <div className="flex items-center  gap-4 mb-4">
         <div className="relative w-full aspect-square  rounded-xl overflow-hidden ">
           {teacher.profile_url ? (
             <Image
-              src={teacher.profile_url || "/placeholder-avatar.jpg"}
+              src={teacher.profile_url}
               alt={teacher.first_name}
               fill
               className="object-cover"
             />
           ) : (
             <div className="bg-border/20 dark:bg-border/50 flex items-center justify-center h-full">
-              {teacher.first_name}
+              <Image
+                src={"/images/placeholder-profile.png"}
+                alt={teacher.first_name}
+                fill
+                className="object-cover"
+              />
+              {/* {teacher.first_name} */}
             </div>
           )}
         </div>
