@@ -80,7 +80,7 @@ export default function ProfileContent({
             </div>
             {/* Bio Section */}
           </div>
-          <p className="text-background text-sm capitalize bg-[#355869] w-fit px-3 py-1 rounded-md">
+          <p className="dark:text-white text-background text-sm capitalize bg-[#355869] w-fit px-3 py-1 rounded-md">
             {role}
           </p>
         </div>

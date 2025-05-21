@@ -29,7 +29,7 @@
 // }
 import SuggestionProfileStudentList from "@/app/(root)/profile/_components/stduentSugguestion/SugguestionProfileStudentList";
 import { SuggestionList } from "@/types/UserProps";
-import VideoListVisitor from "./VideoList";
+import VideoListVisitor from "./VideoListVisitor";
 
 export default async function VisitorsProfile({
   currentUserId,
