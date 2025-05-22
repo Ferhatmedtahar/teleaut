@@ -1,5 +1,13 @@
 "use client";
 
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
@@ -18,9 +26,9 @@ export default function FilterBar({
   const searchParams = useSearchParams();
 
   // Get current filter values from URL
-  const currentClass = searchParams.get("class") || "";
-  const currentBranch = searchParams.get("branch") || "";
-  const currentSubject = searchParams.get("subject") || "";
+  const currentClass = searchParams.get("class") ?? "";
+  const currentBranch = searchParams.get("branch") ?? "";
+  const currentSubject = searchParams.get("subject") ?? "";
 
   // Determine available branches based on selected class
   const availableBranches = useMemo(() => {
@@ -68,20 +76,33 @@ export default function FilterBar({
 
   // Handle filter changes
   const handleClassChange = (value: string) => {
-    router.push(`${pathname}?${createQueryString("class", value)}`);
+    let urlvalue = value;
+    if (value == "tout") {
+      urlvalue = "";
+    }
+    router.push(`${pathname}?${createQueryString("class", urlvalue)}`);
   };
 
   const handleBranchChange = (value: string) => {
-    router.push(`${pathname}?${createQueryString("branch", value)}`);
+    let urlvalue = value;
+    if (value == "tout") {
+      urlvalue = "";
+    }
+    router.push(`${pathname}?${createQueryString("branch", urlvalue)}`);
   };
 
   const handleSubjectChange = (value: string) => {
-    router.push(`${pathname}?${createQueryString("subject", value)}`);
+    let urlvalue = value;
+    if (value == "tout") {
+      urlvalue = "";
+    }
+    router.push(`${pathname}?${createQueryString("subject", urlvalue)}`);
   };
 
   const resetFilters = () => {
     router.push(pathname);
   };
+  console.log(availableBranches);
 
   return (
     <div className="flex flex-col gap-4 mb-6">
@@ -89,74 +110,69 @@ export default function FilterBar({
       <div className="flex flex-wrap gap-4 items-center">
         {/* Class Filter */}
         <div className="flex flex-col gap-1">
-          <label
-            htmlFor="class-filter"
-            className="text-sm font-medium text-gray-700"
-          >
-            Class
-          </label>
-          <select
-            id="class-filter"
+          <Label htmlFor="class-filter">Class</Label>
+          <Select
             value={currentClass}
-            onChange={(e) => handleClassChange(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 min-w-[200px] focus:outline-none focus:ring-2 focus:ring-primary"
+            onValueChange={(value) => handleClassChange(value)}
           >
-            <option value="">All Classes</option>
-            {Object.keys(studentClassesAndBranches).map((classOption) => (
-              <option key={classOption} value={classOption}>
-                {classOption}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="min-w-[200px] border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary rounded-md">
+              <SelectValue placeholder="Toutes les classes" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="tout">Toutes les classes</SelectItem>
+              {Object.keys(studentClassesAndBranches).map((classOption) => (
+                <SelectItem key={classOption} value={classOption}>
+                  {classOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Branch Filter - Only show if a class is selected */}
-        {currentClass && availableBranches.length > 0 && (
-          <div className="flex flex-col gap-1">
-            <label
-              htmlFor="branch-filter"
-              className="text-sm font-medium text-gray-700"
-            >
-              Branch
-            </label>
-            <select
-              id="branch-filter"
-              value={currentBranch}
-              onChange={(e) => handleBranchChange(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2 min-w-[200px] focus:outline-none focus:ring-2 focus:ring-primary"
-            >
-              <option value="">All Branches</option>
-              {availableBranches.map((branch: string) => (
-                <option key={branch} value={branch}>
-                  {branch}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
+        {currentClass &&
+          availableBranches.length > 0 &&
+          availableBranches[0] !== "Aucune filière" && (
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="branch-filter">Branch</Label>
+              <Select
+                value={currentBranch}
+                onValueChange={(value) => handleBranchChange(value)}
+              >
+                <SelectTrigger className="min-w-[200px] border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary rounded-md">
+                  <SelectValue placeholder="Toutes les filières" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="tout">Toutes les filières</SelectItem>
+                  {availableBranches.map((branch: string) => (
+                    <SelectItem key={branch} value={branch}>
+                      {branch}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         {/* Subject Filter */}
         {subjects.length > 0 && (
           <div className="flex flex-col gap-1">
-            <label
-              htmlFor="subject-filter"
-              className="text-sm font-medium text-gray-700"
-            >
-              Subject
-            </label>
-            <select
-              id="subject-filter"
+            <Label htmlFor="subject-filter">Subject</Label>
+            <Select
               value={currentSubject}
-              onChange={(e) => handleSubjectChange(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2 min-w-[200px] focus:outline-none focus:ring-2 focus:ring-primary"
+              onValueChange={(value) => handleSubjectChange(value)}
             >
-              <option value="">All Subjects</option>
-              {subjects.map((subject) => (
-                <option key={subject} value={subject}>
-                  {subject}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="min-w-[200px] border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary rounded-md">
+                <SelectValue placeholder="Toutes les matières" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="tout">Toutes les matières</SelectItem>
+                {subjects.map((subject) => (
+                  <SelectItem key={subject} value={subject.toLowerCase()}>
+                    {subject}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         )}
 
@@ -164,7 +180,7 @@ export default function FilterBar({
         {(currentClass || currentBranch || currentSubject) && (
           <button
             onClick={resetFilters}
-            className="mt-auto mb-1 text-sm text-blue-600 hover:text-blue-800 transition-colors"
+            className="mt-auto mb-1 text-sm text-primary-600 hover:text-primary-800 transition-colors hover:underline hover:underline-offset-2 hover:cursor-pointer"
           >
             Reset Filters
           </button>

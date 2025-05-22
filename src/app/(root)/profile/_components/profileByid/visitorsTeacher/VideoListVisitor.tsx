@@ -68,6 +68,13 @@ export default function VideoListVisitor({
     });
   }, [videos, selectedBranch, selectedClass, selectedSubject]);
 
+  if (videos.length === 0) {
+    return (
+      <div className="p-8 flex flex-col gap-6">
+        <p className="text-center">Pas encore de vidéos.</p>
+      </div>
+    );
+  }
   return (
     <div className="p-8 flex flex-col gap-6">
       {/* Filter Bar Component */}
@@ -80,7 +87,7 @@ export default function VideoListVisitor({
             <ExplorerVideo key={video.id + index} video={video} user={user} />
           ))
         ) : (
-          <p>No videos found for the selected filters.</p>
+          <p>Pas encore de vidéos.</p>
         )}
       </div>
 

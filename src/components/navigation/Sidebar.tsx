@@ -7,7 +7,9 @@ import {
   Home,
   Info,
   MessageSquare,
+  MoonIcon,
   Settings,
+  Sun,
 } from "lucide-react"; // Assuming you're using lucide-react for icons
 import { useTheme } from "next-themes"; // Assuming you're using next-themes or a similar library
 import Link from "next/link";
@@ -112,12 +114,15 @@ const AppSidebar: React.FC<SidebarProps> = ({
             </Link>
           );
         })}
-        <li className="flex-center mt-5">
+        <li className="flex-center gap-4 md:gap-8 lg:gap-12 mt-5  ">
+          {/* <p>light</p> */}
+          <Sun className=" text-primary-700 dark:text-primary-100" />
           <Switch
-            className="gradient-bg-light "
+            className="gradient-bg-light hover:cursor-pointer"
             tabIndex={0}
             onClick={toggleTheme}
           />
+          <MoonIcon className=" text-primary-700 dark:text-primary-100" />
         </li>
       </nav>
     </div>
