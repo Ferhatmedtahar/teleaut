@@ -25,9 +25,9 @@ export default function VideoListVisitor({
   const searchParams = useSearchParams();
 
   // Get filter values from URL
-  const selectedClass = searchParams.get("class") || "";
-  const selectedBranch = searchParams.get("branch") || "";
-  const selectedSubject = searchParams.get("subject") || "";
+  const selectedClass = searchParams.get("class") ?? "";
+  const selectedBranch = searchParams.get("branch") ?? "";
+  const selectedSubject = searchParams.get("subject") ?? "";
 
   const loadVideos = async () => {
     setLoading(true);
@@ -77,10 +77,8 @@ export default function VideoListVisitor({
   }
   return (
     <div className="p-8 flex flex-col gap-6">
-      {/* Filter Bar Component */}
       <FilterBar subjects={subjects} userIsTeacher={user.role === "teacher"} />
 
-      {/* Videos Grid */}
       <div className="grid md:grid-cols-3 gap-6 w-full">
         {filteredVideos.length > 0 ? (
           filteredVideos.map((video, index) => (
@@ -91,7 +89,6 @@ export default function VideoListVisitor({
         )}
       </div>
 
-      {/* Load More */}
       {hasMore && filteredVideos.length > 0 && (
         <Button
           onClick={loadVideos}
