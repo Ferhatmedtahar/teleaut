@@ -2,10 +2,13 @@
 
 import { getTeacherVideos } from "@/actions/profile/getTeacherVideos.action";
 import { Button } from "@/components/common/buttons/Button";
+import { specialtyToSubject } from "@/lib/constants/specialties";
 import { RelatedVideo } from "@/types/RelatedVideos.interface";
 import { UserProps } from "@/types/UserProps";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import ExplorerVideo from "../../(videos)/_components/videos/ExplorerVideo";
+import FilterBar from "./profileByid/FilterBar";
 
 const LIMIT = 6;
 
@@ -18,6 +21,13 @@ export default function TeacherVideosList({
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
+  const searchParams = useSearchParams();
+
+  // Get filter values from URL
+  const selectedClass = searchParams.get("class") ?? "";
+  const selectedBranch = searchParams.get("branch") ?? "";
+  const selectedSubject = searchParams.get("subject") ?? "";
 
   const loadVideos = async () => {
     setLoading(true);
@@ -41,21 +51,79 @@ export default function TeacherVideosList({
     loadVideos();
   }, []);
 
+  // Extract unique subjects from user specialties
+  const subjects = useMemo(
+    () => [
+      ...new Set(user?.specialties?.map((s) => specialtyToSubject[s]) || []),
+    ],
+    [user?.specialties]
+  );
+
+  // Extract unique classes from video data
+  const classes = useMemo(
+    () => [...new Set(videos.map((video) => video.class).filter(Boolean))],
+    [videos]
+  );
+
+  // Extract unique branches from video data
+  const branches = useMemo(
+    () => [...new Set(videos.map((video) => video.branch).filter(Boolean))],
+    [videos]
+  );
+
+  // Filter videos based on URL parameters
+  const filteredVideos = useMemo(() => {
+    return videos.filter((video) => {
+      return (
+        (selectedBranch ? video.branch === selectedBranch : true) &&
+        (selectedClass ? video.class === selectedClass : true) &&
+        (selectedSubject ? video.subject === selectedSubject : true)
+      );
+    });
+  }, [videos, selectedBranch, selectedClass, selectedSubject]);
+
+  // Validate that classes and branches are proper arrays
+  if (
+    !Array.isArray(classes) ||
+    !Array.isArray(branches) ||
+    !classes.every((item) => typeof item === "string") ||
+    !branches.every((item) => typeof item === "string")
+  ) {
+    return (
+      <div className="p-8 flex flex-col gap-4">
+        <h2 className="text-2xl lg:text-3xl font-semibold">Your Videos</h2>
+        <p>Loading videos...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="p-8 flex flex-col gap-4">
       <h2 className="text-2xl lg:text-3xl font-semibold">Your Videos</h2>
 
+      {/* Only show FilterBar if there are videos */}
+      {videos.length > 0 && (
+        <FilterBar
+          subjects={subjects}
+          classes={classes}
+          branches={branches}
+          userIsTeacher={user.role === "teacher"}
+        />
+      )}
+
       <div className="grid md:grid-cols-3 gap-6 w-full">
-        {videos.length > 0 ? (
-          videos.map((video: RelatedVideo, index: number) => (
+        {filteredVideos.length > 0 ? (
+          filteredVideos.map((video: RelatedVideo, index: number) => (
             <ExplorerVideo key={video.id + index} video={video} user={user} />
           ))
+        ) : videos.length > 0 ? (
+          <p>No videos match the selected filters.</p>
         ) : (
           <p>Teacher has no videos yet!</p>
         )}
       </div>
 
-      {hasMore && (
+      {hasMore && filteredVideos.length > 0 && (
         <Button
           onClick={loadVideos}
           disabled={loading}
@@ -68,3 +136,73 @@ export default function TeacherVideosList({
     </div>
   );
 }
+// "use client";
+
+// import { getTeacherVideos } from "@/actions/profile/getTeacherVideos.action";
+// import { Button } from "@/components/common/buttons/Button";
+// import { RelatedVideo } from "@/types/RelatedVideos.interface";
+// import { UserProps } from "@/types/UserProps";
+// import { useEffect, useState } from "react";
+// import ExplorerVideo from "../../(videos)/_components/videos/ExplorerVideo";
+
+// const LIMIT = 6;
+
+// export default function TeacherVideosList({
+//   user,
+// }: {
+//   readonly user: UserProps;
+// }) {
+//   const [videos, setVideos] = useState<RelatedVideo[]>([]);
+//   const [offset, setOffset] = useState(0);
+//   const [loading, setLoading] = useState(false);
+//   const [hasMore, setHasMore] = useState(true);
+
+//   const loadVideos = async () => {
+//     setLoading(true);
+//     const { success, videos: newVideos } = await getTeacherVideos(
+//       user.id,
+//       LIMIT,
+//       offset
+//     );
+//     setLoading(false);
+
+//     if (!success || !newVideos || newVideos.length === 0) {
+//       setHasMore(false);
+//       return;
+//     }
+
+//     setVideos((prev) => [...prev, ...newVideos]);
+//     setOffset((prev) => prev + LIMIT);
+//   };
+
+//   useEffect(() => {
+//     loadVideos();
+//   }, []);
+
+//   return (
+//     <div className="p-8 flex flex-col gap-4">
+//       <h2 className="text-2xl lg:text-3xl font-semibold">Your Videos</h2>
+
+//       <div className="grid md:grid-cols-3 gap-6 w-full">
+//         {videos.length > 0 ? (
+//           videos.map((video: RelatedVideo, index: number) => (
+//             <ExplorerVideo key={video.id + index} video={video} user={user} />
+//           ))
+//         ) : (
+//           <p>Teacher has no videos yet!</p>
+//         )}
+//       </div>
+
+//       {hasMore && (
+//         <Button
+//           onClick={loadVideos}
+//           disabled={loading}
+//           className="mt-6 self-center bg-primary text-white py-2 px-4 rounded hover:bg-primary/90 transition"
+//         >
+//           {loading && <span className="animate-spin mr-2">⌛</span>}
+//           {loading ? "Loading..." : "Load More"}
+//         </Button>
+//       )}
+//     </div>
+//   );
+// }

@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { UserProps } from "@/types/UserProps";
+import { SuggestionList } from "@/types/UserProps";
 import BackgroundUser from "./BackgroundUser";
 import ProfilePictureUser from "./ProfilePictureUser";
 
@@ -7,7 +7,7 @@ export default async function ProfileContentStudent({
   user,
   currentUserId,
 }: {
-  readonly user: UserProps;
+  readonly user: SuggestionList;
   readonly currentUserId: string;
 }) {
   const firstName = user?.first_name ?? "User";
