@@ -116,13 +116,13 @@ const AppSidebar: React.FC<SidebarProps> = ({
         })}
         <li className="flex-center gap-4 md:gap-8 lg:gap-12 mt-5  ">
           {/* <p>light</p> */}
-          <Sun className=" text-primary-700 dark:text-primary-100" />
+          <MoonIcon className=" text-primary-700 dark:text-primary-100" />
           <Switch
             className="gradient-bg-light hover:cursor-pointer"
             tabIndex={0}
             onClick={toggleTheme}
           />
-          <MoonIcon className=" text-primary-700 dark:text-primary-100" />
+          <Sun className=" text-primary-700 dark:text-primary-100" />
         </li>
       </nav>
     </div>

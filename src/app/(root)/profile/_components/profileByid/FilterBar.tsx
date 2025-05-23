@@ -114,7 +114,7 @@ export default function FilterBar({
 
   return (
     <div className="flex flex-col gap-4 mb-6">
-      <h3 className="text-lg font-medium">Filter Videos</h3>
+      <h3 className="text-md font-medium">Filter Videos </h3>
       <div className="flex flex-wrap gap-4 items-center">
         {/* Class Filter - Only show if teacher has more than 2 classes */}
         {classes.length > 2 && (
