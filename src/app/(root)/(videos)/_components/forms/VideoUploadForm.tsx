@@ -9,10 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  studentClasses,
-  studentClassesAndBranches,
-} from "@/lib/constants/studentClassesAndBranches";
+import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileText, ImagePlus, Loader2, Plus, Upload, X } from "lucide-react";
 import Image from "next/image";
@@ -20,10 +17,11 @@ import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { uploadVideo } from "@/actions/videos/uploadVideo.action";
 import ClassSelector from "@/components/common/select/ClassSelector";
 import { Label } from "@/components/ui/label";
+
 import { useRouter } from "next/navigation";
+import BranchPicker from "./BranchPicker";
 import { uploadVideoSchema, UploadVideoSchemaType } from "./UploadVideoSchema";
 
 function capitalizeFirstLetter(val: string) {
@@ -39,9 +37,9 @@ export default function VideoUploadForm({
 }) {
   const router = useRouter();
   const subjectOptions = userSpecialties.map((spec) => {
-    // Extract the subject from the string
-    const match = spec.match(/Professeur d'(.*)/i);
-    return match?.[1] ?? spec;
+    // Match "Professeur d'" or "Professeur de " followed by the subject
+    const match = spec.match(/Professeur d'(.+)|Professeur de (.+)/i);
+    return match ? match[1] || match[2] : spec;
   });
 
   // Refs for file inputs
@@ -57,12 +55,14 @@ export default function VideoUploadForm({
     setSelectedClass(value);
     setAvailableBranches(studentClassesAndBranches[value] ?? []);
     setValue("class", value);
-    setValue("branch", "");
+    setValue("branch", [""]); // Reset branch when class changes
   };
 
-  const handleBranchChange = (value: string) => {
-    setValue("branch", value);
+  // Handle branch selection
+  const handleBranchChange = (branches: string[]) => {
+    setValue("branch", branches);
   };
+
   // State for previews
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   // Setup react-hook-form
@@ -80,9 +80,16 @@ export default function VideoUploadForm({
       title: "",
       subject: "",
       class: "",
+      branch: [""],
       description: "",
     },
   });
+
+  useEffect(() => {
+    if (subjectOptions.length === 1) {
+      setValue("subject", subjectOptions[0].toLowerCase());
+    }
+  }, [subjectOptions, setValue]);
 
   // console.log("errors", errors);
   // Watch form fields to access their values
@@ -90,7 +97,7 @@ export default function VideoUploadForm({
   const thumbnailFile = watch("thumbnailFile");
   const notesFile = watch("notesFile");
   const documentsFile = watch("documentsFile");
-
+  const selectedClasses = watch("class") as string; // Ensure this is an array
   // console.log("studentClasses", studentClasses);
 
   // Handle file selection for video
@@ -148,7 +155,7 @@ export default function VideoUploadForm({
     console.log("data", data);
 
     if (
-      data.branch == "" &&
+      data.branch?.length === 0 &&
       availableBranches.length != 1 &&
       availableBranches[0] != "Aucune filière"
     ) {
@@ -160,18 +167,12 @@ export default function VideoUploadForm({
       return;
     }
 
-    if (
-      !data.class ||
-      !studentClasses.map((c) => c.toLowerCase()).includes(data.class)
-    ) {
+    if (!data.class) {
       toast.error("Veuillez choisir une classe");
       return;
     }
 
-    if (
-      !data.subject ||
-      !subjectOptions.includes(capitalizeFirstLetter(data.subject))
-    ) {
+    if (!data.subject || data.subject === "") {
       toast.error("Veuillez choisir une matière");
       return;
     }
@@ -190,19 +191,26 @@ export default function VideoUploadForm({
 
     try {
       const uploadToastId = toast.loading("Téléchargement en cours...");
+      console.log("data", data);
+      const result = {
+        success: true,
+        message: "Vidéo téléchargée, traitement commencé...",
+        id: `11b00667-2350-49f5-b425-537fdcf90111`,
+      };
 
-      const result = await uploadVideo({
-        videoFile: data.videoFile,
-        thumbnailFile: data.thumbnailFile,
-        notesFile: data.notesFile ?? null,
-        documentsFile: data.documentsFile ?? null,
-        title: data.title,
-        subject: data.subject,
-        classValue: data.class,
-        description: data.description ?? "",
-        teacher_id: userId,
-        branch: data.branch,
-      });
+      // const result = await uploadVideo({
+      //   videoFile: data.videoFile,
+      //   thumbnailFile: data.thumbnailFile,
+      //   notesFile: data.notesFile ?? null,
+      //   documentsFile: data.documentsFile ?? null,
+      //   title: data.title,
+      //   subject: data.subject.toLowerCase(),
+      //   // Convert class to lowercase to match the expected format
+      //   classValue: data.class || [],
+      //   description: data.description ?? "",
+      //   teacher_id: userId,
+      //   branch: data.branch || [],
+      // });
 
       toast.dismiss(uploadToastId);
 
@@ -312,6 +320,10 @@ export default function VideoUploadForm({
         if (documentsInputRef.current) documentsInputRef.current.value = "";
         setValue("subject", "");
         setValue("class", "");
+        setValue("branch", []);
+        setSelectedClass("");
+        setAvailableBranches([]);
+        console.log("Video uploaded successfully:", result);
       }
     } catch (err) {
       toast.dismiss();
@@ -444,42 +456,93 @@ export default function VideoUploadForm({
             <label htmlFor="subject" className="block text-sm font-medium mb-1">
               Veuillez entrer la matière <span className="text-red-500">*</span>
             </label>
-            <Controller
-              name="subject"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger
-                    className={`w-full ${
-                      errors.subject ? "border-red-500" : ""
-                    }`}
-                  >
-                    <SelectValue placeholder="La matière" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {subjectOptions.map((subject) => (
-                      <SelectItem key={subject} value={subject.toLowerCase()}>
-                        {subject}
-                      </SelectItem>
-                    ))}{" "}
-                    {/* <SelectItem value="none">Aucune Matiere</SelectItem> */}
-                  </SelectContent>
-                </Select>
-              )}
-            />
+
+            {subjectOptions.length === 1 ? (
+              <input
+                type="text"
+                value={subjectOptions[0]}
+                readOnly
+                className="w-full bg-gray-100 text-sm text-gray-700 border border-gray-300 rounded px-3 py-2"
+              />
+            ) : (
+              <Controller
+                name="subject"
+                control={control}
+                rules={{ required: "La matière est requise." }}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger
+                      className={`w-full ${
+                        errors.subject ? "border-red-500" : ""
+                      }`}
+                    >
+                      <SelectValue placeholder="La matière" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {subjectOptions.map((subject) => (
+                        <SelectItem key={subject} value={subject.toLowerCase()}>
+                          {subject}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            )}
+            {/* {subjectOptions.length === 1 ? (
+              <>
+                <input
+                  type="text"
+                  value={subjectOptions[0]}
+                  readOnly
+                  className="w-full bg-gray-100 text-sm hover:cusror-not-allowed text-gray-700 border border-gray-300 rounded px-3 py-2"
+                />
+                <input
+                  type="hidden"
+                  className="hover:cusror-not-allowed"
+                  value={subjectOptions[0].toLowerCase()}
+                  {...register("subject", {
+                    required: "La matière est requise.",
+                  })}
+                />
+              </>
+            ) : (
+              <Controller
+                name="subject"
+                control={control}
+                rules={{ required: "La matière est requise." }}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger
+                      className={`w-full ${
+                        errors.subject ? "border-red-500" : ""
+                      }`}
+                    >
+                      <SelectValue placeholder="La matière" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {subjectOptions.map((subject) => (
+                        <SelectItem key={subject} value={subject.toLowerCase()}>
+                          {subject}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            )} */}
+
             {errors.subject && (
               <p className="mt-1 text-sm text-red-500">
                 {errors.subject.message}
               </p>
             )}
           </div>
-
           <div className="flex flex-col gap-1">
             <Label>Classe</Label>
+            {/* <ClassSelector handleClassChange={handleClassChange} /> */}
             <ClassSelector handleClassChange={handleClassChange} />
+
             <Input type="hidden" {...register("class")} />
             {"class" in errors && errors.class && (
               <p className="text-red-500">{errors.class.message}</p>
@@ -487,7 +550,7 @@ export default function VideoUploadForm({
           </div>
 
           <div className="flex flex-col gap-1">
-            <Label>Filière</Label>
+            {/* <Label>Filière</Label> */}
             {/* <BranchSelector
               handleBranchChange={handleBranchChange}
               selectedClass={
@@ -495,7 +558,7 @@ export default function VideoUploadForm({
               }
               availableBranches={availableBranches}
             /> */}
-            <Select
+            {/* <Select
               disabled={!selectedClass || availableBranches.length <= 1}
               onValueChange={handleBranchChange}
             >
@@ -517,7 +580,11 @@ export default function VideoUploadForm({
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
+            </Select> */}
+            <BranchPicker
+              onChange={handleBranchChange}
+              className={selectedClass}
+            />
             <Input type="hidden" {...register("branch")} />
             {"branch" in errors && errors.branch && (
               <p className="text-red-500">{errors.branch.message}</p>

@@ -14,7 +14,7 @@ type VideoUploadParams = {
   classValue: string;
   description: string;
   teacher_id: string;
-  branch: string;
+  branch: string[];
 };
 
 export async function uploadVideo({
