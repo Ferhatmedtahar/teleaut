@@ -100,114 +100,98 @@ export default function VideoInfo({ video }: VideoInfoProps) {
   };
 
   return (
-    <div className="">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-2">
-        {/* Title */}
-        <h1 className="text-xl sm:text-2xl font-bold">{video.title}</h1>
-
-        {/* Class with label */}
-        <p className="px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-sm">
-          <span className="font-medium">Niveau : </span>
-          {video.class}
-        </p>
+    <div className="space-y-4">
+      {/* Title and Class Level */}
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold leading-tight flex-1">
+          {video.title}
+        </h1>
+        <div className="flex-shrink-0">
+          <span className="inline-block px-3 py-1 bg-primary-100/90 text-primary-900 rounded-full dark:bg-primary-900/30 dark:text-primary-100 text-sm font-medium">
+            Niveau : {video.class}
+          </span>
+        </div>
       </div>
 
       {/* Branches */}
-      <div className="flex flex-col gap-2 my-3">
-        {video.branch && video.branch.length > 0 && (
-          <p className="text-sm dark:text-primary-50 text-black">
+      {video.branch && video.branch.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-sm text-muted-foreground">
             Pour les élèves des branches suivantes :
           </p>
-        )}
-        {video.branch && video.branch.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {video.branch.map((branch, idx) => (
               <span
                 key={idx}
-                className="px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs"
+                className="px-2 py-1 bg-secondary/50 text-secondary-foreground rounded-md text-xs"
               >
                 {branch}
               </span>
             ))}
           </div>
-        )}
-      </div>
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 ">
-        <div className="flex items-center flex-col gap-4">
-          <div className="flex items-center gap-6 ">
-            <div className="flex items-center gap-1">
-              {theme === "dark" ? (
-                <Image
-                  src="/icons/views-dark.svg"
-                  alt="Views"
-                  width={19}
-                  height={19}
-                />
-              ) : (
-                <Image
-                  src="/icons/views.svg"
-                  alt="Views"
-                  width={19}
-                  height={19}
-                />
-              )}
+        </div>
+      )}
 
-              <span className="text-sm dark:text-primary-100 text-black ">
-                {video.views} views
+      {/* Views and Time */}
+      <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2">
+          {theme === "dark" ? (
+            <Image
+              src="/icons/views-dark.svg"
+              alt="Views"
+              width={16}
+              height={16}
+            />
+          ) : (
+            <Image src="/icons/views.svg" alt="Views" width={16} height={16} />
+          )}
+          <span>{video.views} views</span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {theme === "dark" ? (
+            <FaClockRotateLeft size={16} className="text-muted-foreground" />
+          ) : (
+            <Image src="/icons/Clock.svg" alt="Time" width={16} height={16} />
+          )}
+          <span>
+            {formatDistanceToNow(new Date(video.created_at), {
+              addSuffix: true,
+            })}
+          </span>
+        </div>
+      </div>
+
+      {/* Teacher Info and Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        {/* Teacher Info */}
+        <Link
+          href={`/profile/${video.teacher.id}`}
+          target="_blank"
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+        >
+          {video.teacher.profile_url ? (
+            <Image
+              src={video.teacher.profile_url}
+              alt={video.teacher.first_name}
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+              <span className="text-muted-foreground font-medium text-sm">
+                {video.teacher.first_name.charAt(0)}
+                {video.teacher.last_name?.charAt(0)}
               </span>
             </div>
-
-            <div className="flex gap-2 items-center">
-              {theme === "dark" ? (
-                <FaClockRotateLeft size={18} className="text-white/85 " />
-              ) : (
-                <Image
-                  src="/icons/Clock.svg"
-                  alt="Time"
-                  width={19}
-                  height={19}
-                />
-              )}
-
-              <p className="text-sm dark:text-primary-100 text-black">
-                {formatDistanceToNow(new Date(video.created_at), {
-                  addSuffix: true,
-                })}
-              </p>
-            </div>
+          )}
+          <div>
+            <p className="font-medium text-sm">
+              {video.teacher.first_name} {video.teacher.last_name}
+            </p>
           </div>
-
-          <div className="flex items-center">
-            <Link
-              target="_blank"
-              href={`/profile/${video.teacher.id}`}
-              className="shrink-0 w-12 h-12"
-            >
-              {video.teacher.profile_url ? (
-                <Image
-                  src={video.teacher.profile_url}
-                  alt={video.teacher.first_name}
-                  width={48}
-                  height={48}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-500 font-medium">
-                    {video.teacher.first_name.charAt(0) +
-                      video.teacher.last_name?.charAt(0)}
-                  </span>
-                </div>
-              )}
-            </Link>
-
-            <div className="ml-3">
-              <p className="font-medium">
-                {video.teacher.first_name} {video.teacher.last_name}
-              </p>
-            </div>
-          </div>
-        </div>
+        </Link>
 
         <div className="flex items-center gap-4 ">
           <div className="flex items-center gap-1">
@@ -237,6 +221,9 @@ export default function VideoInfo({ video }: VideoInfoProps) {
               <span>{likesCount.dislikes}</span>
             </Button>
           </div>
+
+          {/* Like/Dislike and Share Actions */}
+
           <ShareLink isLoading={isLoading} />
         </div>
       </div>
