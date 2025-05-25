@@ -37,10 +37,6 @@ export async function getVideoById(id: string): Promise<{
     };
   }
 
-  // console.log({
-  //   ...video,
-  //   ...teacher,
-  // });
   return {
     success: true,
     data: {

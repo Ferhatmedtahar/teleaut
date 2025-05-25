@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import ClassSelector from "@/components/common/select/ClassSelector";
 import { Label } from "@/components/ui/label";
 
+import { uploadVideo } from "@/actions/videos/uploadVideo.action";
 import { useRouter } from "next/navigation";
 import BranchPicker from "./BranchPicker";
 import { uploadVideoSchema, UploadVideoSchemaType } from "./UploadVideoSchema";
@@ -191,26 +192,21 @@ export default function VideoUploadForm({
 
     try {
       const uploadToastId = toast.loading("Téléchargement en cours...");
-      console.log("data", data);
-      const result = {
-        success: true,
-        message: "Vidéo téléchargée, traitement commencé...",
-        id: `11b00667-2350-49f5-b425-537fdcf90111`,
-      };
-
-      // const result = await uploadVideo({
-      //   videoFile: data.videoFile,
-      //   thumbnailFile: data.thumbnailFile,
-      //   notesFile: data.notesFile ?? null,
-      //   documentsFile: data.documentsFile ?? null,
-      //   title: data.title,
-      //   subject: data.subject.toLowerCase(),
-      //   // Convert class to lowercase to match the expected format
-      //   classValue: data.class || [],
-      //   description: data.description ?? "",
-      //   teacher_id: userId,
-      //   branch: data.branch || [],
-      // });
+      console.log(data);
+      const result = await uploadVideo({
+        videoFile: data.videoFile,
+        thumbnailFile: data.thumbnailFile,
+        notesFile: data.notesFile ?? null,
+        documentsFile: data.documentsFile ?? null,
+        title: data.title,
+        subject: data.subject.toLowerCase(),
+        // Convert class to lowercase to match the expected format
+        classValue: data.class.toLowerCase(),
+        description: data.description ?? "",
+        teacher_id: userId,
+        branch:
+          data.branch?.length == 1 && data.branch[0] == "" ? null : data.branch,
+      });
 
       toast.dismiss(uploadToastId);
 
@@ -250,7 +246,7 @@ export default function VideoUploadForm({
             }
 
             const { status } = await statusResponse.json();
-
+            console.log("Video status:", status);
             let statusMessage = "Traitement vidéo...";
             let shouldPoll = true;
 

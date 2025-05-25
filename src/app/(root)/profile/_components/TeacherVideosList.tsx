@@ -3,6 +3,7 @@
 import { getTeacherVideos } from "@/actions/profile/getTeacherVideos.action";
 import { Button } from "@/components/common/buttons/Button";
 import { specialtyToSubject } from "@/lib/constants/specialties";
+import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
 import { RelatedVideo } from "@/types/RelatedVideos.interface";
 import { UserProps } from "@/types/UserProps";
 import { useSearchParams } from "next/navigation";
@@ -66,16 +67,20 @@ export default function TeacherVideosList({
   );
 
   // Extract unique branches from video data
-  const branches = useMemo(
-    () => [...new Set(videos.map((video) => video.branch).filter(Boolean))],
-    [videos]
-  );
+  const branches =
+    studentClassesAndBranches[
+      selectedClass as keyof typeof studentClassesAndBranches
+    ] || [];
+  // useMemo(
+  //   () => [...new Set(videos.map((video) => video.branch).filter(Boolean))],
+  //   [videos]
+  // );
 
   // Filter videos based on URL parameters
   const filteredVideos = useMemo(() => {
     return videos.filter((video) => {
       return (
-        (selectedBranch ? video.branch === selectedBranch : true) &&
+        (selectedBranch ? video.branch?.includes(selectedBranch) : true) &&
         (selectedClass ? video.class === selectedClass : true) &&
         (selectedSubject ? video.subject === selectedSubject : true)
       );
@@ -85,7 +90,6 @@ export default function TeacherVideosList({
   // Validate that classes and branches are proper arrays
   if (
     !Array.isArray(classes) ||
-    !Array.isArray(branches) ||
     !classes.every((item) => typeof item === "string") ||
     !branches.every((item) => typeof item === "string")
   ) {
