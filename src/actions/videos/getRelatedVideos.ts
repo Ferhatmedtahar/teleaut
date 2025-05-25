@@ -1,19 +1,7 @@
 "use server";
 import { createClient } from "@/lib/supabase/server";
+import { RelatedVideo } from "@/types/RelatedVideos.interface";
 
-interface RelatedVideo {
-  id: string;
-  title: string;
-  thumbnail_url: string | null;
-  created_at: string;
-  views: number;
-  teacher: {
-    id: string;
-    first_name: string;
-    last_name?: string;
-    profile_url: string | null;
-  };
-}
 // Get related videos by subject and class (excluding current video), with teacher info
 export async function getRelatedVideos(
   currentVideoId: string,

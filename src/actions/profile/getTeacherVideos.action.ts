@@ -19,6 +19,7 @@ export async function getTeacherVideos(
     .eq("teacher_id", teacherId)
     .range(offset, offset + limit - 1);
 
+  console.log("Fetched videos:", videos);
   if (error) {
     console.error("Error fetching videos:", error);
     return { success: false, message: "Failed to fetch videos" };

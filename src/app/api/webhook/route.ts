@@ -19,7 +19,9 @@ export async function POST(req: NextRequest) {
     const supabase = await createClient();
 
     const video_url = `https://iframe.mediadelivery.net/embed/426479/${VideoGuid}`;
-
+    console.log(
+      `Updating video status for VideoGuid: ${VideoGuid}, Status: ${Status}, video_url: ${video_url}`
+    );
     const { data, error } = await supabase
       .from("videos")
       .update({ status: Status })

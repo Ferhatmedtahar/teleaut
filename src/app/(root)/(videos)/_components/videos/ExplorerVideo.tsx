@@ -13,6 +13,7 @@ export default function ExplorerVideo({
   readonly video: RelatedVideo;
   readonly user?: RelatedVideoUser;
 }) {
+  console.log("ExplorerVideo", video, user);
   if (!video || !user) return null;
   return (
     <Link
@@ -34,9 +35,12 @@ export default function ExplorerVideo({
           <h3 className="font-semibold text-base line-clamp-2 group-hover:text-primary-800 dark:group-hover:text-primary-300 transition-colors">
             {video.title}
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            {video.branch}
-          </p>
+          {video.branch && video.branch.length > 0 && (
+            <p className="px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
+              {video.branch[0]}
+              {video.branch.length > 1 && `... +${video.branch.length - 1}`}
+            </p>
+          )}
         </div>
         <div className="flex  items-center gap-2">
           <Image

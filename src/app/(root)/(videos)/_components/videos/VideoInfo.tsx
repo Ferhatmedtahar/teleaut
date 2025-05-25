@@ -21,6 +21,8 @@ interface VideoInfoProps {
     readonly title: string;
     readonly created_at: string;
     readonly views: number;
+    readonly class: string;
+    readonly branch: string[];
     readonly teacher: {
       id: string;
       first_name: string;
@@ -99,11 +101,40 @@ export default function VideoInfo({ video }: VideoInfoProps) {
 
   return (
     <div className="">
-      <h1 className="text-2xl font-bold mb-2">{video.title}</h1>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-2">
+        {/* Title */}
+        <h1 className="text-xl sm:text-2xl font-bold">{video.title}</h1>
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+        {/* Class with label */}
+        <p className="px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-sm">
+          <span className="font-medium">Niveau : </span>
+          {video.class}
+        </p>
+      </div>
+
+      {/* Branches */}
+      <div className="flex flex-col gap-2 my-3">
+        {video.branch && video.branch.length > 0 && (
+          <p className="text-sm dark:text-primary-50 text-black">
+            Pour les élèves des branches suivantes :
+          </p>
+        )}
+        {video.branch && video.branch.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {video.branch.map((branch, idx) => (
+              <span
+                key={idx}
+                className="px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs"
+              >
+                {branch}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 ">
         <div className="flex items-center flex-col gap-4">
-          <div className="flex items-center gap-6 text-gray-500">
+          <div className="flex items-center gap-6 ">
             <div className="flex items-center gap-1">
               {theme === "dark" ? (
                 <Image
@@ -121,7 +152,9 @@ export default function VideoInfo({ video }: VideoInfoProps) {
                 />
               )}
 
-              <span className="text-sm">{video.views} views</span>
+              <span className="text-sm dark:text-primary-100 text-black ">
+                {video.views} views
+              </span>
             </div>
 
             <div className="flex gap-2 items-center">
@@ -136,7 +169,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
                 />
               )}
 
-              <p className="text-sm text-gray-500">
+              <p className="text-sm dark:text-primary-100 text-black">
                 {formatDistanceToNow(new Date(video.created_at), {
                   addSuffix: true,
                 })}
