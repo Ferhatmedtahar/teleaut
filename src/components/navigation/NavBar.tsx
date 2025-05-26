@@ -7,6 +7,7 @@ import { Bell, Menu, Plus, Search, X } from "lucide-react";
 import Form from "next/form";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import SearchFormReset from "../forms/SearchFormReset";
 import UserDropDownMenu from "./UserDropDownMenu";
 
 interface NavbarProps {
@@ -23,7 +24,7 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
   const role = user?.role;
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
-
+  const [search, setSearch] = useState("");
   // Focus the search input when mobile search is shown
   useEffect(() => {
     if (showMobileSearch && searchInputRef.current) {
@@ -62,6 +63,8 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
         <div className="relative mx-auto hidden w-full max-w-md md:block">
           <Form action="/">
             <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               type="search"
               name="query"
               placeholder="Chercher"
@@ -71,9 +74,12 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
             <div className="absolute inset-y-0 left-3 flex items-center">
               <Search className="h-5 w-5 dark:text-white/80 text-muted-foreground" />
             </div>
-            <button type="submit" className="hidden">
-              Search
-            </button>
+            <button type="submit" className="hidden"></button>
+            {search && (
+              <div className="absolute inset-y-0 right-3 flex items-center">
+                <SearchFormReset />
+              </div>
+            )}
           </Form>
         </div>
 
