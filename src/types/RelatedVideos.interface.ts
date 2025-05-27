@@ -1,6 +1,7 @@
 export interface RelatedVideo {
   id: string;
   title: string;
+  description?: string;
   thumbnail_url: string | null;
   created_at: string;
   views: number;

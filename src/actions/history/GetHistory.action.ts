@@ -52,7 +52,7 @@ export async function getHistory(userId: string): Promise<{
         thumbnail_url: video.thumbnail_url,
         created_at: video.created_at,
         views: video.views,
-        branch: video.branch,
+        branch: video.branch ?? [],
         class: video.class,
         subject: video.subject,
         teacher: teacher || null,

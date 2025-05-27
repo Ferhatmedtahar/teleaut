@@ -1,28 +1,10 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import { RelatedVideo } from "@/types/RelatedVideos.interface";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-
-interface Teacher {
-  id: string;
-  first_name: string;
-  last_name?: string;
-  profile_url: string | null;
-}
-
-interface RelatedVideo {
-  id: string;
-  title: string;
-  thumbnail_url: string | null;
-  created_at: string;
-  views: number;
-  branch?: string;
-  class?: string;
-  subject?: string;
-  teacher: Teacher;
-}
 
 export default function WatchHistory({
   watchedVideos,
@@ -39,7 +21,10 @@ export default function WatchHistory({
     (video) =>
       video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       video.subject?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      video.branch?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      // video.branch?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      video.branch?.some((branch) =>
+        branch.toLowerCase().includes(searchQuery.toLowerCase())
+      ) ||
       `${video.teacher.first_name} ${video.teacher.last_name ?? ""}`
         .toLowerCase()
         .includes(searchQuery.toLowerCase())
