@@ -67,19 +67,19 @@ export default function AidePage() {
           <div className="w-16 h-1 bg-gradient-to-r from-primary-600 to-primary-800 rounded-full mx-auto mb-8" />
 
           <Accordion type="single" collapsible className="space-y-4">
-            <FAQ
+            <Faq
               question="Comment regarder les vidéos ?"
               answer="Clique simplement sur n'importe quelle vidéo pour la regarder. Tu peux aussi créer une playlist de tes vidéos favorites."
             />
-            <FAQ
+            <Faq
               question="Comment demander une étude personnalisée ?"
               answer="Va sur le profil du professeur qui t'intéresse, puis clique sur le bouton 'Demander une étude'. Tu pourras expliquer ce dont tu as besoin."
             />
-            <FAQ
+            <Faq
               question="Les cours suivent-ils le programme tunisien ?"
               answer="Oui ! Tous nos professeurs enseignent selon le programme officiel tunisien, de la 7ème année de base jusqu'au baccalauréat."
             />
-            <FAQ
+            <Faq
               question="Comment trouver un prof qui explique bien ?"
               answer="Chaque prof a sa méthode. Regarde plusieurs vidéos et choisis celui qui correspond à ton style d'apprentissage."
             />
@@ -153,13 +153,13 @@ function HelpCard({
   );
 }
 
-function FAQ({ question, answer }: { question: string; answer: string }) {
+function Faq({ question, answer }: { question: string; answer: string }) {
   return (
-    <AccordionItem value={question} className="hover:cursor-pointer">
-      <AccordionTrigger className="text-left text-gray-800 dark:text-gray-100 font-medium hover:text-primary-700 transition hover:underline-offset-2">
+    <AccordionItem value={question} className="hover:cursor-pointer ">
+      <AccordionTrigger className="text-left text-primary-800 dark:text-primary-50 font-medium text-base hover:text-primary-700 transition hover:underline-offset-2">
         {question}
       </AccordionTrigger>
-      <AccordionContent className="text-gray-600 dark:text-gray-200">
+      <AccordionContent className="text-primary-600 dark:text-primary-200">
         {answer}
       </AccordionContent>
     </AccordionItem>
@@ -180,7 +180,7 @@ function ContactButton({
   return (
     <Link
       href={href}
-      className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition hover:scale-105 ${
+      className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition hover:scale-102 ${
         primary
           ? "bg-gradient-to-r from-primary-600 to-primary-800 text-white hover:from-primary-700 hover:to-primary-900"
           : "bg-white dark:bg-background text-gray-700 dark:text-gray-100 border border-gray-300 dark:border-border hover:bg-gray-50 dark:hover:bg-gray-900"

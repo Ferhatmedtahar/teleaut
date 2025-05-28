@@ -126,7 +126,7 @@ export default function AboutPage() {
         {/* Intro */}
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-primary-600/5 to-primary-900/5 rounded-3xl blur-3xl transform -rotate-1"></div>
-          <div className="relative bg-white/80 dark:bg-background backdrop-blur-sm shadow-2xl shadow-primary-900/5 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 border border-white/50 dark:border-border/90">
+          <div className="relative dark:bg-background backdrop-blur-sm shadow-2xl shadow-primary-900/5 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 border border-border/20 dark:border-border/90">
             <div className="flex items-start gap-4 mb-6">
               <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-primary-600 to-primary-900 rounded-2xl flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg">
                 🚀
@@ -188,7 +188,7 @@ export default function AboutPage() {
 
         <div className="relative">
           {/* <div className="absolute inset-0  bg-gradient-to-tr from-[#16222A01] to-[#35586901] rounded-3xl blur-lg"></div> */}
-          <div className="relative bg-white/90 dark:bg-background  backdrop-blur-sm p-8 sm:p-12 lg:p-16 rounded-2xl sm:rounded-3xl text-center border border-primary-200/50 dark:border-border/90 shadow-2xl shadow-primary-900/5">
+          <div className="relative  dark:bg-background  backdrop-blur-sm p-8 sm:p-12 lg:p-16 rounded-2xl sm:rounded-3xl text-center border border-primary-200/50 dark:border-border/90 shadow-2xl shadow-primary-900/5">
             <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20  bg-gradient-to-br from-primary-600 to-primary-900 rounded-full mb-6 text-2xl sm:text-3xl shadow-lg">
               ✨
             </div>
@@ -206,7 +206,7 @@ export default function AboutPage() {
         {/* Audience */}
         <div className="relative">
           {/* <div className="absolute inset-0  bg-gradient-to-tr from-[#16222A11] to-[#35586911]  rounded-3xl blur-2xl transform rotate-1"></div> */}
-          <div className="relative bg-white/90 dark:bg-background backdrop-blur-sm shadow-2xl shadow-primary-900/5 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 border border-gray-200/50 dark:border-border/90">
+          <div className="relative  dark:bg-background backdrop-blur-sm shadow-2xl shadow-primary-900/5 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 border border-border/20 dark:border-border/90">
             <div className="flex items-start gap-4 mb-6">
               <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16  bg-gradient-to-br from-primary-600 to-primary-900  rounded-2xl flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg">
                 🎯
@@ -252,7 +252,7 @@ function FeatureCard({
   return (
     <div className="group relative">
       <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-2xl blur-xl"></div>
-      <div className="relative bg-white/80 dark:bg-background backdrop-blur-sm border border-white/50 dark:border-border/90 rounded-2xl p-6 sm:p-8 shadow-lg shadow-gray-900/5 hover:shadow-2xl hover:shadow-gray-900/10 transition-transform duration-300 hover:-translate-y-2 group">
+      <div className="relative  dark:bg-background backdrop-blur-sm border border-border/20 dark:border-border/90 rounded-2xl p-6 sm:p-8 shadow-lg shadow-gray-900/5 hover:shadow-2xl hover:shadow-gray-900/10 transition-transform duration-500 hover:-translate-y-1.5 group">
         <div
           className={`inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${gradient} rounded-2xl mb-4 sm:mb-6 text-2xl sm:text-3xl shadow-lg group-hover:scale-110 transition-transform duration-300`}
         >
@@ -271,8 +271,8 @@ function FeatureCard({
 
 function BenefitItem({ text, icon }: { text: string; icon: string }) {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-xl bg-white/90 dark:bg-background backdrop-blur-sm border border-gray-200/50 dark:border-border/90 hover:from-blue-50 hover:to-indigo-50 hover:border-blue-200/50  group">
-      <div className="flex-shrink-0 w-8 h-8  bg-gradient-to-br from-primary-600 to-primary-900  rounded-lg flex items-center justify-center text-white text-sm group-hover:scale-110 transition-transform duration-200">
+    <div className="flex items-center gap-3 p-3 rounded-xl  dark:bg-background backdrop-blur-sm border border-gray-200/50 dark:border-border/90 hover:from-blue-50 hover:to-indigo-50 hover:border-blue-200/50  group">
+      <div className="flex-shrink-0 w-8 h-8  bg-gradient-to-br from-primary-600 to-primary-900  rounded-lg flex items-center justify-center text-white text-sm  transition-transform duration-200">
         {icon}
       </div>
       <span className="text-gray-700 dark:text-gray-100 font-medium text-sm sm:text-base group-hover:text-gray-800 transition-colors">
