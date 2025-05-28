@@ -67,10 +67,10 @@ export default function SignUpBasicInfoForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 w-full">
       <div className="flex gap-3">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 w-full">
           <Label>Nom</Label>
           <Input
-            className="block text-sm font-medium text-gray-700  py-5"
+            className="block text-sm font-medium text-gray-700  py-5 w-full"
             placeholder="Votre nom"
             type="text"
             {...register("firstName")}
@@ -80,10 +80,10 @@ export default function SignUpBasicInfoForm() {
             <p className="text-red-500 text-sm">{errors.firstName.message}</p>
           )}
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 w-full">
           <Label>Prénom</Label>
           <Input
-            className="block text-sm font-medium text-gray-700  py-5"
+            className="block text-sm font-medium text-gray-700  py-5 w-full"
             placeholder="Votre prénom"
             type="text"
             {...register("lastName")}
