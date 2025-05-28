@@ -12,7 +12,7 @@ export default function Background() {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 1.2 }}
         transition={{ duration: 1, ease: "easeInOut" }}
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden"
       >
         <h1 className="absolute top-10 left-10 text-2xl font-bold">LOGO</h1>
         {currentPath == "/sign-in" ? (
@@ -23,15 +23,20 @@ export default function Background() {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className={cn("w-full h-auto", "opacity-65", "pointer-events-none")}
+            className={cn(
+              "relative w-full h-auto",
+              "opacity-65",
+              "pointer-events-none",
+              "lg:absolute lg:top-1/2 lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:-translate-y-[57%] xl:-translate-y-[55%] 2xl:-translate-y-[55%] "
+            )}
           >
             <Image
               src="/icons/sign-in.svg"
               alt="Sign In Background"
               // fill
-              width={1200}
+              width={1500}
               height={1200}
-              className="object-contain opacity-40 pointer-events-none"
+              className="h-full   object-contain opacity-40 pointer-events-none"
               priority
             />
           </motion.div>
@@ -43,7 +48,7 @@ export default function Background() {
               width={500}
               height={500}
               className={cn(
-                "absolute top-[5%] left-[10%]",
+                "absolute lg:top-[12%] lg:left-[10%] xl:top-[10%] xl:left-[15%] 2xl:top-[2%] 2xl:left-[10%]",
                 "w-[70%] h-auto",
                 "opacity-65",
                 "pointer-events-none object-contain",
@@ -58,7 +63,7 @@ export default function Background() {
               width={450}
               height={450}
               className={cn(
-                "absolute bottom-[15%] right-[5%]",
+                "absolute lg:bottom-[30%] lg:right-[5%] xl:bottom-[22%] xl:right-[3%] 2xl:bottom-[7%] 2xl:right-[5%]",
                 "w-[60%] h-auto",
                 "opacity-55",
                 "pointer-events-none object-contain",
@@ -81,7 +86,7 @@ export default function Background() {
           currentPath == "/sign-in" ? " -translate-y-10" : " -translate-y-24"
         )}
       >
-        <h1 className="radial-gradient text-6xl lg:text-7xl font-extrabold leading-tight">
+        <h1 className="radial-gradient lg:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold leading-tight">
           {currentPath == "/sign-in" ? (
             <span>
               Content de <br /> te revoir
