@@ -3,8 +3,8 @@
 import { Input } from "@/components/ui/input";
 import { RelatedVideo } from "@/types/RelatedVideos.interface";
 import { Search } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
+import VideoHistory from "./VideoHistory";
 
 export default function WatchHistory({
   watchedVideos,
@@ -13,10 +13,6 @@ export default function WatchHistory({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Mock data based on the interface
-  // const watchedVideos: RelatedVideo[] = watchedVideos;
-
-  // Filter videos based on search query
   const filteredVideos = watchedVideos.filter(
     (video) =>
       video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -52,7 +48,7 @@ export default function WatchHistory({
           </div>
           <Input
             type="search"
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="block w-full pl-10 pr-3 py-2"
             placeholder="Rechercher..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -63,139 +59,32 @@ export default function WatchHistory({
         <div>
           <h2 className="text-lg font-medium mb-4">Récemment regardé</h2>
           <div className="space-y-4">
-            {filteredVideos.map((video) => (
-              <div
-                key={video.id}
-                className="flex border-b border-gray-200 pb-4"
-              >
-                <div className="relative h-[90px] w-[160px] flex-shrink-0">
-                  <Image
-                    src={
-                      video.thumbnail_url ?? "/images/placeholder-thumbnail.jpg"
-                    }
-                    alt={video.title}
-                    fill
-                    className="object-cover rounded-md"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-black bg-opacity-50 rounded-full p-2">
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M8 5V19L19 12L8 5Z" fill="white" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <div className="ml-4 flex flex-col justify-between flex-1">
-                  <div>
-                    <h3 className="font-medium text-base">{video.title}</h3>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {video.branch && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                          {video.branch}
-                        </span>
-                      )}
-                      {video.class && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                          {video.class}
-                        </span>
-                      )}
-                      {video.subject && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                          {video.subject}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-500 mt-1">
-                    <p>
-                      Date du post : {formatDate(video.created_at)} ·{" "}
-                      {video.views} vues
-                    </p>
-                    <p>
-                      Professeur: {video.teacher.first_name}{" "}
-                      {video.teacher.last_name || ""}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
+            {filteredVideos.length > 0 ? (
+              filteredVideos.map((video) => (
+                <VideoHistory key={video.id} video={video} />
+              ))
+            ) : (
+              <p className="text-primary-900   dark:text-primary-100">
+                Aucun résultat trouvé pour &quot;{searchQuery}&quot;. Essayez
+                d&apos;autres mots-clés ou vérifiez l&apos;orthographe.
+              </p>
+            )}
           </div>
         </div>
 
         {/* Last 7 days section */}
         <div>
-          <h2 className="text-lg font-medium mb-4">Dernier 7 jrs</h2>
+          {filteredVideos.length > 0 && (
+            <h2 className="text-lg font-medium mb-4">Dernier 7 jrs</h2>
+          )}
+
           {/* This would typically be filtered by date, but for demo purposes we'll reuse the same videos */}
           <div className="space-y-4">
-            {filteredVideos.slice(0, 3).map((video) => (
-              <div
-                key={`recent-${video.id}`}
-                className="flex border-b border-gray-200 pb-4"
-              >
-                <div className="relative h-[90px] w-[160px] flex-shrink-0">
-                  <Image
-                    src={
-                      video.thumbnail_url ||
-                      "/placeholder.svg?height=90&width=160"
-                    }
-                    alt={video.title}
-                    fill
-                    className="object-cover rounded-md"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-black bg-opacity-50 rounded-full p-2">
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M8 5V19L19 12L8 5Z" fill="white" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <div className="ml-4 flex flex-col justify-between flex-1">
-                  <div>
-                    <h3 className="font-medium text-base">{video.title}</h3>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {video.branch && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                          {video.branch}
-                        </span>
-                      )}
-                      {video.class && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                          {video.class}
-                        </span>
-                      )}
-                      {video.subject && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                          {video.subject}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-500 mt-1">
-                    <p>
-                      Date du post : {formatDate(video.created_at)} ·{" "}
-                      {video.views} vues
-                    </p>
-                    <p>
-                      Professeur: {video.teacher.first_name}{" "}
-                      {video.teacher.last_name || ""}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
+            {filteredVideos.length > 0
+              ? filteredVideos
+                  .slice(0, 3)
+                  .map((video) => <VideoHistory key={video.id} video={video} />)
+              : null}
           </div>
         </div>
       </div>

@@ -6,36 +6,14 @@ import { SearchResultsClient } from "@/components/SearchResults";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs } from "@/components/ui/tabs";
 import { Play } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import ExplorerVideo from "./(videos)/_components/videos/ExplorerVideo";
 
 interface SearchPageProps {
   searchParams: Promise<{ query?: string; filter?: string }>;
-}
-
-// Helper function to format duration (assuming duration is in seconds)
-function formatDuration(seconds: number): string {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-}
-
-// Helper function to format upload date
-function formatUploadDate(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffTime = Math.abs(now.getTime() - date.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 1) return "1 jour";
-  if (diffDays < 7) return `${diffDays} jours`;
-  if (diffDays < 30)
-    return `${Math.ceil(diffDays / 7)} semaine${
-      Math.ceil(diffDays / 7) > 1 ? "s" : ""
-    }`;
-  return `${Math.ceil(diffDays / 30)} mois`;
 }
 
 // Helper function to get teacher display name
@@ -49,7 +27,7 @@ function getTeacherName(teacher: any): string {
 
 // Home Page Component
 async function HomePage() {
-  const subjects = ["All", "Math", "Science", "Physique", "Arab", "Eng", "ITA"];
+  // const subjects = ["All", "Math", "Science", "Physique", "Arab", "Eng", "ITA"];
 
   const { success, featuredVideo, explorerVideos } = await getHomePageVideos();
 
@@ -65,10 +43,11 @@ async function HomePage() {
       </div>
     );
   }
-
+  console.log("Featured Video:", featuredVideo);
   return (
     <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg">
       <Tabs defaultValue="all" className="w-full">
+        {/*
         <TabsList className="flex flex-wrap gap-2 dark:bg-background/80 bg-background/80 border border-white/90">
           {subjects.map((subject) => (
             <TabsTrigger
@@ -80,6 +59,7 @@ async function HomePage() {
             </TabsTrigger>
           ))}
         </TabsList>
+         */}
       </Tabs>
 
       {/* Featured Section */}
@@ -90,22 +70,24 @@ async function HomePage() {
             <CardContent className="p-0">
               <div className="grid md:grid-cols-2 gap-4 p-6">
                 <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="rounded-full h-16 w-16 bg-background/80 backdrop-blur-sm"
-                    >
-                      <Play className="h-8 w-8" />
-                    </Button>
-                  </div>
-                  <Image
-                    src={featuredVideo.thumbnail_url || "/placeholder.svg"}
-                    height={300}
-                    width={500}
-                    alt="Featured video"
-                    className="object-cover w-full h-full"
-                  />
+                  <Link href={`/videos/${featuredVideo.id}`}>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        className="rounded-full h-16 w-16 bg-background/80 backdrop-blur-sm"
+                      >
+                        <Play className="h-8 w-8" />
+                      </Button>
+                    </div>
+                    <Image
+                      src={featuredVideo.thumbnail_url || "/placeholder.svg"}
+                      height={300}
+                      width={500}
+                      alt="Featured video"
+                      className="object-cover w-full h-full"
+                    />
+                  </Link>
                 </div>
                 <div className="flex flex-col justify-between">
                   <div>
@@ -113,6 +95,28 @@ async function HomePage() {
                     <p className="text-muted-foreground mt-2">
                       {featuredVideo.description}
                     </p>
+                    <div>
+                      <div className="text-xs mt-2">
+                        <div>
+                          {featuredVideo.branch?.length > 0 && (
+                            <>
+                              <p>branch</p>
+                              <span className="ml-2 font-medium">
+                                {featuredVideo.branch.join(", ")}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        <p>
+                          {featuredVideo.class && (
+                            <span className="ml-2 font-medium">
+                              {featuredVideo.class}
+                            </span>
+                          )}
+                        </p>
+                        <p>{featuredVideo.subject}</p>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2 mt-4">
                     <Avatar className="h-8 w-8">

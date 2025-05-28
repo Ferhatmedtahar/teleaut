@@ -107,7 +107,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
           {video.title}
         </h1>
         <div className="flex-shrink-0">
-          <span className="inline-block px-3 py-1 bg-primary-100/90 text-primary-900 rounded-full dark:bg-primary-900/30 dark:text-primary-100 text-sm font-medium">
+          <span className="inline-block px-3 py-1 rounded-full bg-primary-100/90 text-primary-900 dark:bg-primary-900/30 dark:text-primary-100 text-sm font-medium">
             Niveau : {video.class}
           </span>
         </div>
@@ -116,14 +116,15 @@ export default function VideoInfo({ video }: VideoInfoProps) {
       {/* Branches */}
       {video.branch && video.branch.length > 0 && (
         <div className="space-y-2">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-primary-900 rounded-full  dark:text-primary-100">
             Pour les élèves des branches suivantes :
           </p>
           <div className="flex flex-wrap gap-2">
             {video.branch.map((branch, idx) => (
               <span
                 key={idx}
-                className="px-2 py-1 bg-secondary/50 text-secondary-foreground rounded-md text-xs"
+                // className="px-2 py-1 bg-secondary/50  text-primary-900   dark:text-primary-100 rounded-md text-xs"
+                className="inline-block px-2 py-1 rounded-full bg-primary-100/90 text-primary-900 dark:bg-primary-900/30 dark:text-primary-100 text-xs "
               >
                 {branch}
               </span>
@@ -133,7 +134,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
       )}
 
       {/* Views and Time */}
-      <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+      <div className="flex flex-wrap items-center gap-4 text-sm">
         <div className="flex items-center gap-2">
           {theme === "dark" ? (
             <Image
@@ -145,16 +146,18 @@ export default function VideoInfo({ video }: VideoInfoProps) {
           ) : (
             <Image src="/icons/views.svg" alt="Views" width={16} height={16} />
           )}
-          <span>{video.views} views</span>
+          <span className=" text-primary-900   dark:text-primary-100">
+            {video.views} views
+          </span>
         </div>
 
         <div className="flex items-center gap-2">
           {theme === "dark" ? (
-            <FaClockRotateLeft size={16} className="text-muted-foreground" />
+            <FaClockRotateLeft size={16} />
           ) : (
             <Image src="/icons/Clock.svg" alt="Time" width={16} height={16} />
           )}
-          <span>
+          <span className=" text-primary-900   dark:text-primary-100">
             {formatDistanceToNow(new Date(video.created_at), {
               addSuffix: true,
             })}
@@ -168,7 +171,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
         <Link
           href={`/profile/${video.teacher.id}`}
           target="_blank"
-          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-3 hover:opacity-90 transition-opacity"
         >
           {video.teacher.profile_url ? (
             <Image
@@ -180,7 +183,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
             />
           ) : (
             <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-              <span className="text-muted-foreground font-medium text-sm">
+              <span className="text-primary-900   dark:text-primary-100 font-medium text-sm">
                 {video.teacher.first_name.charAt(0)}
                 {video.teacher.last_name?.charAt(0)}
               </span>
