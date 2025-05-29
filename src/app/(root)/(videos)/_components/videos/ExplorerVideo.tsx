@@ -13,7 +13,7 @@ export default function ExplorerVideo({
   readonly video: RelatedVideo;
   readonly user?: RelatedVideoUser;
 }) {
-  console.log("ExplorerVideo", video, user);
+  // console.log("ExplorerVideo", video, user);
   if (!video || !user) return null;
   return (
     <Link
