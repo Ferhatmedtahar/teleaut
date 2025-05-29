@@ -11,7 +11,7 @@ export function getApplicableSubjects(
   if (studentBranch && classData[studentBranch]) {
     return classData[studentBranch];
   }
-  console.log(classData["_default"]);
+  // console.log(classData["_default"]);
   return classData["_default"] ?? [];
 }
 /**
