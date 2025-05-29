@@ -7,10 +7,21 @@ import { specialtyToSubject } from "@/lib/constants/specialties";
 import { RelatedVideo } from "@/types/RelatedVideos.interface";
 import { UserProps } from "@/types/UserProps";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import FilterBar from "../FilterBar";
 
 const LIMIT = 6;
+
+// Skeleton component for loading state
+const VideoSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="bg-gray-200 rounded-lg aspect-video mb-4"></div>
+    <div className="space-y-2">
+      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+    </div>
+  </div>
+);
 
 export default function VideoListVisitor({
   user,
@@ -20,6 +31,7 @@ export default function VideoListVisitor({
   const [videos, setVideos] = useState<RelatedVideo[]>([]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
 
   const searchParams = useSearchParams();
@@ -29,31 +41,70 @@ export default function VideoListVisitor({
   const selectedBranch = searchParams.get("branch") ?? "";
   const selectedSubject = searchParams.get("subject") ?? "";
 
-  const loadVideos = async () => {
-    setLoading(true);
-    const { success, videos: newVideos } = await getTeacherVideos(
-      user.id,
-      LIMIT,
-      offset
-    );
-    setLoading(false);
+  const loadVideos = useCallback(
+    async (resetData = false) => {
+      setLoading(true);
 
-    if (!success || !newVideos || newVideos.length === 0) {
-      setHasMore(false);
-      return;
-    }
+      const currentOffset = resetData ? 0 : offset;
 
-    setVideos((prev) => [...prev, ...newVideos]);
-    setOffset((prev) => prev + LIMIT);
-  };
+      try {
+        const { success, videos: newVideos } = await getTeacherVideos(
+          user.id,
+          LIMIT,
+          currentOffset
+        );
 
+        if (!success || !newVideos || newVideos.length === 0) {
+          setHasMore(false);
+          if (resetData) {
+            setVideos([]);
+          }
+          return;
+        }
+
+        if (resetData) {
+          setVideos(newVideos);
+          setOffset(LIMIT);
+        } else {
+          setVideos((prev) => [...prev, ...newVideos]);
+          setOffset((prev) => prev + LIMIT);
+        }
+
+        // If we got less than LIMIT videos, we've reached the end
+        if (newVideos.length < LIMIT) {
+          setHasMore(false);
+        }
+      } catch (error) {
+        console.error("Error loading videos:", error);
+        setHasMore(false);
+      } finally {
+        setLoading(false);
+        setInitialLoading(false);
+      }
+    },
+    [user.id, offset]
+  );
+
+  // Initial load
   useEffect(() => {
-    loadVideos();
-  }, []);
+    loadVideos(true);
+  }, [user.id]);
 
-  // Extract unique subjects from video data
+  // Reset when filters change
+  useEffect(() => {
+    if (!initialLoading) {
+      setVideos([]);
+      setOffset(0);
+      setHasMore(true);
+      loadVideos(true);
+    }
+  }, [selectedClass, selectedBranch, selectedSubject]);
+
+  // Extract unique subjects from user specialties
   const subjects = useMemo(
-    () => [...new Set(user?.specialties.map((s) => specialtyToSubject[s]))],
+    () => [
+      ...new Set(user?.specialties?.map((s) => specialtyToSubject[s]) || []),
+    ],
     [user?.specialties]
   );
 
@@ -73,28 +124,63 @@ export default function VideoListVisitor({
   const filteredVideos = useMemo(() => {
     return videos.filter((video) => {
       return (
-        (selectedBranch ? video.branch.includes(selectedBranch) : true) &&
+        (selectedBranch ? video.branch?.includes(selectedBranch) : true) &&
         (selectedClass ? video.class === selectedClass : true) &&
         (selectedSubject ? video.subject === selectedSubject : true)
       );
     });
   }, [videos, selectedBranch, selectedClass, selectedSubject]);
 
-  if (videos.length === 0) {
+  // Show skeleton during initial loading
+  if (initialLoading) {
     return (
       <div className="p-8 flex flex-col gap-6">
-        <p className="text-center">Pas encore de vidéos.</p>
+        <div className="grid md:grid-cols-3 gap-6 w-full">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <VideoSkeleton key={index} />
+          ))}
+        </div>
       </div>
     );
   }
+
+  // Show empty state if no videos after loading
+  if (!initialLoading && videos.length === 0 && !loading) {
+    return (
+      <div className="p-8 flex flex-col gap-6">
+        <p className="text-center text-gray-500">Pas encore de vidéos.</p>
+      </div>
+    );
+  }
+
+  if (!initialLoading && loading) {
+    return (
+      <div className="grid md:grid-cols-3 gap-6 w-full p-6">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <VideoSkeleton key={`loading-${index + 20}`} />
+        ))}
+      </div>
+    );
+  }
+
+  // Validate filter data types
   if (
     !Array.isArray(classes) ||
     !Array.isArray(branches) ||
     !classes.every((item) => typeof item === "string") ||
-    !branches.every((item) => typeof item === "string")
+    !branches.every((item) => typeof item === "object")
   ) {
-    return null;
+    console.error("Invalid filter data types", { classes, branches });
+
+    return (
+      <div className="p-8">
+        <p className="text-center text-red-500">
+          Erreur lors du chargement des filtres.
+        </p>
+      </div>
+    );
   }
+
   return (
     <div className="p-8 flex flex-col gap-6">
       <FilterBar
@@ -102,26 +188,42 @@ export default function VideoListVisitor({
         classes={classes}
         branches={branches}
         userIsTeacher={user.role === "teacher"}
+        setLoading={setLoading}
       />
 
       <div className="grid md:grid-cols-3 gap-6 w-full">
         {filteredVideos.length > 0 ? (
           filteredVideos.map((video, index) => (
-            <ExplorerVideo key={video.id + index} video={video} user={user} />
+            <ExplorerVideo
+              key={`${video.id}-${index}`}
+              video={video}
+              user={user}
+            />
           ))
         ) : (
-          <p>Pas encore de vidéos.</p>
+          <div className="col-span-full text-center text-gray-500">
+            <p>Aucune vidéo ne correspond aux filtres sélectionnés.</p>
+          </div>
         )}
       </div>
 
-      {hasMore && filteredVideos.length > 0 && (
+      {/* Show skeleton for loading more */}
+      {loading && !initialLoading && (
+        <div className="grid md:grid-cols-3 gap-6 w-full">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <VideoSkeleton key={`loading-${index}`} />
+          ))}
+        </div>
+      )}
+
+      {/* Load more button */}
+      {hasMore && filteredVideos.length > 0 && !loading && (
         <Button
-          onClick={loadVideos}
+          onClick={() => loadVideos(false)}
           disabled={loading}
-          className="mt-6 self-center bg-primary text-white py-2 px-4 rounded hover:bg-primary/90 transition"
+          className="mt-6 self-center bg-primary text-white py-2 px-4 rounded hover:bg-primary/90 transition disabled:opacity-50"
         >
-          {loading && <span className="animate-spin mr-2">⌛</span>}
-          {loading ? "Loading..." : "Load More"}
+          Charger plus
         </Button>
       )}
     </div>
