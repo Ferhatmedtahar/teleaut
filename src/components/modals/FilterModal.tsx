@@ -1,7 +1,7 @@
 "use client";
 
+import { Button } from "@/components/common/buttons/Button";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -17,10 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { educationMapping } from "@/lib/constants/EducationsMapping";
 import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
 import type { RelatedVideo } from "@/types/RelatedVideos.interface";
-import { Filter, X } from "lucide-react";
+import { Filter } from "lucide-react";
 import { useState } from "react";
 
 export const studentClasses = Object.keys(studentClassesAndBranches);
@@ -28,8 +27,6 @@ export const studentClasses = Object.keys(studentClassesAndBranches);
 interface FilterState {
   sortBy: string;
   dateFilter: string;
-  duration: string;
-  type: string;
   selectedClass: string;
   selectedBranch: string;
   selectedSubjects: string[];
@@ -38,8 +35,6 @@ interface FilterState {
 const initialFilterState: FilterState = {
   sortBy: "",
   dateFilter: "",
-  duration: "",
-  type: "",
   selectedClass: "",
   selectedBranch: "",
   selectedSubjects: [],
@@ -65,20 +60,20 @@ export function FilterModal({
     : [];
 
   // Get available subjects based on selected class and branch
-  const getAvailableSubjects = () => {
-    if (!filters.selectedClass) return [];
+  // const getAvailableSubjects = () => {
+  //   if (!filters.selectedClass) return [];
 
-    const classData = educationMapping[filters.selectedClass];
-    if (!classData) return [];
+  //   const classData = educationMapping[filters.selectedClass];
+  //   if (!classData) return [];
 
-    if (filters.selectedBranch && filters.selectedBranch !== "Aucune filière") {
-      return classData[filters.selectedBranch] || classData._default || [];
-    }
+  //   if (filters.selectedBranch && filters.selectedBranch !== "Aucune filière") {
+  //     return classData[filters.selectedBranch] || classData._default || [];
+  //   }
 
-    return classData._default || [];
-  };
+  //   return classData._default || [];
+  // };
 
-  const availableSubjects = getAvailableSubjects();
+  // const availableSubjects = getAvailableSubjects();
 
   // Function to filter videos based on current filters
   const filterVideos = (
@@ -87,6 +82,7 @@ export function FilterModal({
   ): RelatedVideo[] => {
     let filtered = [...videos];
 
+    console.log("", filtered, videos);
     // Filter by subjects
     if (currentFilters.selectedSubjects.length > 0) {
       filtered = filtered.filter((video) =>
@@ -113,14 +109,6 @@ export function FilterModal({
       );
     }
 
-    // Filter by type
-    if (currentFilters.type) {
-      filtered = filtered.filter((video) => {
-        const videoType = (video as any).type ?? "Cours";
-        return videoType === currentFilters.type;
-      });
-    }
-
     // Filter by date
     if (currentFilters.dateFilter) {
       const now = new Date();
@@ -128,38 +116,14 @@ export function FilterModal({
         const videoDate = new Date(video.created_at);
         const diffTime = now.getTime() - videoDate.getTime();
         const diffDays = diffTime / (1000 * 60 * 60 * 24);
-        const diffHours = diffTime / (1000 * 60 * 60);
 
         switch (currentFilters.dateFilter) {
-          case "Dernière heure":
-            return diffHours <= 1;
           case "Aujourd'hui":
             return diffDays <= 1;
           case "Cette semaine":
             return diffDays <= 7;
           case "Ce mois":
             return diffDays <= 30;
-          case "Cette année":
-            return diffDays <= 365;
-          default:
-            return true;
-        }
-      });
-    }
-
-    // Filter by duration (assuming duration is in seconds)
-    if (currentFilters.duration) {
-      filtered = filtered.filter((video) => {
-        const duration = (video as any).duration ?? 0;
-        const minutes = duration / 60;
-
-        switch (currentFilters.duration) {
-          case "Courte (< 4 min)":
-            return minutes < 4;
-          case "Moyenne (4-20 min)":
-            return minutes >= 4 && minutes <= 20;
-          case "Longue (> 20 min)":
-            return minutes > 20;
           default:
             return true;
         }
@@ -291,13 +255,7 @@ export function FilterModal({
           <div className="space-y-3">
             <h4 className="font-medium">Date</h4>
             <div className="flex flex-wrap gap-2">
-              {[
-                "Dernière heure",
-                "Aujourd'hui",
-                "Cette semaine",
-                "Ce mois",
-                "Cette année",
-              ].map((option) => (
+              {["Aujourd'hui", "Cette semaine", "Ce mois"].map((option) => (
                 <Button
                   key={option}
                   variant={
@@ -306,54 +264,6 @@ export function FilterModal({
                   size="sm"
                   onClick={() =>
                     setFilters((prev) => ({ ...prev, dateFilter: option }))
-                  }
-                  className="text-xs"
-                >
-                  {option}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Duration Filter */}
-          <div className="space-y-3">
-            <h4 className="font-medium">Durée</h4>
-            <div className="flex flex-wrap gap-2">
-              {[
-                "Courte (< 4 min)",
-                "Moyenne (4-20 min)",
-                "Longue (> 20 min)",
-              ].map((option) => (
-                <Button
-                  key={option}
-                  variant={filters.duration === option ? "default" : "outline"}
-                  size="sm"
-                  onClick={() =>
-                    setFilters((prev) => ({ ...prev, duration: option }))
-                  }
-                  className="text-xs"
-                >
-                  {option}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Type Filter */}
-          <div className="space-y-3">
-            <h4 className="font-medium">Type</h4>
-            <div className="flex flex-wrap gap-2">
-              {["Cours", "Exercice", "Examen"].map((option) => (
-                <Button
-                  key={option}
-                  variant={filters.type === option ? "default" : "outline"}
-                  size="sm"
-                  onClick={() =>
-                    setFilters((prev) => ({ ...prev, type: option }))
                   }
                   className="text-xs"
                 >
@@ -408,7 +318,7 @@ export function FilterModal({
           )}
 
           {/* Subjects Selection */}
-          {availableSubjects.length > 0 && (
+          {/* {availableSubjects.length > 0 && (
             <div className="space-y-3">
               <h4 className="font-medium">Matières</h4>
               <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
@@ -432,7 +342,7 @@ export function FilterModal({
                 ))}
               </div>
             </div>
-          )}
+          )} */}
 
           <Separator />
 

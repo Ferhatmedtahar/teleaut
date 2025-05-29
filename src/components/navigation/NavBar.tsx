@@ -68,10 +68,10 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              type="search"
+              // type="search"
               name="query"
               placeholder="Chercher"
-              className="pl-10 pr-10 rounded-full "
+              className="pl-10 rounded-full "
             />
 
             <div className="absolute inset-y-0 left-3 flex items-center">

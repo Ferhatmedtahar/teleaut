@@ -10,7 +10,7 @@ const SearchFormReset = ({
 }) => {
   const reset = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const form = e.currentTarget.closest("form") as HTMLFormElement | null;
+    const form = e.currentTarget.closest("form") as HTMLFormElement;
     setSearch("");
     if (form) form.reset();
   };
