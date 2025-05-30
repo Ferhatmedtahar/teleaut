@@ -23,18 +23,32 @@ export default function ExplorerVideo({
     >
       <div className="relative w-full aspect-video overflow-hidden">
         <Image
-          src={video.thumbnail_url ?? "/placeholder.svg?height=160&width=284"}
+          src={video.thumbnail_url ?? "/images/placeholder-thumbnail.png"}
+          alt={video.title}
+          fill
+          className="object-cover group-hover:scale-102 transition-transform"
+        />
+      </div>
+      {/* <div className="relative w-full aspect-video overflow-hidden group">
+        <Image
+          src={video.thumbnail_url ?? "/images/placeholder-thumbnail.png"}
           alt={video.title}
           fill
           className="object-cover group-hover:scale-103 transition-transform"
         />
-      </div>
 
+        {video.class && (
+          <p className="absolute top-2 right-2 px-2 py-1 bg-primary-100/90 text-primary-950 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
+            {video.class}
+          </p>
+        )}
+      </div> */}
       <div className="mt-2 px-2 pb-2">
         <div className="flex justify-between pb-2">
           <h3 className="font-semibold text-base line-clamp-2 group-hover:text-primary-800 dark:group-hover:text-primary-300 transition-colors">
             {video.title}
           </h3>
+
           {video.branch && video.branch.length > 0 && (
             <p className="px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
               {video.branch[0]}

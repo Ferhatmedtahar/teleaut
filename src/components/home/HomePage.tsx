@@ -64,13 +64,16 @@ export default async function HomePage() {
                       <Button
                         size="icon"
                         variant="outline"
-                        className="rounded-full h-16 w-16 bg-background/80 backdrop-blur-sm"
+                        className="hover:cursor-pointer rounded-full h-16 w-16 bg-background/80 backdrop-blur-sm"
                       >
                         <Play className="h-8 w-8" />
                       </Button>
                     </div>
                     <Image
-                      src={featuredVideo.thumbnail_url || "/placeholder.svg"}
+                      src={
+                        featuredVideo.thumbnail_url ??
+                        "/images/placeholder-thumbnail.png"
+                      }
                       height={300}
                       width={500}
                       alt="Featured video"
@@ -84,26 +87,42 @@ export default async function HomePage() {
                     <p className="text-muted-foreground mt-2">
                       {featuredVideo.description}
                     </p>
-                    <div>
-                      <div className="text-xs mt-2">
-                        <div>
-                          {featuredVideo.branch?.length > 0 && (
-                            <>
-                              <p>branch</p>
-                              <span className="ml-2 font-medium">
-                                {featuredVideo.branch.join(", ")}
+                    <div className="flex gap-2">
+                      <div className="text-xs mt-2  ">
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="flex items-center gap-2">
+                            <p>
+                              {featuredVideo.class && (
+                                <span
+                                  //  className=" font-medium"
+                                  className="px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs"
+                                >
+                                  {featuredVideo.class}
+                                </span>
+                              )}
+                            </p>
+                            <p
+                              //  className="ml-2 py-1"
+                              className="px-2 py-1 w-fit bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs"
+                            >
+                              {featuredVideo.subject}
+                            </p>
+                          </div>
+
+                          {/* featuredVideo.branch?.length > 0 && */}
+                          {featuredVideo.branch &&
+                            featuredVideo.branch?.length > 0 && (
+                              <span className=" font-medium">
+                                {featuredVideo.branch.length > 0 && (
+                                  <p className="w-fit  px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
+                                    {featuredVideo.branch[0]}
+                                    {featuredVideo.branch.length > 1 &&
+                                      `... +${featuredVideo.branch.length - 1}`}
+                                  </p>
+                                )}
                               </span>
-                            </>
-                          )}
+                            )}
                         </div>
-                        <p>
-                          {featuredVideo.class && (
-                            <span className="ml-2 font-medium">
-                              {featuredVideo.class}
-                            </span>
-                          )}
-                        </p>
-                        <p>{featuredVideo.subject}</p>
                       </div>
                     </div>
                   </div>
@@ -111,9 +130,8 @@ export default async function HomePage() {
                     <Avatar className="h-8 w-8">
                       <AvatarImage
                         src={
-                          featuredVideo.teacher?.profile_url ||
-                          "/placeholder.svg" ||
-                          "/placeholder.svg"
+                          featuredVideo.teacher?.profile_url ??
+                          "/images/placeholder-profile.png"
                         }
                         alt={getTeacherName(featuredVideo.teacher)}
                       />

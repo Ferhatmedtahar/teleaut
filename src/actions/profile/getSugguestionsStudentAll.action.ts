@@ -110,42 +110,121 @@ export async function getSuggestedTeachers(
   // Get applicable subjects for this student
   const applicableSubjects = getApplicableSubjects(studentClass, studentBranch);
 
-  if (applicableSubjects.length === 0) {
-    return {
-      success: false,
-      message:
-        "No applicable subjects found for this student's class and branch",
-    };
-  }
-
   // Get applicable teacher specialties
-  const applicableSpecialties = getApplicableSpecialties(applicableSubjects);
+  const applicableSpecialties =
+    applicableSubjects.length > 0
+      ? getApplicableSpecialties(applicableSubjects)
+      : [];
 
-  if (applicableSpecialties.length === 0) {
-    return {
-      success: false,
-      message: "No applicable teacher specialties found",
-    };
+  // If we have applicable specialties, find teachers with matching specialties
+  if (applicableSpecialties.length > 0) {
+    const { data: teachers, error } = await supabase
+      .from("users")
+      .select("id, first_name, last_name, profile_url, specialties")
+      .eq("role", "teacher") // Ensure we only get teachers
+      .overlaps("specialties", applicableSpecialties)
+      .limit(limit);
+    // .order("rating", { ascending: false })
+
+    if (error) {
+      console.error("Error fetching teachers:", error);
+      return { success: false, message: "Failed to fetch teachers" };
+    }
+
+    if (teachers && teachers.length > 0) {
+      return {
+        success: true,
+        message: "Teachers found",
+        teachers,
+        isRelevant: true, // Indicates these are relevant to student's subjects
+      };
+    }
   }
 
-  // Find teachers with matching specialties
-  const { data: teachers, error } = await supabase
+  // Fallback: Get first 4 teachers regardless of specialties
+  const { data: fallbackTeachers, error: fallbackError } = await supabase
     .from("users")
     .select("id, first_name, last_name, profile_url, specialties")
-    .overlaps("specialties", applicableSpecialties)
-    .limit(limit);
-  // .order("rating", { ascending: false })
-  if (error) {
-    console.error("Error fetching teachers:", error);
+    .eq("role", "teacher")
+    .limit(4);
+  // .order("created_at", { ascending: false }) // or any other ordering you prefer
+
+  if (fallbackError) {
+    console.error("Error fetching fallback teachers:", fallbackError);
     return { success: false, message: "Failed to fetch teachers" };
   }
 
-  if (!teachers || teachers.length === 0) {
-    return { success: false, message: "No relevant teachers found" };
+  if (!fallbackTeachers || fallbackTeachers.length === 0) {
+    return { success: false, message: "No teachers found" };
   }
 
-  return { success: true, message: "Teachers found", teachers };
+  return {
+    success: true,
+    message:
+      applicableSubjects.length === 0
+        ? "Showing general teachers (no specific subjects found for your class/branch)"
+        : "Showing general teachers (no relevant specialists found)",
+    teachers: fallbackTeachers,
+    isRelevant: false, // Indicates these are general teachers, not specifically relevant
+  };
 }
+// /**
+//  *! Get suggested teachers for a student based on their class and branch
+//  */
+// export async function getSuggestedTeachers(
+//   studentId: string,
+//   studentClass: string,
+//   studentBranch?: string,
+//   limit = 6
+// ) {
+//   if (!studentId || !studentClass) {
+//     return {
+//       success: false,
+//       message: !studentId ? "No student ID provided" : "No class provided",
+//     };
+//   }
+
+//   const supabase = await createClient();
+
+//   // Get applicable subjects for this student
+//   const applicableSubjects = getApplicableSubjects(studentClass, studentBranch);
+
+//   if (applicableSubjects.length === 0) {
+//     return {
+//       success: false,
+//       message:
+//         "No applicable subjects found for this student's class and branch",
+//     };
+//   }
+
+//   // Get applicable teacher specialties
+//   const applicableSpecialties = getApplicableSpecialties(applicableSubjects);
+
+//   if (applicableSpecialties.length === 0) {
+//     return {
+//       success: false,
+//       message: "No applicable teacher specialties found",
+//     };
+//   }
+
+//   // Find teachers with matching specialties
+//   const { data: teachers, error } = await supabase
+//     .from("users")
+//     .select("id, first_name, last_name, profile_url, specialties")
+//     .overlaps("specialties", applicableSpecialties)
+//     .limit(limit);
+//   // .order("rating", { ascending: false })
+//   if (error) {
+//     console.error("Error fetching teachers:", error);
+//     return { success: false, message: "Failed to fetch teachers" };
+//   }
+
+//   if (!teachers || teachers.length === 0) {
+//     return { success: false, message: "No relevant teachers found" };
+//   }
+
+//   return { success: true, message: "Teachers found", teachers };
+// }
 
 /**
  * !Get videos for a specific subject
