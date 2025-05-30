@@ -25,15 +25,18 @@ export default function TeacherCard({ teacher }: TeacherCardProps) {
     .filter((subject, index, self) => self.indexOf(subject) === index);
 
   return (
-    <div className="flex flex-col   border border-border/5 dark:border-border/10 rounded-xl p-2 hover:shadow-sm hover:shadow-border/15 transition-all duration-200">
-      <div className="flex items-center  gap-4 mb-4">
-        <div className="relative w-full aspect-square  rounded-xl overflow-hidden ">
+    <div className="flex flex-col   border border-border/20 dark:border-border/70 rounded-xl p-4 hover:shadow-sm hover:shadow-border/15 transition-all duration-200">
+      <div className="relative flex items-center  gap-4 mb-4">
+        <div
+          className="relative  w-full m-1 aspect-square  rounded-xl overflow-hidden "
+          // className="w-20 h-20 rounded-full overflow-hidden bg-gray-100"
+        >
           {teacher.profile_url ? (
             <Image
               src={teacher.profile_url}
               alt={teacher.first_name}
               fill
-              className="object-cover"
+              className="object-cover w-full h-full"
             />
           ) : (
             <div className="bg-border/20 dark:bg-border/50 flex items-center justify-center h-full">
@@ -57,17 +60,22 @@ export default function TeacherCard({ teacher }: TeacherCardProps) {
       {/* Specialties */}
       <div className="mt-auto">
         <div className="flex items-center text-sm text-muted-foreground mb-2">
-          <GraduationCap className="w-4 h-4 mr-1" />
-          <span>Spécialités</span>
+          <GraduationCap className="w-4 h-4 mr-1 text-primary" />
+          <span className="dark:text-white/95">Spécialités</span>
         </div>
         <div className="flex flex-wrap gap-2 mb-4">
           {subjects.slice(0, 4).map((subject, index) => (
-            <Badge key={index} variant="outline" className="text-xs">
+            <Badge
+              key={index}
+              variant="outline"
+              className="text-xs  border-border/20  dark:border-border/70 px-2 py-1"
+              title={subject}
+            >
               {subject}
             </Badge>
           ))}
           {subjects.length > 4 && (
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="outline" className="text-xs border-border/20 ">
               +{subjects.length - 4}
             </Badge>
           )}

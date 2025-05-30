@@ -109,7 +109,7 @@ export async function getSearchResults(query: string): Promise<{
     // Search teachers based on name
     const { data: teachers, error: teachersError } = await supabase
       .from("users")
-      .select("id, first_name, last_name, profile_url")
+      .select("id, first_name, last_name, profile_url , specialties")
       .or(`first_name.ilike.%${query}%, last_name.ilike.%${query}%`)
       .eq("role", roles.teacher)
       .limit(10);

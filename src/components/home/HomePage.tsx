@@ -64,13 +64,16 @@ export default async function HomePage() {
                       <Button
                         size="icon"
                         variant="outline"
-                        className="rounded-full h-16 w-16 bg-background/80 backdrop-blur-sm"
+                        className="hover:cursor-pointer rounded-full h-16 w-16 bg-background/80 backdrop-blur-sm"
                       >
                         <Play className="h-8 w-8" />
                       </Button>
                     </div>
                     <Image
-                      src={featuredVideo.thumbnail_url || "/placeholder.svg"}
+                      src={
+                        featuredVideo.thumbnail_url ??
+                        "/images/placeholder-thumbnail.png"
+                      }
                       height={300}
                       width={500}
                       alt="Featured video"

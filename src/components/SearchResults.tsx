@@ -1,35 +1,20 @@
 "use client";
 
 import ExplorerVideo from "@/app/(root)/(videos)/_components/videos/ExplorerVideo";
+import TeacherCard from "@/app/(root)/profile/_components/stduentSugguestion/TeacherCard";
 import { FilterModal } from "@/components/modals/FilterModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { RelatedVideo } from "@/types/RelatedVideos.interface";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-// Helper function to format upload date
-function formatUploadDate(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffTime = Math.abs(now.getTime() - date.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 1) return "1 jour";
-  if (diffDays < 7) return `${diffDays} jours`;
-  if (diffDays < 30)
-    return `${Math.ceil(diffDays / 7)} semaine${
-      Math.ceil(diffDays / 7) > 1 ? "s" : ""
-    }`;
-  return `${Math.ceil(diffDays / 30)} mois`;
-}
-
-// Helper function to get user display name
 function getUserName(user: any): string {
   if (!user) return "Utilisateur";
   return (
-    `${user.first_name || ""} ${user.last_name || ""}`.trim() || "Utilisateur"
+    `${user.first_name ?? ""} ${user.last_name ?? ""}`.trim() || "Utilisateur"
   );
 }
 
@@ -54,9 +39,19 @@ export function SearchResultsClient({
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // Update filteredVideos when initialVideos changes (new search results)
+  useEffect(() => {
+    console.log(
+      "initialVideos changed, updating filteredVideos:",
+      initialVideos.length
+    );
+    setFilteredVideos(initialVideos);
+  }, [initialVideos]);
+
   const subjects = ["Tout", "Professeur", "Vidéos", "Élève"];
 
   const handleFiltersChange = (videos: RelatedVideo[]) => {
+    console.log("Filter applied, new filtered count:", videos.length);
     setFilteredVideos(videos);
   };
 
@@ -90,6 +85,14 @@ export function SearchResultsClient({
 
   const totalResults = getTotalResults();
 
+  console.log("=== SearchResultsClient Debug ===");
+  console.log("query:", query);
+  console.log("initialVideos count:", initialVideos.length);
+  console.log("filteredVideos count:", filteredVideos.length);
+  console.log("searchTeachers count:", searchTeachers.length);
+  console.log("searchStudents count:", searchStudents.length);
+  console.log("totalResults:", totalResults);
+
   return (
     <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg min-h-screen">
       {/* Search Results Header */}
@@ -109,9 +112,9 @@ export function SearchResultsClient({
       <Tabs
         value={currentTab}
         onValueChange={handleTabChange}
-        className="w-full"
+        className="w-full "
       >
-        <TabsList className="flex flex-wrap gap-2 dark:bg-background/80 bg-background/80 border border-white/90">
+        <TabsList className=" flex flex-wrap gap-2 dark:bg-background/80 bg-background/80 border border-border/20 dark:border-border/70">
           {subjects.map((subject) => (
             <TabsTrigger
               key={subject}
@@ -153,27 +156,9 @@ export function SearchResultsClient({
               <h2 className="text-2xl font-bold mb-4">
                 Professeurs ({searchTeachers.length})
               </h2>
-              <div className="grid md:grid-cols-4 gap-4">
-                {searchTeachers.map((teacher) => (
-                  <Card
-                    key={teacher.id}
-                    className="p-4 text-center hover:shadow-lg transition-shadow cursor-pointer"
-                  >
-                    <Avatar className="h-20 w-20 mx-auto mb-3">
-                      <AvatarImage
-                        src={teacher.profile_url || "/placeholder.svg"}
-                        alt={getUserName(teacher)}
-                      />
-                      <AvatarFallback>
-                        {getUserName(teacher)
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <h3 className="font-medium">{getUserName(teacher)}</h3>
-                    <p className="text-sm text-muted-foreground">Professeur</p>
-                  </Card>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+                {searchTeachers?.map((teacher) => (
+                  <TeacherCard key={teacher.id} teacher={teacher} />
                 ))}
               </div>
             </section>
@@ -263,7 +248,7 @@ export function SearchResultsClient({
               <h2 className="text-2xl font-bold">
                 Toutes les vidéos ({filteredVideos.length})
               </h2>
-              {/* Secondary FilterModal button for the videos tab */}
+              {/* FIXED: Pass initialVideos (current search results) instead of filtered */}
               <FilterModal
                 searchVideos={initialVideos}
                 onFiltersChange={handleFiltersChange}
@@ -300,24 +285,29 @@ export function SearchResultsClient({
               Élèves ({searchStudents.length})
             </h2>
             {searchStudents.length > 0 ? (
-              <div className="grid md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3  md:grid-cols-5 gap-4">
                 {searchStudents.map((student) => (
                   <Card
                     key={student.id}
-                    className="p-4 text-center hover:shadow-lg transition-shadow cursor-pointer"
+                    className=" text-center border-border/20 dark:border-border/70 hover:shadow-lg transition-shadow hover:shadow-border/15 cursor-pointer gap-2 "
                   >
-                    <Avatar className="h-20 w-20 mx-auto mb-3">
-                      <AvatarImage
-                        src={student.profile_url || "/placeholder.svg"}
-                        alt={getUserName(student)}
-                      />
-                      <AvatarFallback>
-                        {getUserName(student)
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </Avatar>
+                    <Link href={`/profile/${student.id}`}>
+                      <Avatar className="h-20 w-20 mx-auto mb-3">
+                        <AvatarImage
+                          src={
+                            student.profile_url ??
+                            "/images/placeholder-profile.png"
+                          }
+                          alt={getUserName(student)}
+                        />
+                        <AvatarFallback>
+                          {getUserName(student)
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Link>
                     <h3 className="font-medium">{getUserName(student)}</h3>
                     <p className="text-sm text-muted-foreground">Élève</p>
                   </Card>
@@ -337,7 +327,7 @@ export function SearchResultsClient({
       </Tabs>
 
       {/* No Results - Only show when all categories are empty */}
-      {filteredVideos.length === 0 &&
+      {/* {filteredVideos.length === 0 &&
         searchTeachers.length === 0 &&
         searchStudents.length === 0 && (
           <div className="text-center py-12">
@@ -347,7 +337,17 @@ export function SearchResultsClient({
               explorez nos catégories.
             </p>
           </div>
-        )}
+        )} */}
+
+      {filteredVideos.length === 0 && activeFilter === "tout" && (
+        <div className="text-center py-12">
+          <h3 className="text-lg font-medium mb-2">Aucun résultat trouvé</h3>
+          <p className="text-muted-foreground">
+            Essayez de modifier votre recherche &quot;{query}&quot; ou explorez
+            nos catégories.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
