@@ -13,11 +13,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 interface FilterBarProps {
-  subjects: string[];
-  classes: string[];
-  branches: string[][];
-  userIsTeacher?: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  readonly subjects: string[];
+  readonly classes: string[];
+  readonly branches: string[][];
+  readonly userIsTeacher?: boolean;
+  readonly setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function FilterBar({
@@ -126,8 +126,11 @@ export default function FilterBar({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="tout">Toutes les classes</SelectItem>
-                {classes.map((classOption) => (
-                  <SelectItem key={classOption} value={classOption}>
+                {classes.map((classOption, index) => (
+                  <SelectItem
+                    key={`${classOption}-${index}`}
+                    value={classOption}
+                  >
                     {classOption}
                   </SelectItem>
                 ))}
@@ -139,14 +142,18 @@ export default function FilterBar({
         {flatBranches.length > 2 && (
           <div className="flex flex-col gap-1">
             <Label htmlFor="branch-filter">Branch</Label>
-            <Select value={currentBranch} onValueChange={handleBranchChange}>
+            <Select
+              value={currentBranch}
+              onValueChange={handleBranchChange}
+              disabled={!availableBranches.length}
+            >
               <SelectTrigger className="min-w-[200px] border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary rounded-md">
                 <SelectValue placeholder="Toutes les filières" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="tout">Toutes les filières</SelectItem>
-                {availableBranches.map((branch) => (
-                  <SelectItem key={branch} value={branch}>
+                {availableBranches.map((branch, index) => (
+                  <SelectItem key={`${branch}-${index}`} value={branch}>
                     {branch}
                   </SelectItem>
                 ))}
@@ -164,8 +171,11 @@ export default function FilterBar({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="tout">Toutes les matières</SelectItem>
-                {subjects.map((subject) => (
-                  <SelectItem key={subject} value={subject.toLowerCase()}>
+                {subjects.map((subject, index) => (
+                  <SelectItem
+                    key={`${subject}-${index}`}
+                    value={subject.toLowerCase()}
+                  >
                     {subject}
                   </SelectItem>
                 ))}

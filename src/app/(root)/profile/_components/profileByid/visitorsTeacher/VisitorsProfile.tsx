@@ -1,4 +1,5 @@
 import SuggestionProfileStudentList from "@/app/(root)/profile/_components/stduentSugguestion/SugguestionProfileStudentList";
+import { roles } from "@/types/roles.enum";
 import { SuggestionList } from "@/types/UserProps";
 import VideoListVisitor from "./VideoListVisitor";
 
@@ -37,12 +38,19 @@ export default async function VisitorsProfile({
       </div>
     );
   }
+  if (currentUserRole == roles.admin) {
+    return (
+      <div className="p-6">
+        <SuggestionProfileStudentList user={visitedUser} />
+      </div>
+    );
+  }
 
   // CASE 4: Optional - if teacher visits a student
   return (
-    <div className="p-6 text-gray-500">
-      Ce profil est privé ou ne contient pas encore de contenu visible pour
-      vous.
+    <div className="p-6 text-gray-500 dark:text-gray-400 text-sm">
+      Ce profil appartient à un élève. Aucun contenu n&apos;est disponible à
+      afficher pour le moment.
     </div>
   );
 }
