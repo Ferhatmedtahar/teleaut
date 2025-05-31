@@ -3,10 +3,10 @@
 import { Button } from "@/components/common/buttons/Button";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@/providers/UserProvider";
-import { Bell, Menu, Plus, Search, X } from "lucide-react";
+import { Menu, Plus, Search, X } from "lucide-react";
 import Form from "next/form";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import SearchFormReset from "../forms/SearchFormReset";
 import UserDropDownMenu from "./UserDropDownMenu";
@@ -22,18 +22,47 @@ interface NavbarProps {
 
 export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
   const user = useUser();
+  const router = useRouter();
   const role = user?.role;
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const mobileSearchInputRef = useRef<HTMLInputElement>(null);
   const params = useSearchParams();
 
   const [search, setSearch] = useState(params.get("query") ?? "");
+  const [mobileSearch, setMobileSearch] = useState(params.get("query") ?? "");
+
   // Focus the search input when mobile search is shown
   useEffect(() => {
-    if (showMobileSearch && searchInputRef.current) {
-      searchInputRef.current.focus();
+    if (showMobileSearch && mobileSearchInputRef.current) {
+      mobileSearchInputRef.current.focus();
     }
   }, [showMobileSearch]);
+
+  // Handle mobile search submit
+  const handleMobileSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const query = formData.get("query") as string;
+
+    if (query?.trim()) {
+      // Close mobile search overlay first
+      setShowMobileSearch(false);
+      // Navigate to search results
+      router.push(`/?query=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  // Handle desktop search submit
+  const handleDesktopSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const query = formData.get("query") as string;
+
+    if (query?.trim()) {
+      router.push(`/?query=${encodeURIComponent(query.trim())}`);
+    }
+  };
 
   if (!user) return null;
 
@@ -64,14 +93,19 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
 
         {/* Desktop search */}
         <div className="relative mx-auto hidden w-full max-w-md md:block">
-          <Form action="/" id="search-form" className="search-form">
+          <Form
+            action="/"
+            onSubmit={handleDesktopSearchSubmit}
+            id="search-form"
+            className="search-form"
+          >
             <Input
+              ref={searchInputRef}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              // type="search"
               name="query"
               placeholder="Chercher"
-              className="pl-10 rounded-full "
+              className="pl-10 rounded-full"
             />
 
             <div className="absolute inset-y-0 left-3 flex items-center">
@@ -87,19 +121,19 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
           </Form>
         </div>
 
-        {/* Mobile search trigger button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          aria-label="Open search"
-          onClick={() => setShowMobileSearch(true)}
-        >
-          <Search className="h-5 w-5" />
-        </Button>
+        <div className="flex items-center gap-2 md:gap-2">
+          {/* Mobile search trigger button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden border"
+            aria-label="Open search"
+            onClick={() => setShowMobileSearch(true)}
+          >
+            <Search className="h-5 w-5" />
+          </Button>
 
-        {/* Right side with buttons and profile */}
-        <div className="flex items-center gap-2 md:gap-4">
+          {/* Right side with buttons and profile */}
           {(role === "teacher" || role === "admin") && (
             <>
               <Link href="/create-video" passHref>
@@ -118,17 +152,17 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8 sm:hidden"
+                  className="h-9 w-9 sm:hidden"
                 >
-                  <Plus className="h-4 w-4" />
+                  <Plus className="h-5 w-5" />
                 </Button>
               </Link>
             </>
           )}
-          <Button variant="ghost" size="icon" className="relative">
+          {/* <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-5 w-5 dark:text-white/80 text-black" />
             <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></span>
-          </Button>
+          </Button> */}
           <UserDropDownMenu userInfo={userInfo} />
         </div>
       </div>
@@ -146,14 +180,16 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
               <X className="h-5 w-5" />
             </Button>
 
-            <Form action="/" className="flex-1">
+            <form onSubmit={handleMobileSearchSubmit} className="flex-1">
               <div className="relative w-full">
                 <Input
-                  ref={searchInputRef}
-                  type="search"
+                  ref={mobileSearchInputRef}
+                  type="text"
                   name="query"
+                  value={mobileSearch}
+                  onChange={(e) => setMobileSearch(e.target.value)}
                   placeholder="Chercher"
-                  className="w-full pl-10 pr-4 rounded-full bg-muted"
+                  className="w-full pl-10 pr-16 rounded-full bg-muted"
                   autoComplete="off"
                 />
                 <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -168,17 +204,15 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
                   <Search className="h-5 w-5" />
                 </Button>
               </div>
-            </Form>
+            </form>
           </div>
 
           {/* Recent searches could go here */}
           <div className="flex-1 p-4 overflow-auto">
-            {/* This area could be populated with recent searches or trending topics */}
             <p className="text-muted-foreground text-sm mb-2">
               Recherches récentes
             </p>
             <div className="space-y-2">
-              {/* This would be a map of recent searches in a real implementation */}
               <div className="flex items-center p-2 hover:bg-muted rounded-md cursor-pointer">
                 <Search className="h-4 w-4 mr-3 text-muted-foreground" />
                 <span>Exemple de recherche récente</span>

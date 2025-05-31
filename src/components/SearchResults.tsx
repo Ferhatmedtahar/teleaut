@@ -7,9 +7,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { RelatedVideo } from "@/types/RelatedVideos.interface";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "./common/buttons/Button";
 
 function getUserName(user: any): string {
   if (!user) return "Utilisateur";
@@ -39,7 +41,6 @@ export function SearchResultsClient({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Update filteredVideos when initialVideos changes (new search results)
   useEffect(() => {
     console.log(
       "initialVideos changed, updating filteredVideos:",
@@ -85,16 +86,16 @@ export function SearchResultsClient({
 
   const totalResults = getTotalResults();
 
-  console.log("=== SearchResultsClient Debug ===");
-  console.log("query:", query);
-  console.log("initialVideos count:", initialVideos.length);
-  console.log("filteredVideos count:", filteredVideos.length);
-  console.log("searchTeachers count:", searchTeachers.length);
-  console.log("searchStudents count:", searchStudents.length);
-  console.log("totalResults:", totalResults);
-
   return (
     <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg min-h-screen">
+      <div>
+        <Button variant="outline" className="mt-2">
+          <Link className="text-sm flex items-center" href="/">
+            <ArrowLeft className="mr-2 size-4" />
+            <span>Back to Home</span>
+          </Link>
+        </Button>
+      </div>
       {/* Search Results Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -112,23 +113,34 @@ export function SearchResultsClient({
       <Tabs
         value={currentTab}
         onValueChange={handleTabChange}
-        className="w-full "
+        className="w-full"
       >
-        <TabsList className=" flex flex-wrap gap-2 dark:bg-background/80 bg-background/80 border border-border/20 dark:border-border/70">
-          {subjects.map((subject) => (
-            <TabsTrigger
-              key={subject}
-              value={subject.toLowerCase()}
-              className="px-4 py-1 cursor-pointer"
-            >
-              {subject}
-              {subject === "Tout" && ` (${totalResults})`}
-              {subject === "Professeur" && ` (${searchTeachers.length})`}
-              {subject === "Vidéos" && ` (${filteredVideos.length})`}
-              {subject === "Élève" && ` (${searchStudents.length})`}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        <div className="w-full overflow-x-auto">
+          <TabsList className="flex w-max min-w-full md:w-full md:flex-wrap md:gap-2 dark:bg-background/80 bg-background/80 border border-border/20 dark:border-border/70">
+            {subjects.map((subject) => (
+              <TabsTrigger
+                key={subject}
+                value={subject.toLowerCase()}
+                className="flex-shrink-0 px-3 py-2 text-sm md:px-4 md:py-1 cursor-pointer whitespace-nowrap"
+              >
+                <span className="hidden md:inline">
+                  {subject}
+                  {subject === "Tout" && ` (${totalResults})`}
+                  {subject === "Professeur" && ` (${searchTeachers.length})`}
+                  {subject === "Vidéos" && ` (${filteredVideos.length})`}
+                  {subject === "Élève" && ` (${searchStudents.length})`}
+                </span>
+                <span className="md:hidden">
+                  {subject === "Tout" && "Tout"}
+                  {subject === "Professeur" && "Prof"}
+                  {subject === "Vidéos" && "Vidéos"}
+                  {subject === "Élève" && "Élève"}
+                </span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
+        {/* </TabsList> */}
 
         {/* All Results Tab */}
         <TabsContent value="tout" className="space-y-6 mt-6">
