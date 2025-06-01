@@ -1,37 +1,20 @@
 "use client";
 
+import { RelatedVideo } from "@/types/RelatedVideos.interface";
 import { formatDistanceToNow } from "date-fns";
 import { Clock, Eye } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-interface Teacher {
+type Teacher = {
   id: string;
   first_name: string;
-  last_name: string;
-  profile_url: string;
-}
-
-interface Video {
-  id: string;
-  title: string;
-  class: string;
-  subject: string;
-  video_url: string;
-  thumbnail_url: string;
-  documents_url: string | null;
-  notes_url: string | null;
-  description: string;
-  created_at: string;
-  teacher_id: string;
-  views: number;
-  status: number;
-  branch: string[] | null;
-  teacher: Teacher;
-}
+  last_name?: string;
+  profile_url: string | null;
+};
 
 interface ExplorerVideoProps {
-  video: Video;
+  video: RelatedVideo;
   user?: Teacher;
 }
 
@@ -49,7 +32,7 @@ export default function ExplorerVideo({ video, user }: ExplorerVideoProps) {
 
   return (
     <Link href={`/videos/${video.id}`} className="group block w-full h-full">
-      <article className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ease-out group-hover:-translate-y-0.5 border border-slate-200/50 dark:border-slate-700/50 h-full flex flex-col">
+      <article className="bg-white dark:bg-background rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ease-out group-hover:-translate-y-0.5 border border-border/30 dark:border-border/70 h-full flex flex-col">
         {/* Thumbnail Container */}
         <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
           <Image
@@ -63,14 +46,14 @@ export default function ExplorerVideo({ video, user }: ExplorerVideoProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-black/15" />
 
           {/* Subject badge with enhanced contrast */}
-          <div className="absolute top-3 left-3 opacity-90 group-hover:opacity-100 transition-opacity duration-300">
+          <div className=" absolute top-3 left-3 opacity-90 group-hover:opacity-100 transition-opacity duration-300">
             <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-primary-950 text-white backdrop-blur-md border border-white/20 shadow-lg">
               {video.subject}
             </span>
           </div>
 
           {/* Class badge with enhanced contrast */}
-          <div className="absolute top-3 right-3 opacity-90 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="  absolute top-3 right-3 opacity-90 group-hover:opacity-100 transition-opacity duration-300">
             <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-white/90 text-slate-900 backdrop-blur-md border border-black/10 shadow-lg">
               {video.class}
             </span>

@@ -13,7 +13,6 @@ export async function getHomePageVideos(): Promise<{
   const supabase = await createClient();
 
   try {
-    // Get the latest video as featured (most recent by created_at)
     const { data: featuredVideos, error: featuredError } = await supabase
       .from("videos")
       .select("*")

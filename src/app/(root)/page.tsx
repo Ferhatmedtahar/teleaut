@@ -18,7 +18,6 @@ export default async function Page({ searchParams }: SearchPageProps) {
     return <HomePage />;
   }
 
-  // Get search results
   const {
     success,
     videos: searchVideos,
@@ -40,13 +39,6 @@ export default async function Page({ searchParams }: SearchPageProps) {
     );
   }
 
-  console.log("Search Results:", {
-    query,
-    activeFilter,
-    searchVideos,
-    searchTeachers,
-    searchStudents,
-  });
   return (
     <SearchResultsClient
       query={query}

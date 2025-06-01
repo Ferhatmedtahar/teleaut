@@ -8,7 +8,6 @@ export interface RelatedVideo {
   branch: string[];
   class?: string;
   subject?: string;
-
   teacher: {
     id: string;
     first_name: string;

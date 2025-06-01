@@ -45,10 +45,10 @@ export default function ProfileContentTeacher({
       </div>
 
       {/* Profile Info */}
-      <div className="px-8 pt-10 pb-6 ">
+      <div className="px-4 pt-8 pb-4  md:px-8 md:pt-10 md:pb-6 ">
         <div className="flex justify-between items-start ">
           <div className="flex-1 flex flex-col gap-2">
-            <h1 className="text-xl font-bold">
+            <h1 className="text-lg sm:text-xl font-bold">
               {firstName} {lastName}
             </h1>
 

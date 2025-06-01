@@ -154,7 +154,7 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
                   size="icon"
                   className="h-9 w-9 sm:hidden"
                 >
-                  <Plus className="h-5 w-5" />
+                  <Plus className="h-5 w-5 dark:text-white " />
                 </Button>
               </Link>
             </>
