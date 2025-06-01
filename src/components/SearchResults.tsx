@@ -42,10 +42,6 @@ export function SearchResultsClient({
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    console.log(
-      "initialVideos changed, updating filteredVideos:",
-      initialVideos.length
-    );
     setFilteredVideos(initialVideos);
   }, [initialVideos]);
 
@@ -85,7 +81,7 @@ export function SearchResultsClient({
   };
 
   const totalResults = getTotalResults();
-
+  console.log("Total filteredVideos:", filteredVideos);
   return (
     <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg min-h-screen">
       <div>
@@ -165,6 +161,8 @@ export function SearchResultsClient({
                     key={video.id}
                     video={video}
                     user={video.teacher}
+                    // video={video}
+                    // user={video.teacher}
                   />
                 ))}
               </div>

@@ -18,7 +18,9 @@ export default function TeacherVideosList({
 }: {
   readonly user: UserProps;
 }) {
+  // Use the complete Video interface instead of RelatedVideo
   const [videos, setVideos] = useState<RelatedVideo[]>([]);
+  console.log(videos);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -70,7 +72,7 @@ export default function TeacherVideosList({
     ] || [];
 
   const filteredVideos = useMemo(() => {
-    return videos.filter((video) => {
+    return videos.filter((video: RelatedVideo) => {
       return (
         (selectedBranch ? video.branch?.includes(selectedBranch) : true) &&
         (selectedClass ? video.class === selectedClass : true) &&
@@ -100,8 +102,13 @@ export default function TeacherVideosList({
         <FilterBar
           subjects={subjects}
           classes={classes}
-          branches={branches}
+          branches={[
+            studentClassesAndBranches[
+              selectedClass as keyof typeof studentClassesAndBranches
+            ] || [],
+          ]}
           userIsTeacher={user.role === "teacher"}
+          setLoading={setLoading}
         />
       )}
 
@@ -125,8 +132,12 @@ export default function TeacherVideosList({
       ) : (
         <div className="grid md:grid-cols-3 gap-6 w-full">
           {filteredVideos.length > 0 ? (
-            filteredVideos.map((video, index) => (
-              <ExplorerVideo key={video.id + index} video={video} user={user} />
+            filteredVideos.map((video: RelatedVideo, index: number) => (
+              <ExplorerVideo
+                key={video.id + index}
+                video={video}
+                user={video.teacher}
+              />
             ))
           ) : (
             <p>No videos match the selected filters.</p>

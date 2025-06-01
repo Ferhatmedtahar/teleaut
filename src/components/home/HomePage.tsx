@@ -17,7 +17,7 @@ function getTeacherName(teacher: any): string {
 }
 export default async function HomePage() {
   // const subjects = ["All", "Math", "Science", "Physique", "Arab", "Eng", "ITA"];
-
+  // const {success:branchAndClassSuccess, branchAndClass} = await getBranchAndClass();
   const { success, featuredVideo, explorerVideos } = await getHomePageVideos();
 
   if (!success) {
