@@ -8,7 +8,6 @@ import {
   Info,
   MessageSquare,
   MoonIcon,
-  Settings,
   Sun,
 } from "lucide-react"; // Assuming you're using lucide-react for icons
 import { useTheme } from "next-themes"; // Assuming you're using next-themes or a similar library
@@ -54,11 +53,11 @@ const navItems: NavItem[] = [
     href: "/a-propos",
     icon: Info,
   },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
-  },
+  // {
+  //   title: "Settings",
+  //   href: "/settings",
+  //   icon: Settings,
+  // },
 ];
 
 interface SidebarProps extends React.ComponentProps<"div"> {
@@ -81,7 +80,7 @@ const AppSidebar: React.FC<SidebarProps> = ({
     <div
       // border-r border-border/20
       className={cn(
-        "flex flex-col w-56 md:w-60 bg-background  h-full overflow-hidden",
+        "flex flex-col w-48 sm:w-52 md:w-56 lg:w-60 bg-background  h-full overflow-hidden",
         className
       )}
       {...props}

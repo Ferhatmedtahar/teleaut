@@ -11,7 +11,7 @@ export default function VideoDescription({
     <>
       <div className="   flex flex-col gap-2">
         <h2 className="text-2xl font-semibold ">Description</h2>
-        <p className="text-gray-700 dark:text-gray-400 whitespace-pre-line text-sm">
+        <p className=" text-primary-900  dark:text-primary-50 whitespace-pre-line text-sm">
           {description}
         </p>
       </div>

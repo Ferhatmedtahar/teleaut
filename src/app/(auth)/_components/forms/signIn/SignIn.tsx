@@ -90,9 +90,9 @@ export default function SignInForm() {
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? (
-              <FiEye className="h-5 w-5 text-gray-500" />
+              <FiEye className="h-5 w-5 text-gray-500 dark:text-gray-400" />
             ) : (
-              <FiEyeOff className="h-5 w-5 text-gray-500" />
+              <FiEyeOff className="h-5 w-5 text-gray-500 dark:text-gray-400" />
             )}
           </button>
         </div>
@@ -104,7 +104,7 @@ export default function SignInForm() {
         <div className="flex justify-end mt-1">
           <Link
             href="forgot-password"
-            className="text-xs text-blue-600 hover:text-blue-800 hover:underline transition-all duration-300 "
+            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-500 dark:hover:text-blue-600  hover:underline transition-all duration-300 "
           >
             Mot de passe oublié ?
           </Link>
@@ -120,7 +120,7 @@ export default function SignInForm() {
           Vous n&apos;avez pas de compte ?{" "}
           <Link
             href="sign-up/info"
-            className="text-blue-600 hover:text-blue-800 font-medium transition duration-200"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-500 dark:hover:text-blue-600 font-medium transition duration-200"
           >
             Créez-en un
           </Link>
