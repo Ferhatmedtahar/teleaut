@@ -21,7 +21,7 @@ export default function ClassSelector({
       <SelectTrigger className="w-full">
         <SelectValue
           // placeholder="Sélectionnez votre classe"
-          placeholder={currentClass || "Sélectionnez votre classe"}
+          placeholder={currentClass ?? "Sélectionnez votre classe"}
         />
       </SelectTrigger>
       <SelectContent>

@@ -48,7 +48,7 @@ export default function DocumentsCommentsTab({
           {notesUrl && <FileCard url={notesUrl} key={notesUrl} />}
 
           {!documentsUrl && !notesUrl && (
-            <p className="text-center text-muted-foreground">
+            <p className="text-center  text-primary-900  dark:text-primary-100">
               aucun document n&apos;a été soumis
             </p>
           )}

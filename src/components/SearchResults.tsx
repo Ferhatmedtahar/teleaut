@@ -89,7 +89,10 @@ export function SearchResultsClient({
   return (
     <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg min-h-screen">
       <div>
-        <Button variant="outline" className="mt-2">
+        <Button
+          variant="outline"
+          className="mt-2 dark:hover:text-white dark:hover:bg-primary-900/50 hover:bg-primary-50/50 hover:cursor-pointer"
+        >
           <Link className="text-sm flex items-center" href="/">
             <ArrowLeft className="mr-2 size-4" />
             <span>Back to Home</span>
@@ -102,7 +105,7 @@ export function SearchResultsClient({
           <h1 className="text-2xl font-bold">
             Résultats pour &quot;{query}&quot;
           </h1>
-          <p className="text-muted-foreground">
+          <p className=" text-primary-900  dark:text-primary-100">
             {totalResults} résultat{totalResults !== 1 ? "s" : ""} trouvé
             {totalResults !== 1 ? "s" : ""}
           </p>
@@ -123,14 +126,20 @@ export function SearchResultsClient({
                 value={subject.toLowerCase()}
                 className="flex-shrink-0 px-3 py-2 text-sm md:px-4 md:py-1 cursor-pointer whitespace-nowrap"
               >
-                <span className="hidden md:inline">
+                <span
+                  className={`hidden md:inline     font-medium ${
+                    currentTab === subject.toLowerCase()
+                      ? "text-white/95 dark:text-primary-50"
+                      : "text-primary-900 dark:text-primary-200"
+                  }`}
+                >
                   {subject}
                   {subject === "Tout" && ` (${totalResults})`}
                   {subject === "Professeur" && ` (${searchTeachers.length})`}
                   {subject === "Vidéos" && ` (${filteredVideos.length})`}
                   {subject === "Élève" && ` (${searchStudents.length})`}
                 </span>
-                <span className="md:hidden">
+                <span className="md:hidden text-primary-900  dark:text-primary-100 ">
                   {subject === "Tout" && "Tout"}
                   {subject === "Professeur" && "Prof"}
                   {subject === "Vidéos" && "Vidéos"}
@@ -190,7 +199,10 @@ export function SearchResultsClient({
                   >
                     <Avatar className="h-20 w-20 mx-auto mb-3">
                       <AvatarImage
-                        src={student.profile_url || "/placeholder.svg"}
+                        src={
+                          student.profile_url ??
+                          "/images/placeholder-profile.png"
+                        }
                         alt={getUserName(student)}
                       />
                       <AvatarFallback>
@@ -201,7 +213,9 @@ export function SearchResultsClient({
                       </AvatarFallback>
                     </Avatar>
                     <h3 className="font-medium">{getUserName(student)}</h3>
-                    <p className="text-sm text-muted-foreground">Élève</p>
+                    <p className="text-sm text-primary-900  dark:text-primary-100 ">
+                      Élève
+                    </p>
                   </Card>
                 ))}
               </div>
@@ -224,7 +238,10 @@ export function SearchResultsClient({
                   >
                     <Avatar className="h-20 w-20 mx-auto mb-3">
                       <AvatarImage
-                        src={teacher.profile_url || "/placeholder.svg"}
+                        src={
+                          teacher.profile_url ??
+                          "/images/placeholder-profile.png"
+                        }
                         alt={getUserName(teacher)}
                       />
                       <AvatarFallback>
@@ -235,7 +252,9 @@ export function SearchResultsClient({
                       </AvatarFallback>
                     </Avatar>
                     <h3 className="font-medium">{getUserName(teacher)}</h3>
-                    <p className="text-sm text-muted-foreground">Professeur</p>
+                    <p className="text-sm text-primary-900  dark:text-primary-100 ">
+                      Professeur
+                    </p>
                   </Card>
                 ))}
               </div>
@@ -244,7 +263,7 @@ export function SearchResultsClient({
                 <h3 className="text-lg font-medium mb-2">
                   Aucun professeur trouvé
                 </h3>
-                <p className="text-muted-foreground">
+                <p className=" text-primary-900  dark:text-primary-100">
                   Aucun professeur ne correspond à votre recherche &quot;{query}
                   &quot;.
                 </p>
@@ -261,10 +280,13 @@ export function SearchResultsClient({
                 Toutes les vidéos ({filteredVideos.length})
               </h2>
               {/* FIXED: Pass initialVideos (current search results) instead of filtered */}
-              <FilterModal
-                searchVideos={initialVideos}
-                onFiltersChange={handleFiltersChange}
-              />
+
+              {filteredVideos.length > 0 && (
+                <FilterModal
+                  searchVideos={initialVideos}
+                  onFiltersChange={handleFiltersChange}
+                />
+              )}
             </div>
             {filteredVideos.length > 0 ? (
               <div className="grid md:grid-cols-3 gap-6">
@@ -281,7 +303,7 @@ export function SearchResultsClient({
                 <h3 className="text-lg font-medium mb-2">
                   Aucune vidéo trouvée
                 </h3>
-                <p className="text-muted-foreground">
+                <p className=" text-primary-900  dark:text-primary-100">
                   Aucune vidéo ne correspond à votre recherche &quot;{query}
                   &quot;.
                 </p>
@@ -321,14 +343,16 @@ export function SearchResultsClient({
                       </Avatar>
                     </Link>
                     <h3 className="font-medium">{getUserName(student)}</h3>
-                    <p className="text-sm text-muted-foreground">Élève</p>
+                    <p className="text-sm  text-primary-900  dark:text-primary-100">
+                      Élève
+                    </p>
                   </Card>
                 ))}
               </div>
             ) : (
               <div className="text-center py-12">
                 <h3 className="text-lg font-medium mb-2">Aucun élève trouvé</h3>
-                <p className="text-muted-foreground">
+                <p className=" text-primary-900  dark:text-primary-100">
                   Aucun élève ne correspond à votre recherche &quot;{query}
                   &quot;.
                 </p>
@@ -354,7 +378,7 @@ export function SearchResultsClient({
       {filteredVideos.length === 0 && activeFilter === "tout" && (
         <div className="text-center py-12">
           <h3 className="text-lg font-medium mb-2">Aucun résultat trouvé</h3>
-          <p className="text-muted-foreground">
+          <p className=" text-primary-900  dark:text-primary-100">
             Essayez de modifier votre recherche &quot;{query}&quot; ou explorez
             nos catégories.
           </p>

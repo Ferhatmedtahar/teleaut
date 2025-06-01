@@ -356,7 +356,7 @@ export default function VideoUploadForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
       {/* Video Upload Area */}
       <div className="gradient-bg-light rounded-lg overflow-hidden shadow-lg">
         <div className="p-6 flex flex-col items-center justify-center text-white">
@@ -454,11 +454,12 @@ export default function VideoUploadForm({
             </label>
 
             {subjectOptions.length === 1 ? (
-              <input
+              <Input
                 type="text"
                 value={subjectOptions[0]}
                 readOnly
-                className="w-full bg-gray-100 text-sm text-gray-700 border border-gray-300 rounded px-3 py-2"
+                className="cursor-not-allowed focus-visible:ring-0   text-gray-700 dark:text-gray-200 w-full text-sm border  rounded px-3 py-2"
+                // className="w-full bg-gray-100 text-sm text-gray-700 border border-gray-300 rounded px-3 py-2"
               />
             ) : (
               <Controller
@@ -675,7 +676,7 @@ export default function VideoUploadForm({
               id="description"
               {...register("description")}
               placeholder="Description"
-              className="w-full min-h-[120px]"
+              className="w-full min-h-[120px] dark:placeholder:text-white/80"
             />
             {errors.description && (
               <p className="mt-1 text-sm text-red-500">
@@ -688,10 +689,12 @@ export default function VideoUploadForm({
           <div className="flex flex-col gap-2">
             <label
               htmlFor="notes"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium dark:text-white/90"
             >
-              Upload Notes
-              <span className="text-gray-500 text-xs"> (optionnel)</span>
+              soumettre des notes
+              <span className="text-gray-500 dark:text-gray-400 text-xs">
+                (optionnel)
+              </span>
             </label>
             <div className="flex items-center gap-2">
               <input
@@ -700,7 +703,7 @@ export default function VideoUploadForm({
                 ref={notesInputRef}
                 onChange={handleNotesSelect}
                 accept=".pdf,.png,.jpg,.jpeg"
-                className="block w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-primary-800 hover:file:bg-primary-50 border border-gray-300 rounded-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="dark:text-white  dark:placeholder:text-white/80 placeholder:text-muted-foreground selection:bg-primary selection:text-[#355869]  dark:bg-primary/30 border-primary-400  block w-full file:mr-4 file:py-2 file:px-4 file:rounded-r-md file:border-0 file:text-sm file:font-medium file:bg-primary/30 dark:file:bg-primary/50  dark:file:text-white/90  file:text-primary-950 hover:file:bg-primary-100 hover:cursor-pointer border  rounded-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
               {notesFile && (
                 <Button
@@ -730,10 +733,13 @@ export default function VideoUploadForm({
           <div className="flex flex-col gap-2">
             <label
               htmlFor="documents"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium  dark:text-white/90"
             >
-              Upload Other Documents
-              <span className="text-gray-500 text-xs"> (optionnel)</span>
+              soumettre d&apos;autres documents
+              <span className="text-gray-500 dark:text-gray-400 text-xs">
+                {" "}
+                (optionnel)
+              </span>
             </label>
             <div className="flex items-center gap-2">
               <input
@@ -742,7 +748,7 @@ export default function VideoUploadForm({
                 ref={documentsInputRef}
                 onChange={handleDocumentsSelect}
                 accept=".pdf,.png,.jpg,.jpeg"
-                className="block w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-primary-800 hover:file:bg-primary-50 border border-gray-300 rounded-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="dark:text-white  dark:placeholder:text-white/80 placeholder:text-muted-foreground selection:bg-primary selection:text-[#355869]  dark:bg-primary/30 border-primary-400  block w-full file:mr-4 file:py-2 file:px-4 file:rounded-r-md file:border-0 file:text-sm file:font-medium file:bg-primary/30 dark:file:bg-primary/50  dark:file:text-white/90  file:text-primary-950 hover:file:bg-primary-100 hover:cursor-pointer border  rounded-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
               {documentsFile && (
                 <Button
@@ -837,7 +843,7 @@ export default function VideoUploadForm({
         type="submit"
         variant="default"
         size="lg"
-        className="w-full md:w-auto"
+        className="w-full  md:w-auto lg:w-1/4    xl:h-10 flex items-center justify-center gap-2"
         disabled={isSubmitting}
       >
         {isSubmitting ? (
@@ -847,7 +853,7 @@ export default function VideoUploadForm({
           </>
         ) : (
           <>
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="h-4 w-4" />
             <span>Publier</span>
           </>
         )}

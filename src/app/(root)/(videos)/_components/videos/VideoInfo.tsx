@@ -116,7 +116,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
       {/* Branches */}
       {video.branch && video.branch.length > 0 && (
         <div className="space-y-2">
-          <p className="text-sm text-primary-900 rounded-full  dark:text-primary-100">
+          <p className="text-sm  rounded-full">
             Pour les élèves des branches suivantes :
           </p>
           <div className="flex flex-wrap gap-2">

@@ -86,7 +86,7 @@ export default function BranchPicker({
         <Popover open={branchesOpen} onOpenChange={setBranchesOpen}>
           <PopoverTrigger
             asChild
-            className="border-primary-400 focus-visible:border-primary-400 focus-visible:ring-primary/60 focus-visible:ring-[3px]"
+            className=" border-primary-400 focus-visible:border-primary-400 focus-visible:ring-primary/60 focus-visible:ring-[3px]"
           >
             <Button
               aria-label="Sélectionner des filières"
@@ -97,7 +97,7 @@ export default function BranchPicker({
               disabled={isDisabled}
             >
               {isDisabled ? (
-                <span className="text-muted-foreground">
+                <span className="text-muted-foreground ">
                   {!className
                     ? "Sélectionnez d'abord une classe"
                     : availableBranches[0] || "Aucune filière"}
@@ -108,20 +108,23 @@ export default function BranchPicker({
                   {selectedBranches.length > 1 ? "s" : ""} sélectionnée
                 </span>
               ) : (
-                <span className="text-muted-foreground">
+                <span className="text-muted-foreground dark:text-white/80">
                   Sélectionner des filières
                 </span>
               )}
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 text-primary-900 " />
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-70 text-primary-900 dark:text-white " />
             </Button>
           </PopoverTrigger>
           <PopoverContent
-            className="w-[300px] p-0 border-primary-400  "
+            className=" w-[300px] p-0  border-primary-400  "
             align="start"
           >
-            <Command>
-              <CommandInput placeholder="Rechercher des filières..." />
-              <CommandEmpty className="p-2 text-sm ">
+            <Command className="dark:bg-primary-950">
+              <CommandInput
+                className="text-primary-900 dark:text-white placeholder:text-primary-700/70 dark:placeholder:text-primary-100"
+                placeholder="Rechercher des filières..."
+              />
+              <CommandEmpty className="p-2 text-sm text-primary-900 dark:text-white">
                 Aucune filière trouvée.
               </CommandEmpty>
               <CommandList className="max-h-[250px]  ">
