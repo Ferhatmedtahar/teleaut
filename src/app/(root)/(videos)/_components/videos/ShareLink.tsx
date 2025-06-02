@@ -25,7 +25,7 @@ export default function ShareLink({
       onClick={handleShare}
     >
       <Share size={19} />
-      <span>Share</span>
+      <span>Copie le lien</span>
     </Button>
   );
 }

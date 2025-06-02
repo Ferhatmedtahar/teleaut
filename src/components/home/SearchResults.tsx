@@ -11,7 +11,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button } from "./common/buttons/Button";
+import { Button } from "../common/buttons/Button";
 
 function getUserName(user: any): string {
   if (!user) return "Utilisateur";
@@ -279,12 +279,12 @@ export function SearchResultsClient({
               </h2>
               {/* FIXED: Pass initialVideos (current search results) instead of filtered */}
 
-              {filteredVideos.length > 0 && (
-                <FilterModal
-                  searchVideos={initialVideos}
-                  onFiltersChange={handleFiltersChange}
-                />
-              )}
+              {/* {filteredVideos.length > 0 && ( */}
+              <FilterModal
+                searchVideos={initialVideos}
+                onFiltersChange={handleFiltersChange}
+              />
+              {/* )} */}
             </div>
             {filteredVideos.length > 0 ? (
               <div className="grid md:grid-cols-3 gap-6">

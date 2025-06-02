@@ -1,6 +1,6 @@
 import { getSearchResults } from "@/actions/home/homeVideos.action";
 import HomePage from "@/components/home/HomePage";
-import { SearchResultsClient } from "@/components/SearchResults";
+import { SearchResultsClient } from "@/components/home/SearchResults";
 
 interface SearchPageProps {
   readonly searchParams: Promise<{ query?: string; filter?: string }>;
