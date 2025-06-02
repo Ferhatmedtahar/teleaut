@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-work-sans: var(--sf-ui-text);
+  --font-sf-ui: var(--sf-ui-text);
 
   --color-primary-50: hsl(205, 35%, 78%);
   --color-primary-100: hsl(205, 36%, 74%);
@@ -349,6 +349,17 @@ body {
 
 .gray-gradient {
   background: linear-gradient(92deg, #acb0b4 2.87%, #ced0d3 96.18%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.primary-gradient-dark {
+  background: linear-gradient(
+    92deg,
+    #5287a1 2.87%,
+    #85a8c1 50%,
+    #b1c8d8 96.18%
+  );
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

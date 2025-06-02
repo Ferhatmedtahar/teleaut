@@ -54,7 +54,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${sfUiText.variable} ${sfUiText.variable} antialiased`}>
+      <body
+        className={`${sfUiText.variable} ${sfUiText.variable}  antialiased`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

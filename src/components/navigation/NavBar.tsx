@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import SearchFormReset from "../forms/SearchFormReset";
+import CognaciaLogo from "../home/Logo";
 import UserDropDownMenu from "./UserDropDownMenu";
 
 interface NavbarProps {
@@ -85,9 +86,10 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
           </Button>
 
           <Link href="/" className="flex items-center">
-            <span className="text-xl font-bold text-black dark:text-white">
+            {/* <span className="text-xl font-bold text-black dark:text-white">
               LOGO
-            </span>
+            </span> */}
+            <CognaciaLogo />
           </Link>
         </div>
 

@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { RelatedVideo } from "@/types/RelatedVideos.interface";
 import { roles } from "@/types/roles.enum";
+import { getCurrentUser } from "../auth/getCurrentUser.action";
 
 // Get home page videos (latest videos + featured video)
 export async function getHomePageVideos(): Promise<{
@@ -156,5 +157,77 @@ export async function getSearchResults(query: string): Promise<{
   } catch (error) {
     console.error("Error in getSearchResults:", error);
     return { success: false, videos: [], teachers: [], students: [] };
+  }
+}
+
+// Get current user's branch and class information
+export async function getBranchAndClass(): Promise<{
+  success: boolean;
+  branchAndClass: {
+    class: string | null;
+    branch: string | null;
+    role: string;
+  } | null;
+}> {
+  const supabase = await createClient();
+
+  try {
+    // Get current user
+    const { user, success } = await getCurrentUser();
+    console.log("Current user:", user);
+    if (!success || !user) {
+      console.error("Error getting current user:");
+      return { success: false, branchAndClass: null };
+    }
+
+    // Get user profile information
+    const { data: userProfile, error: profileError } = await supabase
+      .from("users")
+      .select("class, branch, role")
+      .eq("id", user.id)
+      .single();
+
+    if (profileError) {
+      console.error("Error fetching user profile:", profileError);
+      return { success: false, branchAndClass: null };
+    }
+
+    // Handle different roles
+    if (userProfile.role === roles.student) {
+      return {
+        success: true,
+        branchAndClass: {
+          class: userProfile.class || null,
+          branch: userProfile.branch || null,
+          role: userProfile.role,
+        },
+      };
+    } else if (
+      userProfile.role === roles.teacher ||
+      userProfile.role === roles.admin
+    ) {
+      // For teachers and admins, return null for class/branch since they don't have these
+      return {
+        success: true,
+        branchAndClass: {
+          class: null,
+          branch: null,
+          role: userProfile.role,
+        },
+      };
+    } else {
+      // Unknown role
+      return {
+        success: false,
+        branchAndClass: {
+          class: null,
+          branch: null,
+          role: "unknown role should not happen ERROR",
+        },
+      };
+    }
+  } catch (error) {
+    console.error("Error in getBranchAndClass:", error);
+    return { success: false, branchAndClass: null };
   }
 }
