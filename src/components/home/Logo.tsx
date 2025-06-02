@@ -264,10 +264,9 @@ export default function CognaciaLogo({
     );
   }
 
-  // Default horizontal layout
   return (
     <div
-      className={`${className} flex items-center gap-3`}
+      className={`px-2 flex items-center gap-1`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -306,19 +305,6 @@ export default function CognaciaLogo({
             }`}
           />
           {/* Abstract brain/C shape */}
-          {/* <path
-            d="M60 20 
-            C40 20, 25 35, 25 60 
-            C25 85,
-              40 100, 60 100 
-              C75 100, 85 90, 90 80"
-            fill="none"
-            stroke="white"
-            strokeWidth="8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="transition-all text-[] duration-300"
-          /> */}
           {/* Neural network connections */}
           <g
             className={`transition-all duration-500 ${
@@ -461,7 +447,7 @@ export default function CognaciaLogo({
       </div>
 
       <span
-        className={`font-medium font-sf-ui italic tracking-tight dark:primary-gradient-dark  text-primary-400 transition-colors duration-300 ${textSize}`}
+        className={`font-medium font-sf-ui italic tracking-tight dark:primary-gradient-dark  text-primary-400 transition-colors duration-300 text-lg lg:text-xl  `}
         style={{
           fontFamily: "var(--font-sans)",
           letterSpacing: "-0.02em",
