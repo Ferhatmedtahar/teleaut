@@ -264,7 +264,6 @@ export default function CognaciaLogo({
     );
   }
 
-  // Default horizontal layout
   return (
     <div
       className={`px-2 flex items-center gap-1`}
