@@ -94,7 +94,7 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
         </div>
 
         {/* Desktop search */}
-        <div className="relative mx-auto hidden w-full max-w-md md:block">
+        <div className="relative mx-auto hidden w-full max-w-md md:block  px-2 md:px-0">
           <Form
             action="/"
             onSubmit={handleDesktopSearchSubmit}
