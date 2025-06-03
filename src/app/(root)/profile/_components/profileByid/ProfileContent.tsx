@@ -1,9 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { roles } from "@/types/roles.enum";
 import { User } from "@/types/User";
 import { UserProps } from "@/types/UserProps";
 import Image from "next/image";
 import ErrorProfile from "../ErrorProfile";
+import ContactButton from "./ContactButton";
+import FollowButton from "./FollowButton";
 
 export default function ProfileContent({
   user,
@@ -87,6 +90,13 @@ export default function ProfileContent({
         <div className="mt-4 border border-border/20 dark:border-border/60 rounded-md p-4">
           <p className="text-sm font-medium ">{bio}</p>
         </div>
+
+        {user.role == roles.teacher && currentUser.role != roles.teacher && (
+          <div className="mt-4 flex flex-col items-center w-full sm:w-auto  sm:flex-row gap-2 ">
+            <FollowButton />
+            <ContactButton />
+          </div>
+        )}
       </div>
     </div>
   );

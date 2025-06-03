@@ -19,6 +19,7 @@ interface ExplorerVideoProps {
 }
 
 export default function ExplorerVideo({ video, user }: ExplorerVideoProps) {
+  console.log("ExplorerVideo", video, user);
   if (!video || !user) return null;
 
   const formatViews = (views: number) => {

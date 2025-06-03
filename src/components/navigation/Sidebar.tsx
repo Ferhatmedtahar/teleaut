@@ -252,7 +252,7 @@ const AppSidebar: React.FC<SidebarProps> = ({
       )}
       {...props}
     >
-      <div className="flex items-center justify-between p-4 border-b border-border/20 dark:border-border/90">
+      <div className=" md:hidden flex items-center justify-between p-4 border-b border-border/20 dark:border-border/90">
         <CognaciaLogo />
 
         {ismobile && (

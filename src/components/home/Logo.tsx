@@ -270,7 +270,7 @@ export default function CognaciaLogo({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className={`${iconSize}`}>
+      <div className={`w-6 h-6 sm:h-8 sm:w-8 md:h-10 md:w-10  `}>
         <svg viewBox="0 0 120 120" className="w-full h-full">
           <defs>
             <linearGradient
@@ -447,7 +447,7 @@ export default function CognaciaLogo({
       </div>
 
       <span
-        className={`font-medium font-sf-ui italic tracking-tight dark:primary-gradient-dark  text-primary-400 transition-colors duration-300 text-lg lg:text-xl  `}
+        className={`font-medium font-sf-ui italic tracking-tight dark:primary-gradient-dark  text-primary-400 transition-colors duration-300 text-base sm:text-lg lg:text-xl  `}
         style={{
           fontFamily: "var(--font-sans)",
           letterSpacing: "-0.02em",

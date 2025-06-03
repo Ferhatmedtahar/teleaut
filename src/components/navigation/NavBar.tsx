@@ -165,7 +165,7 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
             <Bell className="h-5 w-5 dark:text-white/80 text-black" />
             <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></span>
           </Button> */}
-          <UserDropDownMenu userInfo={userInfo} />
+          {user.id ? <UserDropDownMenu userInfo={userInfo} /> : <p>Guest</p>}
         </div>
       </div>
 

@@ -93,7 +93,9 @@ export default function TeacherVideosList({
       </div>
     );
   }
-
+  console.log("TeacherVideosList rendered for user:", user.id);
+  console.log(initialLoading, videos.length, filteredVideos.length);
+  console.log("user", user);
   return (
     <div className="p-8 flex flex-col gap-4">
       <h2 className="text-2xl lg:text-3xl font-semibold">Your Videos</h2>
@@ -136,7 +138,12 @@ export default function TeacherVideosList({
               <ExplorerVideo
                 key={video.id + index}
                 video={video}
-                user={video.teacher}
+                user={{
+                  id: user.id,
+                  first_name: user.first_name,
+                  last_name: user.last_name,
+                  profile_url: user.profile_url,
+                }}
               />
             ))
           ) : (
