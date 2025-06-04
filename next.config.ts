@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "mypullzonecognacia.b-cdn.net",
       },
+      {
+        protocol: "https",
+        hostname: "cognacia.b-cdn.net",
+      },
     ],
   },
 };

@@ -30,7 +30,8 @@ export async function sendResetPasswordEmail(
 
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_SERVER_HOST,
-      port: parseInt(process.env.EMAIL_SERVER_PORT ?? "587", 10),
+      port: parseInt(process.env.EMAIL_SERVER_PORT ?? "465", 10),
+      secure: process.env.EMAIL_SERVER_SECURE === "true",
       auth: {
         user: process.env.EMAIL_SERVER_USER,
         pass: process.env.EMAIL_SERVER_PASSWORD,

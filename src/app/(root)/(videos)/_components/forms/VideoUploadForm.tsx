@@ -156,7 +156,7 @@ export default function VideoUploadForm({
     console.log("data", data);
 
     if (
-      data.branch?.length === 0 &&
+      data.branch?.length !== 0 &&
       availableBranches.length != 1 &&
       availableBranches[0] != "Aucune filière"
     ) {
@@ -200,7 +200,7 @@ export default function VideoUploadForm({
         documentsFile: data.documentsFile ?? null,
         title: data.title,
         subject: data.subject.toLowerCase(),
-        // Convert class to lowercase to match the expected format
+
         classValue: data.class.toLowerCase(),
         description: data.description ?? "",
         teacher_id: userId,
@@ -231,7 +231,13 @@ export default function VideoUploadForm({
             const statusResponse = await fetch(
               `${BASE_URL}/api/video/video-status/${videoId}`
             );
-
+            console.log(
+              "Checking video status for ID:",
+              videoId,
+              "Response URL:",
+              statusResponse.url,
+              statusResponse.status
+            );
             if (!statusResponse.ok) {
               console.error(
                 "Failed to fetch video status:",
@@ -245,8 +251,10 @@ export default function VideoUploadForm({
               return;
             }
 
-            const { status } = await statusResponse.json();
-            console.log("Video status:", status);
+            const data = await statusResponse.json();
+
+            const status = data.status;
+
             let statusMessage = "Traitement vidéo...";
             let shouldPoll = true;
 
