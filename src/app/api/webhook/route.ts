@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    // console.log("📩 Webhook received:", body);
 
     const { VideoGuid, Status } = body;
 
@@ -18,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     const supabase = await createClient();
 
-    const video_url = `https://iframe.mediadelivery.net/embed/426479/${VideoGuid}`;
+    const video_url = `https://iframe.mediadelivery.net/embed/${process.env.BUNNY_STREAM_LIBRARY_ID}/${VideoGuid}`;
     console.log(
       `Updating video status for VideoGuid: ${VideoGuid}, Status: ${Status}, video_url: ${video_url}`
     );
