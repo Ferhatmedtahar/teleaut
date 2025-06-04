@@ -5,7 +5,6 @@ import { RelatedVideo } from "@/types/RelatedVideos.interface";
 import { roles } from "@/types/roles.enum";
 import { getCurrentUser } from "../auth/getCurrentUser.action";
 
-// Get home page videos (latest videos + featured video)
 export async function getHomePageVideos(): Promise<{
   success: boolean;
   featuredVideo: RelatedVideo | null;

@@ -22,7 +22,6 @@ export default function RenderStars({
   for (let i = 1; i <= 5; i++) {
     stars.push(
       <div key={i} className="relative">
-        {/* Full star button */}
         <button
           className="relative focus:outline-none disabled:cursor-not-allowed transition-all duration-150"
           disabled={isLoading}
@@ -31,7 +30,7 @@ export default function RenderStars({
           onClick={() => handleRatingSelection(i)}
         >
           <Star
-            size={20}
+            size={23}
             className={`transition-colors duration-150 ${
               displayRating >= i
                 ? "fill-yellow-400 text-yellow-400"
@@ -40,7 +39,6 @@ export default function RenderStars({
           />
         </button>
 
-        {/* Half star overlay button */}
         <button
           className="absolute left-0 top-0 w-[80%] h-full focus:outline-none disabled:cursor-not-allowed z-10"
           disabled={isLoading}
