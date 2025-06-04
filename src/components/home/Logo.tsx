@@ -6,6 +6,7 @@ interface LogoProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   variant?: "default" | "icon" | "text" | "stacked";
   className?: string;
+  textColor?: string;
 }
 
 const sizeClasses = {
@@ -26,6 +27,7 @@ const iconSizes = {
 
 export default function CognaciaLogo({
   size = "md",
+  textColor = "text-primary",
   variant = "default",
   className = "",
 }: LogoProps) {
@@ -266,7 +268,7 @@ export default function CognaciaLogo({
 
   return (
     <div
-      className={`px-2 flex items-center gap-1`}
+      className={`${className} px-2 flex items-center gap-1`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -447,7 +449,7 @@ export default function CognaciaLogo({
       </div>
 
       <span
-        className={`font-medium font-sf-ui italic tracking-tight dark:primary-gradient-dark  text-primary-400 transition-colors duration-300 text-base sm:text-lg lg:text-xl  `}
+        className={`font-medium font-sf-ui italic tracking-tight dark:primary-gradient-dark  ${textColor} transition-colors duration-300 text-base sm:text-lg lg:text-xl  `}
         style={{
           fontFamily: "var(--font-sans)",
           letterSpacing: "-0.02em",

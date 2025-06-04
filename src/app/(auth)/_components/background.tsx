@@ -1,7 +1,9 @@
 "use client";
+import CognaciaLogo from "@/components/home/Logo";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 export default function Background() {
   const currentPath = usePathname();
@@ -14,7 +16,13 @@ export default function Background() {
         transition={{ duration: 1, ease: "easeInOut" }}
         className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden"
       >
-        <h1 className="absolute top-10 left-10 text-2xl font-bold">LOGO</h1>
+        <Link href="/">
+          <CognaciaLogo
+            className="absolute top-10 left-10  font-bold"
+            textColor="text-white"
+          />
+        </Link>
+        {/* <h1 className="absolute top-10 left-10 text-2xl font-bold">LOGO</h1> */}
         {currentPath == "/sign-in" ? (
           <motion.div
             animate={{ y: [0, 10, 0], x: [0, 5, 0] }}
