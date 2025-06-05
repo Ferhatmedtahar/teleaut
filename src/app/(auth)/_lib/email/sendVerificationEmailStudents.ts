@@ -39,21 +39,205 @@ export async function sendVerificationEmail(
       },
     });
 
-    const verificationUrl = `http://localhost:3000/sign-up/verify?token=${token}`;
+    // const verificationUrl = `https://${process.env.NEXT_PUBLIC_SITE_URL}/sign-up/verify?token=${token}`;
+    const verificationUrl = `${
+      process.env.NODE_ENV === "production" ? "https" : "http"
+    }://${
+      process.env.NODE_ENV === "production"
+        ? process.env.NEXT_PUBLIC_SITE_URL
+        : "localhost:3000"
+    }/sign-up/verify?token=${token}`;
 
+    console.log("Verification URL:", verificationUrl); // Debugging line
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: email,
-      subject: "Welcome to Cognacia",
-      html: `
-      <h1>Welcome to Cognacia</h1>
-      <p>Hey there, welcome to Cognacia!</p>
-      <p>We are very excited to see you join us!</p>
-        <h2>Email Verification</h2>
-        <p>To access your dashboard and start your learning journey please confirm your email by clicking the button below.</p>
-        <a  style="background:#355869;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;"href="${verificationUrl}">Confirm Email Address</a>
-        <p>If you have any questions, make sure to contact us. We are always happy to help you out!</p>
-      `,
+      subject: "Bienvenue chez Cognacia",
+      html: `<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue chez Cognacia</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f8f9fa;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(53, 88, 105, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #355869 0%, #4a7280 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+        
+        .tagline {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #355869;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .welcome-text {
+            font-size: 16px;
+            color: #666666;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .verification-section {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            border-left: 4px solid #355869;
+        }
+        
+        .verification-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #355869;
+            margin-bottom: 15px;
+        }
+        
+        .verification-text {
+            font-size: 15px;
+            color: #666666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #355869 0%, #4a7280 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(53, 88, 105, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(53, 88, 105, 0.4);
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            color: #888888;
+            text-align: center;
+            margin-top: 30px;
+            line-height: 1.5;
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .header, .content {
+                padding: 30px 20px;
+            }
+            
+            .verification-section {
+                padding: 25px 20px;
+            }
+            
+            .welcome-title {
+                font-size: 24px;
+            }
+            
+            .cta-button {
+                padding: 12px 25px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+     
+        <div class="header">
+            <div class="logo">Cognacia</div>
+            <div class="tagline">Votre Parcours d'Apprentissage Commence Ici</div>
+        </div>
+        
+     
+        <div class="content">
+            <h1 class="welcome-title">Bienvenue chez Cognacia ! 🎉</h1>
+            
+            <p class="welcome-text">
+                Salut ! Nous sommes absolument ravis de vous accueillir dans notre communauté d'apprentissage.
+            </p>
+            
+            <p class="welcome-text">
+                Vous êtes sur le point de vous lancer dans un parcours éducatif passionnant, et nous sommes impatients d'en faire partie avec vous !
+            </p>
+            
+       
+            <div class="verification-section">
+                <h2 class="verification-title">📧 Vérification d'Email Requise</h2>
+                <p class="verification-text">
+                    Pour accéder à votre tableau de bord et commencer votre expérience d'apprentissage personnalisée, 
+                    veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous.
+                </p>
+                <a href="${verificationUrl}" class="cta-button">
+                    Confirmer mon Adresse Email
+                </a>
+            </div>
+            
+           
+            <p class="footer-text">
+                Des questions ? Nous sommes là pour vous aider ! N'hésitez pas à nous contacter à tout moment. 
+                Nous sommes toujours heureux de vous accompagner dans votre parcours d'apprentissage.
+            </p>
+        </div>
+    </div>
+</body>
+</html>`,
     };
 
     const info = await transporter.sendMail(mailOptions);
