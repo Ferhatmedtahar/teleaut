@@ -1,679 +1,172 @@
 // "use client";
 
-import { getVideosGuestPage } from "@/actions/home/getHomeVideo";
-import ExplorerVideo from "@/app/(root)/(videos)/_components/videos/ExplorerVideo";
-import { Button } from "@/components/common/buttons/Button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, Play, Users } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-
-// Types for video data
-interface Teacher {
-  id: string;
-  first_name?: string;
-  last_name?: string;
-  profile_url?: string;
-}
-
-interface Video {
-  id: string;
-  title: string;
-  description: string;
-  thumbnail_url?: string;
-  subject: string;
-  class?: string;
-  branch?: string[];
-  teacher?: Teacher;
-  views?: number;
-  created_at?: string;
-  teacher_id?: string;
-}
-
-function getTeacherName(teacher?: {
-  first_name?: string;
-  last_name?: string;
-}): string {
-  if (!teacher) return "Professeur";
-  return (
-    `${teacher.first_name || ""} ${teacher.last_name || ""}`.trim() ||
-    "Professeur"
-  );
-}
-
-export default async function GuestHomePage() {
-  // Fetch latest videos using your getRelatedVideos function
-  // We'll use a dummy video ID and get fallback (latest) videos
-  const { success, videos } = await getVideosGuestPage();
-
-  if (!success || !videos || (Array.isArray(videos) && videos.length === 0)) {
-    return null;
-  }
-
-  // Separate featured video (first one) from explorer videos
-  const featuredVideo = videos.length > 0 ? videos[0] : null;
-  const explorerVideos = videos.length > 1 ? videos.slice(1) : [];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-background/90">
-      {/* Hero Section */}
-      <section className="px-4 py-20 md:px-6 lg:px-10">
-        <div className="mx-auto max-w-4xl text-center">
-          <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
-            Bienvenue sur{" "}
-            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              Cognacia
-            </span>
-          </h1>
-
-          <p className="mb-8 text-lg text-muted-foreground md:text-xl max-w-2xl mx-auto">
-            Découvrez une plateforme d&apos;apprentissage innovante où
-            enseignants et étudiants se connectent pour partager des
-            connaissances et créer un avenir meilleur.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/sign-up/info">
-              <Button size="lg" className="w-full sm:w-auto">
-                Commencer gratuitement
-              </Button>
-            </Link>
-            <Link href="/sign-in">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                Se connecter
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Videos Section */}
-      {!success ? (
-        <section className="px-4 py-16 md:px-6 lg:px-10">
-          <div className="mx-auto max-w-6xl">
-            <div className="text-center py-12">
-              <h3 className="text-lg font-medium mb-2">Erreur de chargement</h3>
-              <p className="text-muted-foreground">
-                Impossible de charger les vidéos. Veuillez réessayer plus tard.
-              </p>
-            </div>
-          </div>
-        </section>
-      ) : (
-        <section className="px-4 py-16 md:px-6 lg:px-10">
-          <div className="mx-auto max-w-6xl space-y-12">
-            {/* Featured Video */}
-            {featuredVideo && (
-              <div>
-                <h2 className="text-3xl font-bold mb-6">Vidéo en vedette</h2>
-                <Card>
-                  <CardContent className="p-0">
-                    <div className="grid md:grid-cols-2 gap-4 p-6">
-                      <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-                        <Link href="/sign-in">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <Button
-                              size="icon"
-                              variant="outline"
-                              className="hover:cursor-pointer rounded-full h-16 w-16 bg-background/80 backdrop-blur-sm"
-                            >
-                              <Play className="h-8 w-8" />
-                            </Button>
-                          </div>
-                          <Image
-                            src={
-                              featuredVideo.thumbnail_url ??
-                              "/images/placeholder-thumbnail.jpg"
-                            }
-                            height={300}
-                            width={500}
-                            alt="Featured video"
-                            className="object-cover w-full h-full"
-                          />
-                        </Link>
-                      </div>
-                      <div className="flex flex-col justify-between">
-                        <div>
-                          <h3 className="text-xl font-bold">
-                            {featuredVideo.title}
-                          </h3>
-                          <p className="text-muted-foreground mt-2">
-                            {featuredVideo.description}
-                          </p>
-                          <div className="flex gap-2">
-                            <div className="text-xs mt-2">
-                              <div className="flex flex-col items-center gap-2">
-                                <div className="flex items-center gap-2">
-                                  <p>
-                                    {featuredVideo.class && (
-                                      <span className="px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
-                                        {featuredVideo.class}
-                                      </span>
-                                    )}
-                                  </p>
-                                  <p className="px-2 py-1 w-fit bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
-                                    {featuredVideo.subject}
-                                  </p>
-                                </div>
-
-                                {featuredVideo.branch &&
-                                  featuredVideo.branch?.length > 0 && (
-                                    <span className="font-medium">
-                                      {featuredVideo.branch.length > 0 && (
-                                        <p className="w-fit px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
-                                          {featuredVideo.branch[0]}
-                                          {featuredVideo.branch.length > 1 &&
-                                            `... +${
-                                              featuredVideo.branch.length - 1
-                                            }`}
-                                        </p>
-                                      )}
-                                    </span>
-                                  )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 mt-4">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage
-                              src={
-                                featuredVideo.teacher?.profile_url ??
-                                "/images/placeholder-profile.png"
-                              }
-                              alt={getTeacherName(featuredVideo.teacher)}
-                            />
-                            <AvatarFallback>
-                              {getTeacherName(featuredVideo.teacher).charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="text-sm font-medium">
-                              {getTeacherName(featuredVideo.teacher)}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              @
-                              {getTeacherName(featuredVideo.teacher)
-                                .toLowerCase()
-                                .replace(" ", "")}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
-
-            {/* Explorer Videos */}
-            {explorerVideos.length > 0 && (
-              <div>
-                <h2 className="text-3xl font-bold mb-6">Dernières vidéos</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {explorerVideos.map((video) => (
-                    <ExplorerVideo
-                      key={video.id}
-                      video={video}
-                      user={video.teacher}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* Features Section */}
-      <section className="px-4 py-16 md:px-6 lg:px-10">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="mb-12 text-center text-3xl font-bold">
-            Pourquoi choisir Cognacia ?
-          </h2>
-
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <div className="text-center p-6 rounded-lg border border-border/50 bg-card">
-              <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
-                <Play className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="mb-2 text-xl font-semibold">Contenu Vidéo</h3>
-              <p className="text-muted-foreground">
-                Accédez à des milliers de vidéos éducatives créées par des
-                experts.
-              </p>
-            </div>
-
-            <div className="text-center p-6 rounded-lg border border-border/50 bg-card">
-              <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
-                <Users className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="mb-2 text-xl font-semibold">Communauté</h3>
-              <p className="text-muted-foreground">
-                Rejoignez une communauté d&apos;apprenants et d&apos;enseignants
-                passionnés.
-              </p>
-            </div>
-
-            <div className="text-center p-6 rounded-lg border border-border/50 bg-card">
-              <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
-                <BookOpen className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="mb-2 text-xl font-semibold">Apprentissage</h3>
-              <p className="text-muted-foreground">
-                Apprenez à votre rythme avec des outils d&apos;apprentissage
-                modernes.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="px-4 py-16 md:px-6 lg:px-10 bg-muted/30">
-        <div className="mx-auto max-w-4xl">
-          <div className="grid gap-8 md:grid-cols-3 text-center">
-            <div>
-              <div className="mb-2 text-3xl font-bold text-primary">100+</div>
-              <div className="text-muted-foreground">Vidéos disponibles</div>
-            </div>
-            <div>
-              <div className="mb-2 text-3xl font-bold text-primary">50+</div>
-              <div className="text-muted-foreground">Enseignants actifs</div>
-            </div>
-            <div>
-              <div className="mb-2 text-3xl font-bold text-primary">500+</div>
-              <div className="text-muted-foreground">Étudiants inscrits</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="px-4 py-20 md:px-6 lg:px-10">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="mb-4 text-3xl font-bold">
-            Prêt à commencer votre aventure d&apos;apprentissage ?
-          </h2>
-          <p className="mb-8 text-lg text-muted-foreground">
-            Rejoignez des milliers d&apos;apprenants qui transforment déjà leur
-            avenir avec Cognacia.
-          </p>
-          <Link href="/sign-up">
-            <Button size="lg" className="px-8">
-              Créer un compte gratuit
-            </Button>
-          </Link>
-        </div>
-      </section>
-    </div>
-  );
-}
-// "use client";
-
+// import ExplorerVideo from "@/app/(root)/(videos)/_components/videos/ExplorerVideo";
 // import { Button } from "@/components/common/buttons/Button";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { Card, CardContent } from "@/components/ui/card";
-// import { BookOpen, Play, Users } from "lucide-react";
+// import type { RelatedVideo } from "@/types/RelatedVideos.interface";
+// import { motion } from "framer-motion";
+// import { ArrowRight, BookOpen, Play, Sparkles, Users } from "lucide-react";
 // import Image from "next/image";
 // import Link from "next/link";
-// import { useEffect, useState } from "react";
 
-// // Types for video data
-// interface Teacher {
+// interface GuestHomePageProps {
+//   readonly videos?: RelatedVideo[];
+//   readonly success?: boolean;
+//   readonly search?: string;
+// }
+
+// function getTeacherName(teacher?: {
 //   first_name?: string;
 //   last_name?: string;
-//   profile_url?: string;
-// }
-
-// interface Video {
-//   id: string;
-//   title: string;
-//   description: string;
-//   thumbnail_url?: string;
-//   subject: string;
-//   class?: string;
-//   branch?: string[];
-//   teacher?: Teacher;
-// }
-
-// interface VideoData {
-//   success: boolean;
-//   featuredVideo?: Video;
-//   explorerVideos: Video[];
-// }
-
-// function getTeacherName(teacher?: Teacher): string {
+// }): string {
 //   if (!teacher) return "Professeur";
 //   return (
-//     `${teacher.first_name || ""} ${teacher.last_name || ""}`.trim() ||
+//     `${teacher.first_name ?? ""} ${teacher.last_name ?? ""}`.trim() ||
 //     "Professeur"
 //   );
 // }
 
-// // Mock function to simulate fetching videos - replace with your actual API call
-// async function getHomePageVideos(): Promise<VideoData> {
-//   try {
-//     // Replace this with your actual API call
-//     // const response = await fetch('/api/videos/home');
-//     // const data = await response.json();
-//     // return data;
+// const fadeInUp = {
+//   initial: { opacity: 0, y: 5 },
+//   animate: { opacity: 1, y: 0 },
+// };
 
-//     // Mock data for demonstration - remove this when implementing real API
-//     return {
-//       success: true,
-//       featuredVideo: {
-//         id: "1",
-//         title: "Introduction aux Mathématiques",
-//         description:
-//           "Découvrez les bases des mathématiques avec ce cours complet.",
-//         thumbnail_url: "/images/placeholder-thumbnail.png",
-//         subject: "Mathématiques",
-//         class: "Terminale",
-//         branch: ["Sciences"],
-//         teacher: {
-//           first_name: "Ahmed",
-//           last_name: "Benali",
-//           profile_url: "/images/placeholder-profile.png",
-//         },
-//       },
-//       explorerVideos: [
-//         {
-//           id: "2",
-//           title: "Physique Quantique",
-//           description: "Les principes de base de la physique quantique.",
-//           thumbnail_url: "/images/placeholder-thumbnail.png",
-//           subject: "Physique",
-//           class: "Terminale",
-//           branch: ["Sciences"],
-//           teacher: {
-//             first_name: "Fatima",
-//             last_name: "Khemir",
-//           },
-//         },
-//         {
-//           id: "3",
-//           title: "Littérature Arabe",
-//           description: "Exploration de la littérature arabe classique.",
-//           thumbnail_url: "/images/placeholder-thumbnail.png",
-//           subject: "Arabe",
-//           class: "Première",
-//           teacher: {
-//             first_name: "Omar",
-//             last_name: "Mansouri",
-//           },
-//         },
-//       ],
-//     };
-//   } catch (error) {
-//     console.error("Error fetching videos:", error);
-//     return {
-//       success: false,
-//       explorerVideos: [],
-//     };
-//   }
-// }
+// const staggerContainer = {
+//   initial: {},
+//   animate: {
+//     transition: {
+//       staggerChildren: 0.2,
+//       delayChildren: 0.1,
+//     },
+//   },
+// };
 
-// export default function GuestHomePage() {
-//   const [videoData, setVideoData] = useState<VideoData>({
-//     success: false,
-//     explorerVideos: [],
-//   });
-//   const [loading, setLoading] = useState(true);
+// const scaleIn = {
+//   initial: { opacity: 0, scale: 0.99 },
+//   animate: { opacity: 1, scale: 1 },
+// };
 
-//   useEffect(() => {
-//     const fetchVideos = async () => {
-//       try {
-//         const data = await getHomePageVideos();
-//         setVideoData(data);
-//       } catch (error) {
-//         console.error("Error loading videos:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchVideos();
-//   }, []);
+// export default function GuestHomePage({
+//   videos = [],
+//   success = true,
+//   search = "",
+// }: GuestHomePageProps) {
+//   const featuredVideo = videos.length > 0 ? videos[0] : null;
+//   const explorerVideos = videos.length > 1 ? videos.slice(1) : [];
 
 //   return (
-//     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-background/90">
-//       {/* Hero Section */}
-//       <section className="px-4 py-20 md:px-6 lg:px-10">
-//         <div className="mx-auto max-w-4xl text-center">
-//           <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
-//             Bienvenue sur{" "}
-//             <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-//               Cognacia
-//             </span>
-//           </h1>
+//     <div className="min-h-screen relative overflow-hidden bg-background">
+//       <section className="bg-gradient-to-br from-[#355869]/95 via-[#355869]/60 to-[#355869]/30 dark:bg-[#0F2C3F] px-4 py-24 sm:py-32 md:px-8 lg:px-10 relative border-b border-border/60 dark:border-border/90 ">
+//         <Image
+//           src={`icons/guestBlob.svg`}
+//           alt="Background Blob"
+//           className=" opacity-50 bottom-4 left-0 absolute z-10  pointer-events-none"
+//           height={500}
+//           width={500}
+//         />
 
-//           <p className="mb-8 text-lg text-muted-foreground md:text-xl max-w-2xl mx-auto">
+//         {/* Landing Content */}
+//         <motion.div
+//           className="mx-auto max-w-4xl text-center relative z-0"
+//           initial="initial"
+//           animate="animate"
+//           variants={staggerContainer}
+//         >
+//           <motion.div
+//             variants={fadeInUp}
+//             transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+//             className="mb-10"
+//           >
+//             <motion.div
+//               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#355869]/5 border border-[#355869]/10 mb-10"
+//               whileHover={{ scale: 1.01 }}
+//               transition={{ duration: 0.8, ease: [0.22, 0.03, 0.26, 1] }}
+//             >
+//               <Sparkles className="w-4 h-4 text-[#355869]" />
+//               <span className="text-sm font-medium text-[#355869]">
+//                 Plateforme d&apos;apprentissage de confiance
+//               </span>
+//             </motion.div>
+
+//             <h1 className="  text-primary-950   text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl leading-tight">
+//               Bienvenue sur{" "}
+//               <motion.span
+//                 className="bg-gradient-to-r from-primary via-[#355869cc] to-primary/80 bg-clip-text text-transparent"
+//                 animate={{
+//                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+//                 }}
+//                 transition={{
+//                   duration: 20,
+//                   repeat: Infinity,
+//                   ease: "linear",
+//                 }}
+//               >
+//                 Cognacia
+//               </motion.span>
+//             </h1>
+//           </motion.div>
+
+//           <motion.p
+//             variants={fadeInUp}
+//             transition={{
+//               duration: 0.7,
+//               delay: 0.1,
+//               ease: [0.22, 0.03, 0.26, 1],
+//             }}
+//             className="mb-12 text-lg text-white/90 dark:text-muted-foreground md:text-xl max-w-2xl mx-auto leading-relaxed"
+//           >
 //             Découvrez une plateforme d&apos;apprentissage innovante où
 //             enseignants et étudiants se connectent pour partager des
 //             connaissances et créer un avenir meilleur.
-//           </p>
+//           </motion.p>
 
-//           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-//             <Link href="/sign-up">
-//               <Button size="lg" className="w-full sm:w-auto">
-//                 Commencer gratuitement
-//               </Button>
+//           <motion.div
+//             variants={fadeInUp}
+//             transition={{
+//               duration: 0.7,
+//               delay: 0.2,
+//               ease: [0.22, 0.03, 0.26, 1],
+//             }}
+//             className="flex flex-col sm:flex-row gap-4 justify-center"
+//           >
+//             <Link href="/sign-up/info">
+//               <motion.div
+//                 whileHover={{ scale: 1.005 }}
+//                 whileTap={{ scale: 0.995 }}
+//                 transition={{ duration: 0.6, ease: [0.22, 0.03, 0.26, 1] }}
+//               >
+//                 <Button size="lg" className="w-full sm:w-auto group px-8 py-3">
+//                   Commencer gratuitement
+//                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-500" />
+//                 </Button>
+//               </motion.div>
 //             </Link>
 //             <Link href="/sign-in">
-//               <Button variant="outline" size="lg" className="w-full sm:w-auto">
-//                 Se connecter
-//               </Button>
+//               <motion.div
+//                 whileHover={{ scale: 1.005 }}
+//                 whileTap={{ scale: 0.995 }}
+//                 transition={{ duration: 0.6, ease: [0.22, 0.03, 0.26, 1] }}
+//               >
+//                 <Button
+//                   variant="outline"
+//                   size="lg"
+//                   className="w-full sm:w-auto px-8 py-3 border-[#355869]/10 hover:border-[#355869]/20"
+//                 >
+//                   Se connecter
+//                 </Button>
+//               </motion.div>
 //             </Link>
-//           </div>
-//         </div>
+//           </motion.div>
+//         </motion.div>
 //       </section>
-
-//       {/* Videos Section */}
-//       {loading ? (
-//         <section className="px-4 py-16 md:px-6 lg:px-10">
-//           <div className="mx-auto max-w-6xl">
-//             <div className="text-center py-12">
-//               <p className="text-muted-foreground">Chargement des vidéos...</p>
-//             </div>
-//           </div>
-//         </section>
-//       ) : videoData.success ? (
-//         <section className="px-4 py-16 md:px-6 lg:px-10">
-//           <div className="mx-auto max-w-6xl space-y-12">
-//             {/* Featured Video */}
-//             {videoData.featuredVideo && (
-//               <div>
-//                 <h2 className="text-3xl font-bold mb-6">Vidéo en vedette</h2>
-//                 <Card>
-//                   <CardContent className="p-0">
-//                     <div className="grid md:grid-cols-2 gap-4 p-6">
-//                       <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-//                         <Link href="/sign-in">
-//                           <div className="absolute inset-0 flex items-center justify-center">
-//                             <Button
-//                               size="icon"
-//                               variant="outline"
-//                               className="hover:cursor-pointer rounded-full h-16 w-16 bg-background/80 backdrop-blur-sm"
-//                             >
-//                               <Play className="h-8 w-8" />
-//                             </Button>
-//                           </div>
-//                           <Image
-//                             src={
-//                               videoData.featuredVideo.thumbnail_url ??
-//                               "/images/placeholder-thumbnail.png"
-//                             }
-//                             height={300}
-//                             width={500}
-//                             alt="Featured video"
-//                             className="object-cover w-full h-full"
-//                           />
-//                         </Link>
-//                       </div>
-//                       <div className="flex flex-col justify-between">
-//                         <div>
-//                           <h3 className="text-xl font-bold">
-//                             {videoData.featuredVideo.title}
-//                           </h3>
-//                           <p className="text-muted-foreground mt-2">
-//                             {videoData.featuredVideo.description}
-//                           </p>
-//                           <div className="flex gap-2">
-//                             <div className="text-xs mt-2">
-//                               <div className="flex flex-col items-center gap-2">
-//                                 <div className="flex items-center gap-2">
-//                                   <p>
-//                                     {videoData.featuredVideo.class && (
-//                                       <span className="px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
-//                                         {videoData.featuredVideo.class}
-//                                       </span>
-//                                     )}
-//                                   </p>
-//                                   <p className="px-2 py-1 w-fit bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
-//                                     {videoData.featuredVideo.subject}
-//                                   </p>
-//                                 </div>
-
-//                                 {videoData.featuredVideo.branch &&
-//                                   videoData.featuredVideo.branch?.length >
-//                                     0 && (
-//                                     <span className="font-medium">
-//                                       {videoData.featuredVideo.branch.length >
-//                                         0 && (
-//                                         <p className="w-fit px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
-//                                           {videoData.featuredVideo.branch[0]}
-//                                           {videoData.featuredVideo.branch
-//                                             .length > 1 &&
-//                                             `... +${
-//                                               videoData.featuredVideo.branch
-//                                                 .length - 1
-//                                             }`}
-//                                         </p>
-//                                       )}
-//                                     </span>
-//                                   )}
-//                               </div>
-//                             </div>
-//                           </div>
-//                         </div>
-//                         <div className="flex items-center gap-2 mt-4">
-//                           <Avatar className="h-8 w-8">
-//                             <AvatarImage
-//                               src={
-//                                 videoData.featuredVideo.teacher?.profile_url ??
-//                                 "/images/placeholder-profile.png"
-//                               }
-//                               alt={getTeacherName(
-//                                 videoData.featuredVideo.teacher
-//                               )}
-//                             />
-//                             <AvatarFallback>
-//                               {getTeacherName(
-//                                 videoData.featuredVideo.teacher
-//                               ).charAt(0)}
-//                             </AvatarFallback>
-//                           </Avatar>
-//                           <div>
-//                             <p className="text-sm font-medium">
-//                               {getTeacherName(videoData.featuredVideo.teacher)}
-//                             </p>
-//                             <p className="text-xs text-muted-foreground">
-//                               @
-//                               {getTeacherName(videoData.featuredVideo.teacher)
-//                                 .toLowerCase()
-//                                 .replace(" ", "")}
-//                             </p>
-//                           </div>
-//                         </div>
-//                       </div>
-//                     </div>
-//                   </CardContent>
-//                 </Card>
-//               </div>
-//             )}
-
-//             {/* Explorer Videos */}
-//             {videoData.explorerVideos.length > 0 && (
-//               <div>
-//                 <h2 className="text-3xl font-bold mb-6">Dernières vidéos</h2>
-//                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-//                   {videoData.explorerVideos.map((video) => (
-//                     <Card key={video.id} className="overflow-hidden">
-//                       <CardContent className="p-0">
-//                         <div className="relative aspect-video bg-muted">
-//                           <Link href="/sign-in">
-//                             <div className="absolute inset-0 flex items-center justify-center">
-//                               <Button
-//                                 size="icon"
-//                                 variant="outline"
-//                                 className="rounded-full h-12 w-12 bg-background/80 backdrop-blur-sm"
-//                               >
-//                                 <Play className="h-6 w-6" />
-//                               </Button>
-//                             </div>
-//                             <Image
-//                               src={
-//                                 video.thumbnail_url ??
-//                                 "/images/placeholder-thumbnail.png"
-//                               }
-//                               height={200}
-//                               width={350}
-//                               alt={video.title}
-//                               className="object-cover w-full h-full"
-//                             />
-//                           </Link>
-//                         </div>
-//                         <div className="p-4">
-//                           <h3 className="font-semibold text-sm mb-2 line-clamp-2">
-//                             {video.title}
-//                           </h3>
-//                           <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
-//                             {video.description}
-//                           </p>
-
-//                           <div className="flex flex-wrap gap-1 mb-3">
-//                             {video.class && (
-//                               <span className="px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
-//                                 {video.class}
-//                               </span>
-//                             )}
-//                             <span className="px-2 py-1 bg-primary-100/90 text-primary-900 rounded-xl dark:bg-primary-900/30 dark:text-primary-100 text-xs">
-//                               {video.subject}
-//                             </span>
-//                           </div>
-
-//                           <div className="flex items-center gap-2">
-//                             <Avatar className="h-6 w-6">
-//                               <AvatarImage
-//                                 src={
-//                                   video.teacher?.profile_url ??
-//                                   "/images/placeholder-profile.png"
-//                                 }
-//                                 alt={getTeacherName(video.teacher)}
-//                               />
-//                               <AvatarFallback className="text-xs">
-//                                 {getTeacherName(video.teacher).charAt(0)}
-//                               </AvatarFallback>
-//                             </Avatar>
-//                             <div className="min-w-0 flex-1">
-//                               <p className="text-xs font-medium truncate">
-//                                 {getTeacherName(video.teacher)}
-//                               </p>
-//                             </div>
-//                           </div>
-//                         </div>
-//                       </CardContent>
-//                     </Card>
-//                   ))}
-//                 </div>
-//               </div>
-//             )}
-//           </div>
-//         </section>
-//       ) : (
-//         <section className="px-4 py-16 md:px-6 lg:px-10">
+//       {!success ? (
+//         <motion.section
+//           className="px-4 py-16 md:px-6 lg:px-10"
+//           initial="initial"
+//           animate="animate"
+//           variants={fadeInUp}
+//           viewport={{ once: true, amount: 0.1 }}
+//           transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+//         >
 //           <div className="mx-auto max-w-6xl">
 //             <div className="text-center py-12">
 //               <h3 className="text-lg font-medium mb-2">Erreur de chargement</h3>
@@ -682,214 +175,621 @@ export default async function GuestHomePage() {
 //               </p>
 //             </div>
 //           </div>
+//         </motion.section>
+//       ) : (
+//         <section className="px-4 py-24 md:px-6 lg:px-10">
+//           <div className="mx-auto max-w-6xl space-y-24">
+//             {explorerVideos.length > 0 && (
+//               <motion.div
+//                 initial="initial"
+//                 whileInView="animate"
+//                 viewport={{ once: true, margin: "-5%" }}
+//                 variants={staggerContainer}
+//               >
+//                 <motion.h2
+//                   variants={fadeInUp}
+//                   className="text-3xl font-bold mb-10 text-center"
+//                   transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+//                 >
+//                   {search ? `Résultats pour "${search}"` : " Dernières vidéos"}
+//                 </motion.h2>
+//                 <motion.div
+//                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+//                   variants={staggerContainer}
+//                 >
+//                   {explorerVideos.slice(0, 6).map((video) => (
+//                     <motion.div
+//                       key={video.id}
+//                       variants={scaleIn}
+//                       whileHover={{ y: -1 }}
+//                       transition={{
+//                         duration: 0.8,
+//                         ease: [0.22, 0.03, 0.26, 1],
+//                       }}
+//                     >
+//                       <ExplorerVideo video={video} user={video.teacher} />
+//                     </motion.div>
+//                   ))}
+//                 </motion.div>
+//               </motion.div>
+//             )}
+//           </div>
 //         </section>
 //       )}
 
-//       {/* Features Section */}
-//       <section className="px-4 py-16 md:px-6 lg:px-10">
-//         <div className="mx-auto max-w-6xl">
-//           <h2 className="mb-12 text-center text-3xl font-bold">
+//       <section className="px-4 pb-24 pt-10 md:px-6 lg:px-10 relative">
+//         <motion.div
+//           className="mx-auto max-w-6xl"
+//           initial="initial"
+//           whileInView="animate"
+//           viewport={{ once: true, margin: "-5%" }}
+//           variants={staggerContainer}
+//         >
+//           <motion.h2
+//             variants={fadeInUp}
+//             className="mb-10 sm:mb-12 text-center text-3xl font-bold"
+//             transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+//           >
 //             Pourquoi choisir Cognacia ?
-//           </h2>
+//           </motion.h2>
 
-//           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-//             <div className="text-center p-6 rounded-lg border border-border/50 bg-card">
-//               <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
-//                 <Play className="h-6 w-6 text-primary" />
-//               </div>
-//               <h3 className="mb-2 text-xl font-semibold">Contenu Vidéo</h3>
-//               <p className="text-muted-foreground">
-//                 Accédez à des milliers de vidéos éducatives créées par des
-//                 experts.
-//               </p>
-//             </div>
-
-//             <div className="text-center p-6 rounded-lg border border-border/50 bg-card">
-//               <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
-//                 <Users className="h-6 w-6 text-primary" />
-//               </div>
-//               <h3 className="mb-2 text-xl font-semibold">Communauté</h3>
-//               <p className="text-muted-foreground">
-//                 Rejoignez une communauté d&apos;apprenants et d&apos;enseignants
-//                 passionnés.
-//               </p>
-//             </div>
-
-//             <div className="text-center p-6 rounded-lg border border-border/50 bg-card">
-//               <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
-//                 <BookOpen className="h-6 w-6 text-primary" />
-//               </div>
-//               <h3 className="mb-2 text-xl font-semibold">Apprentissage</h3>
-//               <p className="text-muted-foreground">
-//                 Apprenez à votre rythme avec des outils d&apos;apprentissage
-//                 modernes.
-//               </p>
-//             </div>
-//           </div>
-//         </div>
+//           <motion.div
+//             className="grid gap-10 md:grid-cols-2 lg:grid-cols-3"
+//             variants={staggerContainer}
+//           >
+//             {[
+//               {
+//                 icon: Play,
+//                 title: "Contenu Vidéo",
+//                 description:
+//                   "Accédez à des milliers de vidéos éducatives créées par des experts.",
+//               },
+//               {
+//                 icon: Users,
+//                 title: "Communauté",
+//                 description:
+//                   "Rejoignez une communauté d'apprenants et d'enseignants passionnés.",
+//               },
+//               {
+//                 icon: BookOpen,
+//                 title: "Apprentissage",
+//                 description:
+//                   "Apprenez à votre rythme avec des outils d'apprentissage modernes.",
+//               },
+//             ].map((feature, index) => (
+//               <motion.div
+//                 key={index}
+//                 variants={scaleIn}
+//                 whileHover={{ y: -1, scale: 1.01 }}
+//                 transition={{ duration: 0.5, ease: [0.22, 0.03, 0.26, 1] }}
+//                 className="text-center p-10 rounded-xl border border-[#355869]/5 bg-gradient-to-br from-card via-card to-card/95 shadow-lg hover:shadow-xl transition-shadow duration-1000"
+//               >
+//                 <motion.div
+//                   className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-[#355869]/10 to-primary/10"
+//                   whileHover={{ rotate: 3 }}
+//                   transition={{ duration: 0.5 }}
+//                 >
+//                   <feature.icon className="h-7 w-7 text-[#355869]" />
+//                 </motion.div>
+//                 <h3 className="mb-4 text-xl font-semibold">{feature.title}</h3>
+//                 <p className="text-muted-foreground leading-relaxed">
+//                   {feature.description}
+//                 </p>
+//               </motion.div>
+//             ))}
+//           </motion.div>
+//         </motion.div>
 //       </section>
 
-//       {/* Stats Section */}
-//       <section className="px-4 py-16 md:px-6 lg:px-10 bg-muted/30">
-//         <div className="mx-auto max-w-4xl">
-//           <div className="grid gap-8 md:grid-cols-3 text-center">
-//             <div>
-//               <div className="mb-2 text-3xl font-bold text-primary">1000+</div>
-//               <div className="text-muted-foreground">Vidéos disponibles</div>
-//             </div>
-//             <div>
-//               <div className="mb-2 text-3xl font-bold text-primary">500+</div>
-//               <div className="text-muted-foreground">Enseignants actifs</div>
-//             </div>
-//             <div>
-//               <div className="mb-2 text-3xl font-bold text-primary">5000+</div>
-//               <div className="text-muted-foreground">Étudiants inscrits</div>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-
-//       {/* CTA Section */}
-//       <section className="px-4 py-20 md:px-6 lg:px-10">
-//         <div className="mx-auto max-w-2xl text-center">
-//           <h2 className="mb-4 text-3xl font-bold">
+//       <motion.section
+//         className="px-4 py-24 md:px-6 lg:px-10 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] relative overflow-hidden"
+//         initial="initial"
+//         whileInView="animate"
+//         viewport={{ once: true, margin: "-50%" }}
+//         variants={staggerContainer}
+//       >
+//         <motion.div
+//           className="mx-auto max-w-4xl relative z-10"
+//           variants={staggerContainer}
+//         >
+//           <motion.div
+//             className="grid gap-16 md:grid-cols-3 text-center"
+//             variants={staggerContainer}
+//           >
+//             {[
+//               { number: "100+", label: "Vidéos disponibles" },
+//               { number: "50+", label: "Enseignants actifs" },
+//               { number: "500+", label: "Étudiants inscrits" },
+//             ].map((stat, index) => (
+//               <motion.div
+//                 key={index}
+//                 variants={fadeInUp}
+//                 whileHover={{ scale: 1.01 }}
+//                 transition={{ duration: 0.5, ease: [0.22, 0.03, 0.26, 1] }}
+//               >
+//                 <motion.div
+//                   className="mb-3 text-4xl font-bold text-primary-50"
+//                   initial={{ scale: 0.95, opacity: 0 }}
+//                   whileInView={{ scale: 1, opacity: 1 }}
+//                   viewport={{ once: true, amount: 0.1 }}
+//                   transition={{
+//                     delay: index * 0.2,
+//                     duration: 0.5,
+//                     ease: [0.22, 0.03, 0.26, 1],
+//                   }}
+//                 >
+//                   {stat.number}
+//                 </motion.div>
+//                 <div className="text-primary-100 font-medium">{stat.label}</div>
+//               </motion.div>
+//             ))}
+//           </motion.div>
+//         </motion.div>
+//       </motion.section>
+//       <motion.section
+//         className="px-4 py-28 md:px-6 lg:px-10 relative"
+//         initial="initial"
+//         whileInView="animate"
+//         viewport={{ once: true, margin: "-5%" }}
+//       >
+//         <motion.div
+//           className="mx-auto max-w-2xl text-center"
+//           variants={staggerContainer}
+//         >
+//           <motion.h2
+//             variants={fadeInUp}
+//             transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+//             className="mb-6 text-3xl font-bold"
+//           >
 //             Prêt à commencer votre aventure d&apos;apprentissage ?
-//           </h2>
-//           <p className="mb-8 text-lg text-muted-foreground">
+//           </motion.h2>
+//           <motion.p
+//             variants={fadeInUp}
+//             transition={{
+//               duration: 0.7,
+//               delay: 0.1,
+//               ease: [0.22, 0.03, 0.26, 1],
+//             }}
+//             className="mb-12 text-lg text-muted-foreground leading-relaxed"
+//           >
 //             Rejoignez des milliers d&apos;apprenants qui transforment déjà leur
 //             avenir avec Cognacia.
-//           </p>
-//           <Link href="/sign-up">
-//             <Button size="lg" className="px-8">
-//               Créer un compte gratuit
-//             </Button>
-//           </Link>
-//         </div>
-//       </section>
+//           </motion.p>
+//           <motion.div
+//             variants={fadeInUp}
+//             transition={{
+//               duration: 0.7,
+//               delay: 0.2,
+//               ease: [0.22, 0.03, 0.26, 1],
+//             }}
+//           >
+//             <Link href="/sign-up">
+//               <motion.div
+//                 whileHover={{ scale: 1.005 }}
+//                 whileTap={{ scale: 0.995 }}
+//                 transition={{ duration: 0.6, ease: [0.22, 0.03, 0.26, 1] }}
+//               >
+//                 <Button
+//                   size="lg"
+//                   className="px-10 py-4 group bg-gradient-to-r from-primary to-[#355869] hover:from-primary/98 hover:to-[#355869]/98 text-base"
+//                 >
+//                   Créer un compte gratuit
+//                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-500" />
+//                 </Button>
+//               </motion.div>
+//             </Link>
+//           </motion.div>
+//         </motion.div>
+//       </motion.section>
 //     </div>
 //   );
 // }
-// // "use client";
+"use client";
 
-// // import { Button } from "@/components/common/buttons/Button";
-// // import { BookOpen, Play, Users } from "lucide-react";
-// // import Link from "next/link";
+import ExplorerVideo from "@/app/(root)/(videos)/_components/videos/ExplorerVideo";
+import { Button } from "@/components/common/buttons/Button";
+import type { RelatedVideo } from "@/types/RelatedVideos.interface";
+import { motion } from "framer-motion";
+import { ArrowRight, BookOpen, Play, Sparkles, Users } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef } from "react";
 
-// // export default function GuestHomePage() {
-// //   return (
-// //     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-background/90">
-// //       {/* Hero Section */}
-// //       <section className="px-4 py-20 md:px-6 lg:px-10">
-// //         <div className="mx-auto max-w-4xl text-center">
-// //           <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
-// //             Bienvenue sur{" "}
-// //             <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-// //               Cognacia
-// //             </span>
-// //           </h1>
+interface GuestHomePageProps {
+  readonly videos?: RelatedVideo[];
+  readonly success?: boolean;
+  readonly search?: string;
+}
 
-// //           <p className="mb-8 text-lg text-muted-foreground md:text-xl max-w-2xl mx-auto">
-// //             Découvrez une plateforme d&apos;apprentissage innovante où
-// //             enseignants et étudiants se connectent pour partager des
-// //             connaissances et créer un avenir meilleur.
-// //           </p>
+function getTeacherName(teacher?: {
+  first_name?: string;
+  last_name?: string;
+}): string {
+  if (!teacher) return "Professeur";
+  return (
+    `${teacher.first_name ?? ""} ${teacher.last_name ?? ""}`.trim() ||
+    "Professeur"
+  );
+}
 
-// //           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-// //             <Link href="/sign-up">
-// //               <Button size="lg" className="w-full sm:w-auto">
-// //                 Commencer gratuitement
-// //               </Button>
-// //             </Link>
-// //             <Link href="/sign-in">
-// //               <Button variant="outline" size="lg" className="w-full sm:w-auto">
-// //                 Se connecter
-// //               </Button>
-// //             </Link>
-// //           </div>
-// //         </div>
-// //       </section>
+const fadeInUp = {
+  initial: { opacity: 0, y: 5 },
+  animate: { opacity: 1, y: 0 },
+};
 
-// //       {/* Features Section */}
-// //       <section className="px-4 py-16 md:px-6 lg:px-10">
-// //         <div className="mx-auto max-w-6xl">
-// //           <h2 className="mb-12 text-center text-3xl font-bold">
-// //             Pourquoi choisir Cognacia ?
-// //           </h2>
+const staggerContainer = {
+  initial: {},
+  animate: {
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.1,
+    },
+  },
+};
 
-// //           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-// //             <div className="text-center p-6 rounded-lg border border-border/50 bg-card">
-// //               <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
-// //                 <Play className="h-6 w-6 text-primary" />
-// //               </div>
-// //               <h3 className="mb-2 text-xl font-semibold">Contenu Vidéo</h3>
-// //               <p className="text-muted-foreground">
-// //                 Accédez à des milliers de vidéos éducatives créées par des
-// //                 experts.
-// //               </p>
-// //             </div>
+const scaleIn = {
+  initial: { opacity: 0, scale: 0.99 },
+  animate: { opacity: 1, scale: 1 },
+};
 
-// //             <div className="text-center p-6 rounded-lg border border-border/50 bg-card">
-// //               <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
-// //                 <Users className="h-6 w-6 text-primary" />
-// //               </div>
-// //               <h3 className="mb-2 text-xl font-semibold">Communauté</h3>
-// //               <p className="text-muted-foreground">
-// //                 Rejoignez une communauté d&apos;apprenants et d&apos;enseignants
-// //                 passionnés.
-// //               </p>
-// //             </div>
+export default function GuestHomePage({
+  videos = [],
+  success = true,
+  search = "",
+}: GuestHomePageProps) {
+  const featuredVideo = videos.length > 0 ? videos[0] : null;
+  const explorerVideos = videos.length > 1 ? videos.slice(1) : [];
+  const resultsRef = useRef<HTMLDivElement>(null);
 
-// //             <div className="text-center p-6 rounded-lg border border-border/50 bg-card">
-// //               <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
-// //                 <BookOpen className="h-6 w-6 text-primary" />
-// //               </div>
-// //               <h3 className="mb-2 text-xl font-semibold">Apprentissage</h3>
-// //               <p className="text-muted-foreground">
-// //                 Apprenez à votre rythme avec des outils d&apos;apprentissage
-// //                 modernes.
-// //               </p>
-// //             </div>
-// //           </div>
-// //         </div>
-// //       </section>
+  // Auto-scroll to results when search is performed
+  useEffect(() => {
+    if (search && resultsRef.current) {
+      // Add a small delay to ensure the component has rendered
+      const scrollTimeout = setTimeout(() => {
+        resultsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
+      }, 100);
 
-// //       {/* Stats Section */}
-// //       <section className="px-4 py-16 md:px-6 lg:px-10 bg-muted/30">
-// //         <div className="mx-auto max-w-4xl">
-// //           <div className="grid gap-8 md:grid-cols-3 text-center">
-// //             <div>
-// //               <div className="mb-2 text-3xl font-bold text-primary">1000+</div>
-// //               <div className="text-muted-foreground">Vidéos disponibles</div>
-// //             </div>
-// //             <div>
-// //               <div className="mb-2 text-3xl font-bold text-primary">500+</div>
-// //               <div className="text-muted-foreground">Enseignants actifs</div>
-// //             </div>
-// //             <div>
-// //               <div className="mb-2 text-3xl font-bold text-primary">5000+</div>
-// //               <div className="text-muted-foreground">Étudiants inscrits</div>
-// //             </div>
-// //           </div>
-// //         </div>
-// //       </section>
+      return () => clearTimeout(scrollTimeout);
+    }
+  }, [search]);
 
-// //       {/* CTA Section */}
-// //       <section className="px-4 py-20 md:px-6 lg:px-10">
-// //         <div className="mx-auto max-w-2xl text-center">
-// //           <h2 className="mb-4 text-3xl font-bold">
-// //             Prêt à commencer votre aventure d&apos;apprentissage ?
-// //           </h2>
-// //           <p className="mb-8 text-lg text-muted-foreground">
-// //             Rejoignez des milliers d&apos;apprenants qui transforment déjà leur
-// //             avenir avec Cognacia.
-// //           </p>
-// //           <Link href="/sign-up">
-// //             <Button size="lg" className="px-8">
-// //               Créer un compte gratuit
-// //             </Button>
-// //           </Link>
-// //         </div>
-// //       </section>
-// //     </div>
-// //   );
-// // }
+  return (
+    <div className="min-h-screen relative overflow-hidden bg-background">
+      <section className="bg-gradient-to-br from-[#355869]/95 via-[#355869]/60 to-[#355869]/30 dark:bg-[#0F2C3F] px-4 py-24 sm:py-32 md:px-8 lg:px-10 relative border-b border-border/60 dark:border-border/90 ">
+        <Image
+          src={`icons/guestBlob.svg`}
+          alt="Background Blob"
+          className=" opacity-50 bottom-4 left-0 absolute z-10  pointer-events-none"
+          height={500}
+          width={500}
+        />
+
+        {/* Landing Content */}
+        <motion.div
+          className="mx-auto max-w-4xl text-center relative z-0"
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+        >
+          <motion.div
+            variants={fadeInUp}
+            transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+            className="mb-10"
+          >
+            <motion.div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#355869]/5 border border-[#355869]/10 mb-10"
+              whileHover={{ scale: 1.01 }}
+              transition={{ duration: 0.8, ease: [0.22, 0.03, 0.26, 1] }}
+            >
+              <Sparkles className="w-4 h-4 text-[#355869]" />
+              <span className="text-sm font-medium text-[#355869]">
+                Plateforme d&apos;apprentissage de confiance
+              </span>
+            </motion.div>
+
+            <h1 className="  text-primary-950   text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl leading-tight">
+              Bienvenue sur{" "}
+              <motion.span
+                className="bg-gradient-to-r from-primary via-[#355869cc] to-primary/80 bg-clip-text text-transparent"
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{
+                  duration: 20,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                Cognacia
+              </motion.span>
+            </h1>
+          </motion.div>
+
+          <motion.p
+            variants={fadeInUp}
+            transition={{
+              duration: 0.7,
+              delay: 0.1,
+              ease: [0.22, 0.03, 0.26, 1],
+            }}
+            className="mb-12 text-lg text-white/90 dark:text-muted-foreground md:text-xl max-w-2xl mx-auto leading-relaxed"
+          >
+            Découvrez une plateforme d&apos;apprentissage innovante où
+            enseignants et étudiants se connectent pour partager des
+            connaissances et créer un avenir meilleur.
+          </motion.p>
+
+          <motion.div
+            variants={fadeInUp}
+            transition={{
+              duration: 0.7,
+              delay: 0.2,
+              ease: [0.22, 0.03, 0.26, 1],
+            }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <Link href="/sign-up/info">
+              <motion.div
+                whileHover={{ scale: 1.005 }}
+                whileTap={{ scale: 0.995 }}
+                transition={{ duration: 0.6, ease: [0.22, 0.03, 0.26, 1] }}
+              >
+                <Button size="lg" className="w-full sm:w-auto group px-8 py-3">
+                  Commencer gratuitement
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-500" />
+                </Button>
+              </motion.div>
+            </Link>
+            <Link href="/sign-in">
+              <motion.div
+                whileHover={{ scale: 1.005 }}
+                whileTap={{ scale: 0.995 }}
+                transition={{ duration: 0.6, ease: [0.22, 0.03, 0.26, 1] }}
+              >
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto px-8 py-3 border-[#355869]/10 hover:border-[#355869]/20"
+                >
+                  Se connecter
+                </Button>
+              </motion.div>
+            </Link>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {!success ? (
+        <motion.section
+          className="px-4 py-16 md:px-6 lg:px-10"
+          initial="initial"
+          animate="animate"
+          variants={fadeInUp}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+        >
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center py-12">
+              <h3 className="text-lg font-medium mb-2">Erreur de chargement</h3>
+              <p className="text-muted-foreground">
+                Impossible de charger les vidéos. Veuillez réessayer plus tard.
+              </p>
+            </div>
+          </div>
+        </motion.section>
+      ) : (
+        <section className="px-4 py-24 md:px-6 lg:px-10">
+          <div className="mx-auto max-w-6xl space-y-24">
+            {explorerVideos.length > 0 && (
+              <motion.div
+                ref={resultsRef} // Add ref for scrolling target
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true, margin: "-5%" }}
+                variants={staggerContainer}
+                // Add scroll margin for better positioning
+                className="scroll-mt-20"
+              >
+                <motion.h2
+                  variants={fadeInUp}
+                  className="text-3xl font-bold mb-10 text-center"
+                  transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+                >
+                  {search ? `Résultats pour "${search}"` : " Dernières vidéos"}
+                </motion.h2>
+                <motion.div
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+                  variants={staggerContainer}
+                >
+                  {explorerVideos.slice(0, 6).map((video) => (
+                    <motion.div
+                      key={video.id}
+                      variants={scaleIn}
+                      whileHover={{ y: -1 }}
+                      transition={{
+                        duration: 0.8,
+                        ease: [0.22, 0.03, 0.26, 1],
+                      }}
+                    >
+                      <ExplorerVideo video={video} user={video.teacher} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </motion.div>
+            )}
+          </div>
+        </section>
+      )}
+
+      <section className="px-4 pb-24 pt-10 md:px-6 lg:px-10 relative">
+        <motion.div
+          className="mx-auto max-w-6xl"
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, margin: "-5%" }}
+          variants={staggerContainer}
+        >
+          <motion.h2
+            variants={fadeInUp}
+            className="mb-10 sm:mb-12 text-center text-3xl font-bold"
+            transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+          >
+            Pourquoi choisir Cognacia ?
+          </motion.h2>
+
+          <motion.div
+            className="grid gap-10 md:grid-cols-2 lg:grid-cols-3"
+            variants={staggerContainer}
+          >
+            {[
+              {
+                icon: Play,
+                title: "Contenu Vidéo",
+                description:
+                  "Accédez à des milliers de vidéos éducatives créées par des experts.",
+              },
+              {
+                icon: Users,
+                title: "Communauté",
+                description:
+                  "Rejoignez une communauté d'apprenants et d'enseignants passionnés.",
+              },
+              {
+                icon: BookOpen,
+                title: "Apprentissage",
+                description:
+                  "Apprenez à votre rythme avec des outils d'apprentissage modernes.",
+              },
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                variants={scaleIn}
+                whileHover={{ y: -1, scale: 1.01 }}
+                transition={{ duration: 0.5, ease: [0.22, 0.03, 0.26, 1] }}
+                className="text-center p-10 rounded-xl border border-[#355869]/5 bg-gradient-to-br from-card via-card to-card/95 shadow-lg hover:shadow-xl transition-shadow duration-1000"
+              >
+                <motion.div
+                  className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-[#355869]/10 to-primary/10"
+                  whileHover={{ rotate: 3 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <feature.icon className="h-7 w-7 text-[#355869]" />
+                </motion.div>
+                <h3 className="mb-4 text-xl font-semibold">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </section>
+
+      <motion.section
+        className="px-4 py-24 md:px-6 lg:px-10 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] relative overflow-hidden"
+        initial="initial"
+        whileInView="animate"
+        viewport={{ once: true, margin: "-50%" }}
+        variants={staggerContainer}
+      >
+        <motion.div
+          className="mx-auto max-w-4xl relative z-10"
+          variants={staggerContainer}
+        >
+          <motion.div
+            className="grid gap-16 md:grid-cols-3 text-center"
+            variants={staggerContainer}
+          >
+            {[
+              { number: "100+", label: "Vidéos disponibles" },
+              { number: "50+", label: "Enseignants actifs" },
+              { number: "500+", label: "Étudiants inscrits" },
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                variants={fadeInUp}
+                whileHover={{ scale: 1.01 }}
+                transition={{ duration: 0.5, ease: [0.22, 0.03, 0.26, 1] }}
+              >
+                <motion.div
+                  className="mb-3 text-4xl font-bold text-primary-50"
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{
+                    delay: index * 0.2,
+                    duration: 0.5,
+                    ease: [0.22, 0.03, 0.26, 1],
+                  }}
+                >
+                  {stat.number}
+                </motion.div>
+                <div className="text-primary-100 font-medium">{stat.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </motion.section>
+
+      <motion.section
+        className="px-4 py-28 md:px-6 lg:px-10 relative"
+        initial="initial"
+        whileInView="animate"
+        viewport={{ once: true, margin: "-5%" }}
+      >
+        <motion.div
+          className="mx-auto max-w-2xl text-center"
+          variants={staggerContainer}
+        >
+          <motion.h2
+            variants={fadeInUp}
+            transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+            className="mb-6 text-3xl font-bold"
+          >
+            Prêt à commencer votre aventure d&apos;apprentissage ?
+          </motion.h2>
+          <motion.p
+            variants={fadeInUp}
+            transition={{
+              duration: 0.7,
+              delay: 0.1,
+              ease: [0.22, 0.03, 0.26, 1],
+            }}
+            className="mb-12 text-lg text-muted-foreground leading-relaxed"
+          >
+            Rejoignez des milliers d&apos;apprenants qui transforment déjà leur
+            avenir avec Cognacia.
+          </motion.p>
+          <motion.div
+            variants={fadeInUp}
+            transition={{
+              duration: 0.7,
+              delay: 0.2,
+              ease: [0.22, 0.03, 0.26, 1],
+            }}
+          >
+            <Link href="/sign-up">
+              <motion.div
+                whileHover={{ scale: 1.005 }}
+                whileTap={{ scale: 0.995 }}
+                transition={{ duration: 0.6, ease: [0.22, 0.03, 0.26, 1] }}
+              >
+                <Button
+                  size="lg"
+                  className="px-10 py-4 group bg-gradient-to-r from-primary to-[#355869] hover:from-primary/98 hover:to-[#355869]/98 text-base"
+                >
+                  Créer un compte gratuit
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-500" />
+                </Button>
+              </motion.div>
+            </Link>
+          </motion.div>
+        </motion.div>
+      </motion.section>
+    </div>
+  );
+}
