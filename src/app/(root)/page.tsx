@@ -49,33 +49,37 @@
 //     />
 //   );
 // }
-// app/(root)/page.tsx
+
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
+import { getVideosGuestPage } from "@/actions/home/getHomeVideo";
 import { getSearchResults } from "@/actions/home/homeVideos.action";
-import HomePage from "@/components/home/HomePage";
+import { Button } from "@/components/common/buttons/Button";
 import GuestHomePage from "@/components/home/GuestHomePage";
+import HomePage from "@/components/home/HomePage";
 import { SearchResultsClient } from "@/components/home/SearchResults";
 import Link from "next/link";
-import { Button } from "@/components/common/buttons/Button";
 
 interface SearchPageProps {
-  readonly searchParams: Promise<{ query?: string; filter?: string }>;
+  readonly searchParams: Promise<{
+    query?: string;
+    filter?: string;
+    search?: string;
+  }>;
 }
 
 export default async function Page({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const query = params.query ?? "";
+  const search = params.search ?? "";
   const activeFilter = params.filter ?? "tout";
 
-  console.log("Search Page Params:", { query, activeFilter });
+  console.log("Search Page Params:", { query, activeFilter, search });
 
-  // Check if user is authenticated
   const result = await getCurrentUser();
   const isAuthenticated = result.success && result.user;
 
   // For guest users
   if (!isAuthenticated) {
-    // If guest is searching, show message to login
     if (query) {
       return (
         <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg min-h-screen">
@@ -97,8 +101,12 @@ export default async function Page({ searchParams }: SearchPageProps) {
       );
     }
 
-    // Show guest home page
-    return <GuestHomePage />;
+    const { success, videos } = await getVideosGuestPage(search, 6);
+
+    if (!success || !videos || (Array.isArray(videos) && videos.length === 0)) {
+      return null;
+    }
+    return <GuestHomePage videos={videos} success={success} search={search} />;
   }
 
   // For authenticated users
