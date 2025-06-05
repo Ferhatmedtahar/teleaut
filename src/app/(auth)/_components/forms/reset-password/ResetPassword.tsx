@@ -36,7 +36,7 @@ export default function ResetPasswordForm({ id }: { readonly id: string }) {
   });
   async function onSubmit(data: ResetPasswordSchema) {
     if (data.password !== data.confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error("Les mots de passe ne correspondent pas");
       return;
     }
     const formData = new FormData();
@@ -47,14 +47,14 @@ export default function ResetPasswordForm({ id }: { readonly id: string }) {
     const result = await resetPassword(formData);
 
     if (result.success) {
-      toast.success("Password updated successfully", {
+      toast.success("Mot de passe mis à jour avec succès", {
         duration: 7000,
-        description: "login with your new password",
+        description: "connectez-vous avec votre nouveau mot de passe",
       });
       router.push("/sign-in");
     } else {
-      toast.error("Failed to update password", {
-        description: "Please try again later",
+      toast.error("Échec de la mise à jour du mot de passe", {
+        description: "Veuillez réessayer plus tard",
         duration: 7000,
       });
     }

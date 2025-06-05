@@ -72,13 +72,13 @@ export async function signInAction(
     if (error instanceof z.ZodError) {
       return {
         state: "ERROR",
-        error: "Validation failed",
+        error: "La validation a échoué",
       };
     }
 
     return {
       state: "ERROR",
-      error: "Something went wrong",
+      error: "Quelque chose s'est mal passé",
     };
   }
 }

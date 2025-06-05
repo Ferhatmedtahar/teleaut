@@ -139,19 +139,18 @@ export default function SignUpDetailsForm() {
   //$ the actual form handler
   async function onSubmit(data: SignUpDetailsSchemaType) {
     if (data.role === "teacher") {
-      //REVIEW upload the files and get the urls
       await handleTeacherSubmit(data);
       localStorage.setItem("signedUp", "true");
     }
 
     if (data.role === "student") {
       if (data.password !== data.confirmPassword) {
-        toast.error("Passwords do not match");
+        toast.error("Les mots de passe ne correspondent pas");
         return;
       }
 
       if (!selectedClass) {
-        toast.error("Please select a class");
+        toast.error("Veuillez sélectionner une classe");
         return;
       }
 
@@ -160,7 +159,7 @@ export default function SignUpDetailsForm() {
         availableBranches.length != 1 &&
         availableBranches[0] != "Aucune filière"
       ) {
-        toast.error("Please select a branch");
+        toast.error("Veuillez sélectionner une succursale");
         return;
       }
       try {
@@ -188,7 +187,7 @@ export default function SignUpDetailsForm() {
         }
       } catch (error) {
         console.error(error);
-        toast.error("Something went wrong.");
+        toast.error("Quelque chose s'est mal passé.");
         router.push("/sign-up/fail-auth");
       }
     }
@@ -200,11 +199,11 @@ export default function SignUpDetailsForm() {
         return;
       }
       if (data.password !== data.confirmPassword) {
-        toast.error("Passwords do not match");
+        toast.error("Les mots de passe ne correspondent pas");
         return;
       }
 
-      toast.loading("Uploading files...");
+      toast.loading("Téléchargement de fichiers...");
       let diplomeFile: File | null = null;
       let identityFileFront: File | null = null;
       let identityFileBack: File | null = null;
@@ -214,12 +213,12 @@ export default function SignUpDetailsForm() {
       identityFileBack = (data.identityFileBack as FileList)[0];
 
       if (!data.specialties) {
-        toast.error("Please select at least one specialty");
+        toast.error("Veuillez sélectionner au moins une spécialité");
         return;
       }
 
       if (!diplomeFile || !identityFileFront || !identityFileBack) {
-        toast.error("Please upload all files");
+        toast.error("Veuillez envoyer tous les fichiers");
         return;
       }
 
@@ -241,7 +240,7 @@ export default function SignUpDetailsForm() {
 
       if (!result.success) {
         toast.dismiss();
-        toast.error(result.message ?? "Registration failed");
+        toast.error(result.message ?? "L'inscription a échoué");
         router.push("/sign-up/fail-auth");
         return;
       }
@@ -250,7 +249,7 @@ export default function SignUpDetailsForm() {
     } catch (error) {
       toast.dismiss();
       console.error("Teacher registration error:", error);
-      toast.error("Something went wrong during registration");
+      toast.error("Une erreur s'est produite lors de l'inscription.");
       router.push("/sign-up/fail-auth");
     }
   }

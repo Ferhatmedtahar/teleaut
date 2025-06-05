@@ -12,13 +12,16 @@ export async function verifyEmailExists(email: string) {
       .eq("email", email)
       .single();
     if (existingUser) {
-      return { success: false, message: "Email is already registered." };
+      return { success: false, message: "L'e-mail est déjà enregistré." };
     }
-    return { success: true, message: "Email is available." };
+    return {
+      success: true,
+      message: "Le courrier électronique est disponible.",
+    };
   } catch (error) {
     if (error instanceof z.ZodError) {
       return { success: false, message: error.message };
     }
-    return { success: false, message: "An unexpected error occurred." };
+    return { success: false, message: "Une erreur inattendue s'est produite." };
   }
 }

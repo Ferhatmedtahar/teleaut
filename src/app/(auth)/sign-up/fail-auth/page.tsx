@@ -5,7 +5,7 @@ import { toast } from "sonner";
 export default function FailAuthPage() {
   useEffect(() => {
     toast.error(
-      "Failed to sign up! Please contact the admin for more information",
+      "Échec de l'inscription ! Veuillez contacter l'administrateur pour plus d'informations.",
       {
         duration: 10000,
       }

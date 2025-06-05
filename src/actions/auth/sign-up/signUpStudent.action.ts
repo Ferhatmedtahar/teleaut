@@ -44,7 +44,7 @@ export async function signUpStudent(formData: FormData) {
 
     if (existingUser) {
       console.error("User already exists");
-      return { success: false, message: "Email is already registered." };
+      return { success: false, message: "L'e-mail est déjà enregistré." };
     }
 
     const hashedPassword = await hashPassword(password);
@@ -68,7 +68,10 @@ export async function signUpStudent(formData: FormData) {
 
     if (insertError || !newUser) {
       console.error(insertError);
-      return { success: false, message: "Failed to create user." };
+      return {
+        success: false,
+        message: "Échec de la création de l'utilisateur.",
+      };
     }
 
     //!generate token and send email server action call
@@ -86,11 +89,11 @@ export async function signUpStudent(formData: FormData) {
       return { success: false, message };
     }
 
-    return { success: true, token, message: "User created successfully." };
+    return { success: true, token, message: "Utilisateur créé avec succès." };
   } catch (error) {
     if (error instanceof z.ZodError) {
       return { success: false, message: error.message };
     }
-    return { success: false, message: "An unexpected error occurred." };
+    return { success: false, message: "Une erreur inattendue s'est produite." };
   }
 }

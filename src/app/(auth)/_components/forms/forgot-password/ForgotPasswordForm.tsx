@@ -30,13 +30,16 @@ export default function ForgotPasswordForm() {
     const result = await forgotPassword(data.email);
 
     if (result.success) {
-      toast.success("Password reset link sent to your email", {
-        duration: 10000,
-        description: "Check your inbox",
-      });
+      toast.success(
+        "Lien de réinitialisation du mot de passe envoyé à votre adresse e-mail",
+        {
+          duration: 10000,
+          description: "Vérifiez votre boîte de réception",
+        }
+      );
     } else {
-      toast.error("Failed to send email", {
-        description: "Please try again later",
+      toast.error("Échec de l'envoi de l'e-mail", {
+        description: "Veuillez réessayer plus tard",
         duration: 7000,
       });
     }

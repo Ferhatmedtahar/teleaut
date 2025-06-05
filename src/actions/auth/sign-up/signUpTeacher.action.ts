@@ -48,13 +48,13 @@ export async function signUpTeacher(formData: FormData) {
 
     if (existingUser) {
       console.error("User already exists");
-      return { success: false, message: "Email is already registered." };
+      return { success: false, message: "L'e-mail est déjà enregistré." };
     }
 
     if (!diplomeFile || !identityFileFront || !identityFileBack) {
       return {
         success: false,
-        message: "One or more required files are missing.",
+        message: "Un ou plusieurs fichiers requis sont manquants.",
       };
     }
 
@@ -78,12 +78,18 @@ export async function signUpTeacher(formData: FormData) {
 
     if (insertError || !newTeacher) {
       console.error(insertError);
-      return { success: false, message: "Failed to create user." };
+      return {
+        success: false,
+        message: "Échec de la création de l'utilisateur.",
+      };
     }
 
     newUserId = newTeacher.id;
     if (!newUserId) {
-      return { success: false, message: "Failed to create user." };
+      return {
+        success: false,
+        message: "Échec de la création de l'utilisateur.",
+      };
     }
 
     const uploads = await Promise.all([
@@ -103,7 +109,8 @@ export async function signUpTeacher(formData: FormData) {
 
     return {
       success: true,
-      message: "Teacher account created successfully, awaiting verification.",
+      message:
+        "Compte enseignant créé avec succès, en attente de vérification.",
     };
   } catch (error) {
     console.error("error", error);
@@ -115,6 +122,6 @@ export async function signUpTeacher(formData: FormData) {
     if (error instanceof z.ZodError) {
       return { success: false, message: error.message };
     }
-    return { success: false, message: "An unexpected error occurred." };
+    return { success: false, message: "Une erreur inattendue s'est produite." };
   }
 }
