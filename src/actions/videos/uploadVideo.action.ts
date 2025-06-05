@@ -77,8 +77,6 @@ export async function uploadVideo({
       return { success: false, message: "Failed to store video in Supabase" };
     }
 
-    // revalidatePath("/");
-    // revalidatePath("/videos");
     return {
       success: true,
       message: "Video uploaded successfully",

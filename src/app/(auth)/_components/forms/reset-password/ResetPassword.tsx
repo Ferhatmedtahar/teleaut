@@ -43,7 +43,7 @@ export default function ResetPasswordForm({ id }: { readonly id: string }) {
     formData.append("id", id);
     formData.append("password", data.password);
     formData.append("confirmPassword", data.confirmPassword);
-    // console.log(data);
+
     const result = await resetPassword(formData);
 
     if (result.success) {

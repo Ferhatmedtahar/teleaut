@@ -136,7 +136,6 @@ export default function SignUpDetailsForm() {
     setValue("branch", value);
   };
 
-  // console.log("errors", errors);
   //$ the actual form handler
   async function onSubmit(data: SignUpDetailsSchemaType) {
     if (data.role === "teacher") {

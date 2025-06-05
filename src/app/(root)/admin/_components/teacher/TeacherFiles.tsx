@@ -30,7 +30,7 @@ export function TeacherFiles({
       </Card>
     );
   }
-  // console.log(files);
+
   return (
     <>
       {files.map((file: TeacherFile) => {

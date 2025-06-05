@@ -120,56 +120,16 @@ export default function CommentSection({
     const result = await addComment(videoId, formData);
 
     if (!result.success || !result.comment) {
-      // Remove the temp one on failure
       setComments((prev) => prev.filter((c) => c.id !== tempId));
       toast.error("Failed to add comment", { description: result.message });
       return;
     }
 
-    // Replace the temp comment with the real one
     setComments((prev) =>
       prev.map((comment) => (comment.id === tempId ? result.comment : comment))
     );
-  }; // const onSubmit = async (data: CommentFormValues) => {
-  //   if (!user?.id) {
-  //     toast.error("You must be logged in to comment");
-  //     return;
-  //   }
-
-  //   const { user: userData } = await getUserById(user.id);
-  //   const optimisticComment: Comment = {
-  //     id: "temp-" + Date.now(),
-  //     content: data.content,
-  //     created_at: new Date().toISOString(),
-  //     is_pinned: false,
-  //     user: {
-  //       id: user.id,
-  //       first_name: userData?.first_name ?? "User",
-  //       profile_url: userData?.profile_url ?? null,
-  //     },
-  //   };
-
-  //   setComments((prev) => [optimisticComment, ...prev]);
-  //   reset();
-  //   const formData = new FormData();
-
-  //   formData.append("content", data.content);
-  //   const result = await addComment(videoId, formData);
-
-  //   if (!result.success) {
-  //     setComments((prev) =>
-  //       prev.filter((comment) => comment.id !== optimisticComment.id)
-  //     );
-
-  //     toast.error("Failed to add comment", {
-  //       description: result.message,
-  //     });
-  //   }
-  //   router.refresh();
-  // };
-
+  };
   const handlePinComment = async (commentId: string) => {
-    console.log("commentId", commentId);
     if (!isTeacher) return;
 
     const result = await togglePinComment(commentId, videoId);

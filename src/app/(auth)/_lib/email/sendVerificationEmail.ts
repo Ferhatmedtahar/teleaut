@@ -25,7 +25,7 @@ export async function handleVerificationEmail(
     .select("id,verification_status")
     .eq("id", teacherId)
     .single();
-  // console.log(data, "data hello HELLOP");
+
   if (
     !data ||
     typeof data.id !== "string" ||

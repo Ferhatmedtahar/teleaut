@@ -7,7 +7,6 @@ import { createClient } from "@/lib/supabase/server"; // adjust the path to your
 import { z } from "zod";
 
 export async function forgotPassword(email: string) {
-  // Check if user exists
   try {
     const supabase = await createClient();
     const { data: existingUser } = await supabase
@@ -16,7 +15,6 @@ export async function forgotPassword(email: string) {
       .eq("email", email)
       .single();
 
-    // console.log(existingUser);
     if (!existingUser) {
       console.error("User does not exist");
       return { success: false, message: "User does not exist." };
@@ -32,7 +30,7 @@ export async function forgotPassword(email: string) {
       id: existingUser.id,
       role: existingUser.role,
     });
-    // console.log(token);
+
     const { emailSent, message } = await sendResetPasswordEmail(
       existingUser.id,
       email,

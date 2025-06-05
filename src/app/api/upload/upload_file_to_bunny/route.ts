@@ -9,9 +9,7 @@ import https from "https";
 
 export async function POST(request: NextRequest) {
   try {
-    console.log("File upload route hit!");
     const formData = await request.formData();
-    console.log("form data here", Object.fromEntries(formData));
 
     const file = formData.get("file") as File;
     const fileType = formData.get("fileType") as string;
@@ -26,7 +24,6 @@ export async function POST(request: NextRequest) {
     const fileExtension = file.name.split(".").pop();
     const uniqueFilename = `${uuidv4()}.${fileExtension}`;
 
-    console.log("fileExtension,uniqueFilename", fileExtension, uniqueFilename);
     let folderPath = "";
     switch (fileType) {
       case "profile_picture":
@@ -66,7 +63,6 @@ export async function POST(request: NextRequest) {
       ? `${folderPath}/${userId}/${uniqueFilename}`
       : `${folderPath}/${uniqueFilename}`;
 
-    console.log("finalPath", finalPath);
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
@@ -147,7 +143,6 @@ async function storeFileReference(
   fileType: string,
   url: string
 ): Promise<void> {
-  console.log("storeFileReference called", userId, fileType, url);
   const supabase = await createClient();
   const hostname = process.env.BUNNY_PULL_ZONE!;
   const STORAGE_ZONE_NAME = process.env.BUNNY_STORAGE_ZONE!;

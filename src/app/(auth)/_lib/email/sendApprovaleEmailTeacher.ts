@@ -299,7 +299,6 @@ export async function sendVerificationEmailTeacher(
     };
 
     const info = await transporter.sendMail(mailOptions);
-    // console.log("Email sent:", info.messageId);
 
     if (info.messageId) {
       await supabase.from("email_logs").insert({

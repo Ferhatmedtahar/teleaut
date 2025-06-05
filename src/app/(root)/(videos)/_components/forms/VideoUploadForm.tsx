@@ -92,16 +92,12 @@ export default function VideoUploadForm({
     }
   }, [subjectOptions, setValue]);
 
-  // console.log("errors", errors);
-  // Watch form fields to access their values
   const videoFile = watch("videoFile");
   const thumbnailFile = watch("thumbnailFile");
   const notesFile = watch("notesFile");
   const documentsFile = watch("documentsFile");
   const selectedClasses = watch("class") as string; // Ensure this is an array
-  // console.log("studentClasses", studentClasses);
 
-  // Handle file selection for video
   const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -152,9 +148,6 @@ export default function VideoUploadForm({
   }, [thumbnailPreview]);
 
   async function onSubmit(data: UploadVideoSchemaType) {
-    // Validation
-    console.log("data", data);
-
     if (
       data.branch?.length !== 0 &&
       availableBranches.length != 1 &&
@@ -192,7 +185,7 @@ export default function VideoUploadForm({
 
     try {
       const uploadToastId = toast.loading("Téléchargement en cours...");
-      console.log(data);
+
       const result = await uploadVideo({
         videoFile: data.videoFile,
         thumbnailFile: data.thumbnailFile,
@@ -231,13 +224,7 @@ export default function VideoUploadForm({
             const statusResponse = await fetch(
               `${BASE_URL}/api/video/video-status/${videoId}`
             );
-            console.log(
-              "Checking video status for ID:",
-              videoId,
-              "Response URL:",
-              statusResponse.url,
-              statusResponse.status
-            );
+
             if (!statusResponse.ok) {
               console.error(
                 "Failed to fetch video status:",
@@ -327,7 +314,6 @@ export default function VideoUploadForm({
         setValue("branch", []);
         setSelectedClass("");
         setAvailableBranches([]);
-        console.log("Video uploaded successfully:", result);
       }
     } catch (err) {
       toast.dismiss();

@@ -46,7 +46,6 @@ export async function signUpTeacher(formData: FormData) {
       .eq("email", email)
       .single();
 
-    // console.log(existingUser);
     if (existingUser) {
       console.error("User already exists");
       return { success: false, message: "Email is already registered." };
@@ -60,7 +59,7 @@ export async function signUpTeacher(formData: FormData) {
     }
 
     const hashedPassword = await hashPassword(password);
-    // console.log(hashedPassword);
+
     const { data: newTeacher, error: insertError } = await supabase
       .from("users")
       .insert({
@@ -77,7 +76,6 @@ export async function signUpTeacher(formData: FormData) {
       .select("id")
       .single();
 
-    // console.log("new teacher from server action ", newTeacher);
     if (insertError || !newTeacher) {
       console.error(insertError);
       return { success: false, message: "Failed to create user." };
@@ -93,8 +91,6 @@ export async function signUpTeacher(formData: FormData) {
       uploadFile(identityFileFront, "idFront", newUserId),
       uploadFile(identityFileBack, "idBack", newUserId),
     ]);
-
-    // console.log("Files uploaded and references stored.");
 
     await supabase
       .from("users")

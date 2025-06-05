@@ -18,9 +18,7 @@ export async function POST(req: NextRequest) {
     const supabase = await createClient();
 
     const video_url = `https://iframe.mediadelivery.net/embed/${process.env.BUNNY_STREAM_LIBRARY_ID}/${VideoGuid}`;
-    console.log(
-      `Updating video status for VideoGuid: ${VideoGuid}, Status: ${Status}, video_url: ${video_url}`
-    );
+
     const { data, error } = await supabase
       .from("videos")
       .update({ status: Status })
@@ -34,10 +32,6 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
-
-    console.log(
-      `Video status updated successfully for VideoGuid: ${VideoGuid}, new Status: ${Status}`
-    );
 
     return NextResponse.json(
       { message: "Webhook received and processed successfully" },

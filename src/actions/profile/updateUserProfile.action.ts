@@ -33,21 +33,7 @@ export async function updateUserProfile(formData: FormData) {
     const removeBackgroundImage = formData.get(
       "removeBackgroundImage"
     ) as string;
-    console.table({
-      prev_bio,
-      prev_class,
-      prev_branch,
-      bio,
-      userId,
-      classValue,
-      branch,
-      profileImage,
-      backgroundImage,
-      removeProfileImage,
-      removeBackgroundImage,
-    });
 
-    //REVIEW
     const supabase = await createClient();
 
     const { data: existingUser } = await supabase
@@ -157,7 +143,6 @@ export async function updateUserProfile(formData: FormData) {
       return { success: false, message: "Failed to update profile" };
     }
 
-    // Revalidate the profile page to show updated data
     revalidatePath("/profile");
 
     return { success: true, message: "Profile updated successfully" };

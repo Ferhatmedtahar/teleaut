@@ -83,7 +83,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
     setIsLoading(true);
 
     const result = await setVideoRating(video.id, selectedRating);
-    console.log("Rating result:", result);
+
     if (!result.success) {
       toast.error("Échec de la soumission de l'évaluation", {
         description: result.message,
@@ -105,7 +105,6 @@ export default function VideoInfo({ video }: VideoInfoProps) {
     setIsLoading(true);
 
     const result = await deleteVideoRating(video.id);
-    console.log("Delete rating result:", result);
 
     if (!result.success) {
       toast.error("Échec de la suppression de l'évaluation", {

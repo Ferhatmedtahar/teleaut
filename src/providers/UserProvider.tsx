@@ -18,7 +18,6 @@ export function UserProvider({
   readonly user: User | null;
 }) {
   const [currentUser, setCurrentUser] = useState(user);
-  // console.log("current user", currentUser);
 
   return (
     <UserContext.Provider value={currentUser}>{children}</UserContext.Provider>
