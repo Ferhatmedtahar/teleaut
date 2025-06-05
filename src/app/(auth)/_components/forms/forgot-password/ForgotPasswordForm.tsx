@@ -1,14 +1,14 @@
 "use client";
 import { forgotPassword } from "@/actions/auth/forgotPassword/forgotPassword.action";
 import { ForgotPasswordSchema } from "@/app/(auth)/_components/forms/forgot-password/forgotPassword.schema";
+import { Button } from "@/components/common/buttons/Button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/app/(root)/chats/_components/ui/card";
-import { Button } from "@/components/common/buttons/Button";
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
