@@ -57,7 +57,6 @@ interface GuestNavbarProps {
   readonly className?: string;
 }
 
-// Search Form Reset Component
 const SearchFormReset = ({
   setSearch,
 }: {

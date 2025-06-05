@@ -38,7 +38,6 @@ export async function addComment(videoId: string, formData: FormData) {
     };
   }
 
-  // Step 1: Insert the comment
   const { data: inserted, error: insertError } = await supabase
     .from("video_comments")
     .insert({
@@ -54,7 +53,6 @@ export async function addComment(videoId: string, formData: FormData) {
     return { success: false, message: "Failed to insert comment" };
   }
 
-  // Step 2: Fetch user separately
   const { data: userData, error: userError } = await supabase
     .from("users")
     .select("id, first_name, profile_url")
@@ -68,7 +66,6 @@ export async function addComment(videoId: string, formData: FormData) {
 
   revalidatePath(`/videos/${videoId}`);
 
-  // Step 3: Combine and return
   return {
     success: true,
     comment: {
@@ -84,44 +81,6 @@ export async function addComment(videoId: string, formData: FormData) {
     },
   };
 }
-// export async function addComment(videoId: string, formData: FormData) {
-//   const cookieStore = await cookies();
-//   const token = cookieStore.get("token")?.value;
-
-//   if (!token) {
-//     return { success: false, message: "Not authenticated" };
-//   }
-
-//   const decoded = await verifyToken(token);
-//   if (!decoded || !decoded.id) {
-//     return { success: false, message: "Invalid token" };
-//   }
-
-//   const supabase = await createClient();
-//   const content = formData.get("content") as string;
-
-//   const validation = CommentSchema.safeParse({ content });
-//   if (!validation.success) {
-//     return {
-//       success: false,
-//       message: validation.error.errors[0]?.message || "Invalid comment",
-//     };
-//   }
-
-//   const { error } = await supabase.from("video_comments").insert({
-//     video_id: videoId,
-//     user_id: decoded.id,
-//     content: content,
-//   });
-
-//   if (error) {
-//     console.error("Error adding comment:", error);
-//     return { success: false, message: "Failed to add comment" };
-//   }
-
-//   revalidatePath(`/videos/${videoId}`);
-//   return { success: true, message: "Comment added successfully" };
-// }
 
 //!Get all comments
 
@@ -133,7 +92,6 @@ export async function getVideoComments(
   const supabase = await createClient();
 
   try {
-    // Fetch pinned comments
     const { data: pinnedCommentsRaw, error: pinnedError } = await supabase
       .from("video_comments")
       .select("*")
@@ -143,7 +101,6 @@ export async function getVideoComments(
 
     if (pinnedError) throw pinnedError;
 
-    // Fetch regular comments (paginated)
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
@@ -161,7 +118,6 @@ export async function getVideoComments(
 
     if (commentsError) throw commentsError;
 
-    // Get all unique user IDs from both pinned and regular comments
     const userIds = [
       ...new Set([
         ...(pinnedCommentsRaw || []).map((c) => c.user_id),
@@ -169,7 +125,6 @@ export async function getVideoComments(
       ]),
     ];
 
-    // Fetch user data in a single query
     const { data: users, error: usersError } = await supabase
       .from("users")
       .select("id, first_name, last_name, profile_url")
@@ -177,10 +132,8 @@ export async function getVideoComments(
 
     if (usersError) throw usersError;
 
-    // Create a map of user_id -> user
     const userMap = new Map(users.map((u) => [u.id, u]));
 
-    // Enrich comments with user info
     const pinnedComments =
       pinnedCommentsRaw?.map((comment) => ({
         ...comment,

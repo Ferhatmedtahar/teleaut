@@ -11,8 +11,6 @@
 //   const query = params.query ?? "";
 //   const activeFilter = params.filter ?? "tout";
 
-//   console.log("Search Page Params:", { query, activeFilter });
-
 //   //! If no search query, show home page with all videos
 //   if (!query) {
 //     return <HomePage />;
@@ -73,8 +71,6 @@ export default async function Page({ searchParams }: SearchPageProps) {
   const search = params.search ?? "";
   const activeFilter = params.filter ?? "tout";
 
-  console.log("Search Page Params:", { query, activeFilter, search });
-
   const result = await getCurrentUser();
   const isAuthenticated = result.success && result.user;
 
@@ -103,7 +99,7 @@ export default async function Page({ searchParams }: SearchPageProps) {
 
     const { success, videos } = await getVideosGuestPage(search, 6);
 
-    if (!success || !videos || (Array.isArray(videos) && videos.length === 0)) {
+    if (!success) {
       return null;
     }
     return <GuestHomePage videos={videos} success={success} search={search} />;

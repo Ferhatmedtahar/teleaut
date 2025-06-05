@@ -48,7 +48,6 @@ export async function sendVerificationEmail(
         : "localhost:3000"
     }/sign-up/verify?token=${token}`;
 
-    console.log("Verification URL:", verificationUrl); // Debugging line
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: email,
@@ -241,7 +240,6 @@ export async function sendVerificationEmail(
     };
 
     const info = await transporter.sendMail(mailOptions);
-    // console.log("Email sent:", info.messageId);
 
     if (info.messageId) {
       await supabase

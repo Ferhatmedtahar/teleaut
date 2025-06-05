@@ -19,7 +19,7 @@ export default function WaitlistPage() {
     if (role !== "teacher" && !toastShown.current) {
       toastShown.current = true;
       toast.error(
-        "You're not allowed to access this page. Please sign up as a teacher if you want to request a feature."
+        "Vous n'êtes pas autorisé à accéder à cette page. Veuillez vous inscrire en tant qu'enseignant si vous souhaitez demander une fonctionnalité."
       );
       router.push("/sign-up/info");
       return;
@@ -27,9 +27,9 @@ export default function WaitlistPage() {
 
     if (role === "teacher" && !toastShown.current) {
       toastShown.current = true;
-      toast.success("Your request has been submitted successfully!", {
+      toast.success("Votre demande a été soumise avec succès !", {
         description:
-          "The Cognacia team is now reviewing it and will email you once your request has processed.",
+          "L'équipe Cognacia est en train de l'examiner et vous enverra un e-mail une fois votre demande traitée.",
         duration: 5000,
       });
     }

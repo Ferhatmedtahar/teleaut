@@ -15,17 +15,20 @@ export default function EmailConfirmationPage() {
     if (role !== "student" && !toastShown.current) {
       toastShown.current = true;
       toast.error(
-        "You're not allowed to access this page. Please sign up as a student if you want to request a feature."
+        "Vous n'êtes pas autorisé à accéder à cette page. Veuillez vous inscrire en tant qu'étudiant si vous souhaitez demander une fonctionnalité."
       );
       router.push("/sign-up/info");
       return;
     }
     if (role === "student" && !toastShown.current) {
-      toast.success("We've sent a confirmation email to your inbox.", {
-        description:
-          "Please check it and verify your email address to continue to your dashboard.",
-        duration: 5000,
-      });
+      toast.success(
+        "Nous avons envoyé un e-mail de confirmation dans votre boîte de réception.",
+        {
+          description:
+            "Veuillez le vérifier et vérifier votre adresse e-mail pour continuer vers votre tableau de bord.",
+          duration: 5000,
+        }
+      );
     }
   }, [router]);
 

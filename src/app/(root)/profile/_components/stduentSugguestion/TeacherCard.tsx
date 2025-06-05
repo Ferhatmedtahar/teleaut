@@ -23,7 +23,7 @@ export default function TeacherCard({ teacher }: TeacherCardProps) {
   const subjects = teacher.specialties
     .map((specialty) => extractSubjectFromSpecialty(specialty))
     .filter((subject, index, self) => self.indexOf(subject) === index);
-  console.log("TeacherCard subjects:", subjects);
+
   return (
     <div className="flex flex-col   border border-border/20 dark:border-border/70 rounded-xl p-4 hover:shadow-sm hover:shadow-border/15 transition-all duration-200">
       <div className="relative flex items-center  gap-4 mb-4">

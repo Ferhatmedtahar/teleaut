@@ -20,7 +20,7 @@ export default function TeacherVideosList({
 }) {
   // Use the complete Video interface instead of RelatedVideo
   const [videos, setVideos] = useState<RelatedVideo[]>([]);
-  console.log(videos);
+
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -93,9 +93,7 @@ export default function TeacherVideosList({
       </div>
     );
   }
-  console.log("TeacherVideosList rendered for user:", user.id);
-  console.log(initialLoading, videos.length, filteredVideos.length);
-  console.log("user", user);
+
   return (
     <div className="p-8 flex flex-col gap-4">
       <h2 className="text-2xl lg:text-3xl font-semibold">Your Videos</h2>

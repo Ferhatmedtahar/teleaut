@@ -48,7 +48,6 @@ export function SearchResultsClient({
   const subjects = ["Tout", "Professeur", "Vidéos", "Élève"];
 
   const handleFiltersChange = (videos: RelatedVideo[]) => {
-    console.log("Filter applied, new filtered count:", videos.length);
     setFilteredVideos(videos);
   };
 
@@ -81,7 +80,7 @@ export function SearchResultsClient({
   };
 
   const totalResults = getTotalResults();
-  console.log("Total filteredVideos:", filteredVideos);
+
   return (
     <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg min-h-screen">
       <div>

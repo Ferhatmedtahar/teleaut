@@ -38,7 +38,6 @@ export async function getSuggestedVideos(
     };
   }
 
-  // Fetch videos only
   const videoQuery = supabase
     .from("videos")
     .select("*")
@@ -58,7 +57,6 @@ export async function getSuggestedVideos(
     return { success: false, message: "No relevant videos found" };
   }
 
-  // Fetch teacher data separately
   const teacherIds = [...new Set(videos.map((v) => v.teacher_id))];
 
   const { data: teachers, error: teacherError } = await supabase
@@ -75,7 +73,6 @@ export async function getSuggestedVideos(
     };
   }
 
-  // Merge teacher data into videos
   const teacherMap = new Map(teachers.map((t) => [t.id, t]));
   const enrichedVideos = videos.map((video) => ({
     ...video,
@@ -136,18 +133,16 @@ export async function getSuggestedTeachers(
         success: true,
         message: "Teachers found",
         teachers,
-        isRelevant: true, // Indicates these are relevant to student's subjects
+        isRelevant: true,
       };
     }
   }
 
-  // Fallback: Get first 4 teachers regardless of specialties
   const { data: fallbackTeachers, error: fallbackError } = await supabase
     .from("users")
     .select("id, first_name, last_name, profile_url, specialties")
     .eq("role", "teacher")
     .limit(4);
-  // .order("created_at", { ascending: false }) // or any other ordering you prefer
 
   if (fallbackError) {
     console.error("Error fetching fallback teachers:", fallbackError);
@@ -168,63 +163,6 @@ export async function getSuggestedTeachers(
     isRelevant: false, // Indicates these are general teachers, not specifically relevant
   };
 }
-// /**
-//  *! Get suggested teachers for a student based on their class and branch
-//  */
-// export async function getSuggestedTeachers(
-//   studentId: string,
-//   studentClass: string,
-//   studentBranch?: string,
-//   limit = 6
-// ) {
-//   if (!studentId || !studentClass) {
-//     return {
-//       success: false,
-//       message: !studentId ? "No student ID provided" : "No class provided",
-//     };
-//   }
-
-//   const supabase = await createClient();
-
-//   // Get applicable subjects for this student
-//   const applicableSubjects = getApplicableSubjects(studentClass, studentBranch);
-
-//   if (applicableSubjects.length === 0) {
-//     return {
-//       success: false,
-//       message:
-//         "No applicable subjects found for this student's class and branch",
-//     };
-//   }
-
-//   // Get applicable teacher specialties
-//   const applicableSpecialties = getApplicableSpecialties(applicableSubjects);
-
-//   if (applicableSpecialties.length === 0) {
-//     return {
-//       success: false,
-//       message: "No applicable teacher specialties found",
-//     };
-//   }
-
-//   // Find teachers with matching specialties
-//   const { data: teachers, error } = await supabase
-//     .from("users")
-//     .select("id, first_name, last_name, profile_url, specialties")
-//     .overlaps("specialties", applicableSpecialties)
-//     .limit(limit);
-//   // .order("rating", { ascending: false })
-//   if (error) {
-//     console.error("Error fetching teachers:", error);
-//     return { success: false, message: "Failed to fetch teachers" };
-//   }
-
-//   if (!teachers || teachers.length === 0) {
-//     return { success: false, message: "No relevant teachers found" };
-//   }
-
-//   return { success: true, message: "Teachers found", teachers };
-// }
 
 /**
  * !Get videos for a specific subject
@@ -254,7 +192,6 @@ export async function getSubjectVideos(
     };
   }
 
-  // Fetch videos only
   const videoQuery = supabase
     .from("videos")
     .select("*")
@@ -283,7 +220,6 @@ export async function getSubjectVideos(
     };
   }
 
-  // Fetch corresponding teachers
   const teacherIds = [...new Set(videos.map((v) => v.teacher_id))];
   const { data: teachers, error: teacherError } = await supabase
     .from("users")

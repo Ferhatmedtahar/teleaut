@@ -46,7 +46,6 @@ export async function getUserRating(videoId: string) {
 
 // Set/update user rating for a video
 export async function setVideoRating(videoId: string, rating: number) {
-  console.log("Setting video rating:", videoId, rating);
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
@@ -137,7 +136,6 @@ export async function setVideoRating(videoId: string, rating: number) {
 
 // Delete user's rating for a video
 export async function deleteVideoRating(videoId: string) {
-  console.log("Deleting video rating:", videoId);
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 

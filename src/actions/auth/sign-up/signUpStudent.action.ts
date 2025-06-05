@@ -20,8 +20,6 @@ const StudentSchema = SignUpSchema.pick({
 });
 
 export async function signUpStudent(formData: FormData) {
-  // console.log("Start the server action");
-
   const data = Object.fromEntries(formData.entries());
   try {
     const {
@@ -44,14 +42,13 @@ export async function signUpStudent(formData: FormData) {
       .eq("email", email)
       .single();
 
-    // console.log(existingUser);
     if (existingUser) {
       console.error("User already exists");
-      return { success: false, message: "Email is already registered." };
+      return { success: false, message: "L'e-mail est déjà enregistré." };
     }
 
     const hashedPassword = await hashPassword(password);
-    // console.log(hashedPassword);
+
     const { data: newUser, error: insertError } = await supabase
       .from("users")
       .insert({
@@ -69,21 +66,22 @@ export async function signUpStudent(formData: FormData) {
       .select()
       .single();
 
-    // console.log(newUser);
     if (insertError || !newUser) {
       console.error(insertError);
-      return { success: false, message: "Failed to create user." };
+      return {
+        success: false,
+        message: "Échec de la création de l'utilisateur.",
+      };
     }
 
     //!generate token and send email server action call
     const token = await generateToken({ id: newUser.id, role: "student" });
-    // console.log(token);
+
     const { emailSent, message } = await sendVerificationEmail(
       newUser.id,
       newUser.email,
       token
     );
-    // console.log(emailSent);
 
     if (!emailSent) {
       //$Rollback user creation
@@ -91,11 +89,11 @@ export async function signUpStudent(formData: FormData) {
       return { success: false, message };
     }
 
-    return { success: true, token, message: "User created successfully." };
+    return { success: true, token, message: "Utilisateur créé avec succès." };
   } catch (error) {
     if (error instanceof z.ZodError) {
       return { success: false, message: error.message };
     }
-    return { success: false, message: "An unexpected error occurred." };
+    return { success: false, message: "Une erreur inattendue s'est produite." };
   }
 }

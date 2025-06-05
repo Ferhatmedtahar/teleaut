@@ -17,7 +17,6 @@ export default function CommentItem({
   readonly isTeacher: boolean;
   readonly onPin: (id: string) => void;
 }) {
-  console.table(comment);
   return (
     <div className="flex gap-4 p-2 border  border-border/20 dark:border-border/90 rounded-xl">
       <Link

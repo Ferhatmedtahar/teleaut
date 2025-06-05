@@ -66,8 +66,6 @@ export function FilterModal({
   ): RelatedVideo[] => {
     let filtered = [...videos];
 
-    console.log("Original videos:", filtered.length);
-
     // Filter by subjects
     if (currentFilters.selectedSubjects.length > 0) {
       filtered = filtered.filter((video) =>
@@ -139,7 +137,6 @@ export function FilterModal({
       });
     }
 
-    console.log("Final filtered results:", filtered.length);
     return filtered;
   };
 
@@ -147,8 +144,8 @@ export function FilterModal({
     setFilters((prev) => ({
       ...prev,
       selectedClass: value,
-      selectedBranch: "", // Reset branch when class changes
-      selectedSubjects: [], // Reset subjects when class changes
+      selectedBranch: "",
+      selectedSubjects: [],
     }));
   };
 

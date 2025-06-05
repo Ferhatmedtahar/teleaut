@@ -13,11 +13,10 @@ export async function getRelatedVideos(
 ): Promise<{
   success: boolean;
   data: RelatedVideo[];
-  isFallback?: boolean; // Optional flag to indicate if fallback was used
+  isFallback?: boolean;
 }> {
   const supabase = await createClient();
 
-  // First attempt: Get related videos by subject and class
   const { data: relatedVideos, error: relatedError } = await supabase
     .from("videos")
     .select("*")
@@ -35,7 +34,6 @@ export async function getRelatedVideos(
   let videosToProcess = relatedVideos || [];
   let isFallback = false;
 
-  // Fallback: If no related videos found, get latest videos
   if (videosToProcess.length === 0) {
     console.log("No related videos found, fetching latest videos as fallback");
 
@@ -92,64 +90,3 @@ export async function getRelatedVideos(
     isFallback,
   };
 }
-// "use server";
-// import { createClient } from "@/lib/supabase/server";
-// import { RelatedVideo } from "@/types/RelatedVideos.interface";
-
-// // Get related videos by subject and class (excluding current video), with teacher info
-// export async function getRelatedVideos(
-//   currentVideoId: string,
-//   subject: string,
-//   classValue: string,
-//   limit = 8
-// ): Promise<{
-//   success: boolean;
-//   data: RelatedVideo[];
-// }> {
-//   const supabase = await createClient();
-
-//   const { data: videos, error: videosError } = await supabase
-//     .from("videos")
-//     .select("*")
-//     .neq("id", currentVideoId)
-//     .eq("subject", subject)
-//     .eq("class", classValue.toLowerCase())
-//     .order("views", { ascending: false })
-//     .limit(limit);
-
-//   if (videosError || !videos) {
-//     console.error("Error fetching related videos:", videosError);
-//     return { success: false, data: [] };
-//   }
-
-//   const enrichedVideos = await Promise.all(
-//     videos.map(async (video) => {
-//       const { data: teacher, error: teacherError } = await supabase
-//         .from("users")
-//         .select("id, first_name, last_name, profile_url")
-//         .eq("id", video.teacher_id)
-//         .single();
-
-//       if (teacherError) {
-//         console.error(
-//           `Error fetching teacher for video ${video.id}:`,
-//           teacherError
-//         );
-//         return {
-//           ...video,
-//           teacher: null,
-//         };
-//       }
-
-//       return {
-//         ...video,
-//         teacher,
-//       };
-//     })
-//   );
-
-//   return {
-//     success: true,
-//     data: enrichedVideos,
-//   };
-// }

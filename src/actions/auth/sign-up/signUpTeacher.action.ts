@@ -46,21 +46,20 @@ export async function signUpTeacher(formData: FormData) {
       .eq("email", email)
       .single();
 
-    // console.log(existingUser);
     if (existingUser) {
       console.error("User already exists");
-      return { success: false, message: "Email is already registered." };
+      return { success: false, message: "L'e-mail est déjà enregistré." };
     }
 
     if (!diplomeFile || !identityFileFront || !identityFileBack) {
       return {
         success: false,
-        message: "One or more required files are missing.",
+        message: "Un ou plusieurs fichiers requis sont manquants.",
       };
     }
 
     const hashedPassword = await hashPassword(password);
-    // console.log(hashedPassword);
+
     const { data: newTeacher, error: insertError } = await supabase
       .from("users")
       .insert({
@@ -77,15 +76,20 @@ export async function signUpTeacher(formData: FormData) {
       .select("id")
       .single();
 
-    // console.log("new teacher from server action ", newTeacher);
     if (insertError || !newTeacher) {
       console.error(insertError);
-      return { success: false, message: "Failed to create user." };
+      return {
+        success: false,
+        message: "Échec de la création de l'utilisateur.",
+      };
     }
 
     newUserId = newTeacher.id;
     if (!newUserId) {
-      return { success: false, message: "Failed to create user." };
+      return {
+        success: false,
+        message: "Échec de la création de l'utilisateur.",
+      };
     }
 
     const uploads = await Promise.all([
@@ -93,8 +97,6 @@ export async function signUpTeacher(formData: FormData) {
       uploadFile(identityFileFront, "idFront", newUserId),
       uploadFile(identityFileBack, "idBack", newUserId),
     ]);
-
-    // console.log("Files uploaded and references stored.");
 
     await supabase
       .from("users")
@@ -107,7 +109,8 @@ export async function signUpTeacher(formData: FormData) {
 
     return {
       success: true,
-      message: "Teacher account created successfully, awaiting verification.",
+      message:
+        "Compte enseignant créé avec succès, en attente de vérification.",
     };
   } catch (error) {
     console.error("error", error);
@@ -119,6 +122,6 @@ export async function signUpTeacher(formData: FormData) {
     if (error instanceof z.ZodError) {
       return { success: false, message: error.message };
     }
-    return { success: false, message: "An unexpected error occurred." };
+    return { success: false, message: "Une erreur inattendue s'est produite." };
   }
 }
