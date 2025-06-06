@@ -1,7 +1,6 @@
 "use server";
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { handleVerificationEmail } from "@/app/(auth)/_lib/email/sendVerificationEmail";
-import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 
 export async function resendVerificationEmail(formData: FormData) {
   const { user } = await getCurrentUser();
@@ -9,7 +8,7 @@ export async function resendVerificationEmail(formData: FormData) {
   if (!user || user.role !== "admin") {
     return {
       success: false,
-      message: "You are not authorized to perform this action",
+      message: "Vous n'êtes pas autorisé à effectuer cette action",
     };
   }
   const teacherId = formData.get("teacherId") as string;

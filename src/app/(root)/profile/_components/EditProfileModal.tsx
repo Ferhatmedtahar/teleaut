@@ -214,7 +214,7 @@ export default function EditProfileModal({
 
       if (userRole === "student") {
         if (!selectedClass) {
-          toast.error("Please select a class");
+          toast.error("Veuillez sélectionner une classe");
           return;
         }
 
@@ -223,7 +223,7 @@ export default function EditProfileModal({
           availableBranches.length > 1 &&
           availableBranches[0] !== "Aucune filière"
         ) {
-          toast.error("Please select a branch");
+          toast.error("Veuillez sélectionner une branche");
           return;
         }
         formData.append("prev_class", userData.class ?? "");
@@ -253,7 +253,7 @@ export default function EditProfileModal({
       router.refresh();
     } catch (error) {
       console.error("Error updating profile:", error);
-      toast.error("Failed to update profile");
+      toast.error("Échec de la mise à jour du profil");
     }
   }
 

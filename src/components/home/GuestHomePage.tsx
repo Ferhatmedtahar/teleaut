@@ -3,8 +3,8 @@
 import ExplorerVideo from "@/app/(root)/(videos)/_components/videos/ExplorerVideo";
 import { Button } from "@/components/common/buttons/Button";
 import type { RelatedVideo } from "@/types/RelatedVideos.interface";
-import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Play, Sparkles, Users } from "lucide-react";
+import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
@@ -64,7 +64,7 @@ export default function GuestHomePage({
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
-      <section className="bg-gradient-to-br from-[#355869]/95 via-[#355869]/60 to-[#355869]/30 dark:bg-[#0F2C3F] px-4 py-24 sm:py-32 md:px-8 lg:px-10 relative border-b border-border/60 dark:border-border/90 ">
+      <section className="opacity-95 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] px-4 py-24 sm:py-32 md:px-8 lg:px-10 relative border-b border-border/60 dark:border-border/90 ">
         <Image
           src={`icons/guestBlob.svg`}
           alt="Background Blob"
@@ -85,20 +85,20 @@ export default function GuestHomePage({
             className="mb-10"
           >
             <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full  border bg-primary/10 border-[#355869]/40 mb-10"
-              whileHover={{ scale: 1.01 }}
+              className="cursor-default inline-flex items-center gap-2 px-4 py-2 rounded-full  border bg-primary-900/70 border-[#355869]/40 mb-10"
+              whileHover={{ scale: 1.03, y: -2 }}
               transition={{ duration: 0.8, ease: [0.22, 0.03, 0.26, 1] }}
             >
-              <Sparkles className="w-4 h-4 text-[#355869]" />
-              <span className="text-sm font-medium text-[#355869]">
+              <Sparkles className="w-4 h-4 text-white" />
+              <span className="text-sm font-medium text-white">
                 Plateforme d&apos;apprentissage de confiance
               </span>
             </motion.div>
 
-            <h1 className="  text-primary-950   text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl leading-tight">
+            <h1 className="  text-white/85   text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl leading-tight">
               Bienvenue sur{" "}
               <motion.span
-                className="bg-gradient-to-r from-primary via-[#355869cc] to-primary/80 bg-clip-text text-transparent"
+                className="bg-gradient-to-r from-primary-800 via-primary/80 to-primary-500/60 bg-clip-text text-transparent"
                 animate={{
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                 }}
@@ -142,7 +142,10 @@ export default function GuestHomePage({
                 whileTap={{ scale: 0.995 }}
                 transition={{ duration: 0.6, ease: [0.22, 0.03, 0.26, 1] }}
               >
-                <Button size="lg" className="w-full sm:w-auto group px-8 py-3">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto group px-8 py-3 border border-primary-900  "
+                >
                   Commencer gratuitement
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-500" />
                 </Button>
@@ -157,7 +160,7 @@ export default function GuestHomePage({
                 <Button
                   variant="outline"
                   size="lg"
-                  className="w-full sm:w-auto px-8 py-3 border-[#355869]/10 hover:border-[#355869]/20"
+                  className=" bg-white/95 w-full sm:w-auto px-8 py-3 border-border/70 hover:border-[#355869]/20"
                 >
                   Se connecter
                 </Button>
@@ -190,13 +193,12 @@ export default function GuestHomePage({
           <div className="mx-auto max-w-6xl space-y-24">
             {explorerVideos.length > 0 ? (
               <motion.div
-                ref={resultsRef} // Add ref for scrolling target
+                ref={resultsRef}
                 initial="initial"
-                animate={search ? "animate" : "initial"} // Force animate when there's a search
+                animate={search ? "animate" : "initial"}
                 whileInView="animate"
-                viewport={{ once: false, amount: 0.1 }} // Change once to false and reduce amount
+                viewport={{ once: true }}
                 variants={staggerContainer}
-                // Add scroll margin for better positioning
                 className="scroll-mt-20"
               >
                 <motion.h2
@@ -214,7 +216,8 @@ export default function GuestHomePage({
                     <motion.div
                       key={video.id}
                       variants={scaleIn}
-                      whileHover={{ y: -1 }}
+                      // whileHover={{ y: -1 }}
+                      viewport={{ once: true }}
                       transition={{
                         duration: 0.8,
                         ease: [0.22, 0.03, 0.26, 1],

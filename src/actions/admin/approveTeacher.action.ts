@@ -9,7 +9,7 @@ export async function approveTeacher(formData: FormData) {
   if (!user || user.role !== "admin") {
     return {
       success: false,
-      message: "You are not authorized to perform this action",
+      message: "Vous n'êtes pas autorisé à effectuer cette action",
     };
   }
 

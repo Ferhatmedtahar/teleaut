@@ -160,7 +160,6 @@ export default function TeachersList({ teachers }: TeachersListClientProps) {
                           variant="ghost"
                           size="icon"
                           className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                          // onClick={() => setTeacherToDelete(teacher.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                           <span className="sr-only">Delete</span>

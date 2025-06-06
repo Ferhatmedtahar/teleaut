@@ -1,4 +1,3 @@
-// app/etude/components/EtudesButton.tsx
 import { FaBook } from "react-icons/fa";
 
 type Props = {

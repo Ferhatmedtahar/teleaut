@@ -11,14 +11,17 @@ export async function rejectTeacher(formData: FormData) {
   if (!user || user.role !== "admin") {
     return {
       success: false,
-      message: "You are not authorized to perform this action",
+      message: "Vous n'êtes pas autorisé à effectuer cette action",
     };
   }
 
   const teacherId = formData.get("teacherId") as string;
 
   if (!teacherId) {
-    return { success: false, message: "Teacher ID is required" };
+    return {
+      success: false,
+      message: "L'identifiant de l'enseignant est requis",
+    };
   }
 
   const supabase = await createClient();
@@ -30,7 +33,7 @@ export async function rejectTeacher(formData: FormData) {
 
   if (error) {
     console.error("Error rejecting teacher:", error);
-    return { success: false, message: "Failed to reject teacher" };
+    return { success: false, message: "Impossible de rejeter l'enseignant" };
   }
 
   revalidatePath(`/admin/teachers/${teacherId}`);
@@ -39,6 +42,6 @@ export async function rejectTeacher(formData: FormData) {
 
   return {
     success: true,
-    message: "Teacher has been rejected",
+    message: "L'enseignant a été rejeté",
   };
 }

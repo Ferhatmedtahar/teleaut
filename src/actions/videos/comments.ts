@@ -19,12 +19,12 @@ export async function addComment(videoId: string, formData: FormData) {
   const token = cookieStore.get("token")?.value;
 
   if (!token) {
-    return { success: false, message: "Not authenticated" };
+    return { success: false, message: "Non authentifié" };
   }
 
   const decoded = await verifyToken(token);
   if (!decoded?.id) {
-    return { success: false, message: "Invalid token" };
+    return { success: false, message: "Jeton invalide" };
   }
 
   const supabase = await createClient();
@@ -34,7 +34,7 @@ export async function addComment(videoId: string, formData: FormData) {
   if (!validation.success) {
     return {
       success: false,
-      message: validation.error.errors[0]?.message || "Invalid comment",
+      message: validation.error.errors[0]?.message || "Commentaire invalide",
     };
   }
 
@@ -50,7 +50,7 @@ export async function addComment(videoId: string, formData: FormData) {
 
   if (insertError || !inserted) {
     console.error("Insert error:", insertError);
-    return { success: false, message: "Failed to insert comment" };
+    return { success: false, message: "Échec de l'insertion du commentaire" };
   }
 
   const { data: userData, error: userError } = await supabase
@@ -61,7 +61,10 @@ export async function addComment(videoId: string, formData: FormData) {
 
   if (userError || !userData) {
     console.error("User fetch error:", userError);
-    return { success: false, message: "Failed to fetch user data" };
+    return {
+      success: false,
+      message: "Échec de la récupération des données utilisateur",
+    };
   }
 
   revalidatePath(`/videos/${videoId}`);
@@ -155,7 +158,7 @@ export async function getVideoComments(
         comments,
         hasMore,
       },
-      message: "Comments fetched successfully",
+      message: "Commentaires récupérés avec succès",
     };
   } catch (error) {
     console.error("Error fetching comments:", error);
@@ -166,7 +169,7 @@ export async function getVideoComments(
         comments: [],
         hasMore: false,
       },
-      message: "Failed to fetch comments",
+      message: "Échec de la récupération des commentaires",
     };
   }
 }
@@ -177,12 +180,12 @@ export async function togglePinComment(commentId: string, videoId: string) {
   const token = cookieStore.get("token")?.value;
 
   if (!token) {
-    return { success: false, message: "Not authenticated" };
+    return { success: false, message: "Non authentifié" };
   }
 
   const decoded = await verifyToken(token);
   if (!decoded || !decoded.id) {
-    return { success: false, message: "Invalid token" };
+    return { success: false, message: "Jeton invalide" };
   }
 
   const supabase = await createClient();
@@ -195,7 +198,10 @@ export async function togglePinComment(commentId: string, videoId: string) {
 
   if (commentError || !comment) {
     console.error("Error fetching comment:", commentError);
-    return { success: false, message: "Failed to fetch comment" };
+    return {
+      success: false,
+      message: "Impossible de récupérer le commentaire",
+    };
   }
 
   const { data: video, error: videoError } = await supabase
@@ -206,13 +212,13 @@ export async function togglePinComment(commentId: string, videoId: string) {
 
   if (videoError || !video) {
     console.error("Error fetching video:", videoError);
-    return { success: false, message: "Failed to fetch video" };
+    return { success: false, message: "Échec de la récupération de la vidéo" };
   }
 
   if (video.teacher_id !== decoded.id) {
     return {
       success: false,
-      message: "You are not authorized to pin this comment",
+      message: "Vous n'êtes pas autorisé à épingler ce commentaire",
     };
   }
 
@@ -223,9 +229,15 @@ export async function togglePinComment(commentId: string, videoId: string) {
 
   if (toggleError) {
     console.error("Error updating pin status:", toggleError);
-    return { success: false, message: "Failed to update pin status" };
+    return {
+      success: false,
+      message: "Échec de la mise à jour du statut épinglé",
+    };
   }
 
   revalidatePath(`/videos/${videoId}`);
-  return { success: true, message: "Pin status updated successfully" };
+  return {
+    success: true,
+    message: "Le statut épinglé a été mis à jour avec succès",
+  };
 }

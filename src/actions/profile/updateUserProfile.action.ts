@@ -12,7 +12,7 @@ export async function updateUserProfile(formData: FormData) {
     let prev_branch: string = "";
 
     if (!userRole) {
-      return { success: false, message: "Failed to update profile" };
+      return { success: false, message: "Échec de la mise à jour du profil" };
     }
     //get the previous data sent within the form
     const prev_bio = formData.get("prev_bio") as string;
@@ -43,7 +43,7 @@ export async function updateUserProfile(formData: FormData) {
       .single();
 
     if (!existingUser) {
-      return { success: false, message: "User not found" };
+      return { success: false, message: "Utilisateur non trouvé" };
     }
 
     let profile: string = "";
@@ -140,14 +140,14 @@ export async function updateUserProfile(formData: FormData) {
 
     if (updateError) {
       console.error("Error updating profile:", updateError);
-      return { success: false, message: "Failed to update profile" };
+      return { success: false, message: "Échec de la mise à jour du profil" };
     }
 
     revalidatePath("/profile");
 
-    return { success: true, message: "Profile updated successfully" };
+    return { success: true, message: "Profil mis à jour avec succès" };
   } catch (error) {
     console.error("Error updating profile:", error);
-    return { success: false, message: "Failed to update profile" };
+    return { success: false, message: "Échec de la mise à jour du profil" };
   }
 }

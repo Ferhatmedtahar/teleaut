@@ -1,4 +1,3 @@
-// providers/UserProvider.tsx
 "use client";
 
 import { User } from "@/types/User";

@@ -17,7 +17,10 @@ export async function handleVerificationEmail(
   options: HandleVerificationEmailOptions = {}
 ) {
   if (!teacherId) {
-    return { success: false, message: "Teacher ID is required" };
+    return {
+      success: false,
+      message: "L'identifiant de l'enseignant est requis",
+    };
   }
   const supabase = await createClient();
   const { data } = await supabase
@@ -31,7 +34,7 @@ export async function handleVerificationEmail(
     typeof data.id !== "string" ||
     typeof data.verification_status !== "string"
   ) {
-    return { success: false, message: "Teacher not found" };
+    return { success: false, message: "Enseignant non trouvé" };
   }
   const { verification_status } = data;
 
@@ -39,7 +42,7 @@ export async function handleVerificationEmail(
     verification_status == VERIFICATION_STATUS.APPROVED ||
     verification_status == VERIFICATION_STATUS.REJECTED
   ) {
-    return { success: false, message: "Teacher already verified" };
+    return { success: false, message: "Enseignant déjà vérifié" };
   }
 
   const token = await generateToken({ id: teacherId, role: "teacher" });
@@ -68,7 +71,7 @@ export async function handleVerificationEmail(
       console.error("Error updating teacher verification status:", error);
       return {
         success: false,
-        message: "Failed to update verification status",
+        message: "Échec de la mise à jour du statut de vérification",
       };
     }
   }
@@ -80,7 +83,7 @@ export async function handleVerificationEmail(
   return {
     success: true,
     message: options.updateUser
-      ? "Approval email sent successfully"
-      : "Approval email resent successfully",
+      ? "E-mail d'approbation envoyé avec succès"
+      : "L'e-mail d'approbation a été renvoyé avec succès",
   };
 }

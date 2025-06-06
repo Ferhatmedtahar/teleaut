@@ -10,10 +10,10 @@ export default function ShareLink({
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      toast.success("Link copied to clipboard!");
+      toast.success("Lien copié dans le presse-papiers!");
     } catch (err) {
       console.error(err);
-      toast.error("Failed to copy link");
+      toast.error("Impossible de copier le lien");
     }
   };
 

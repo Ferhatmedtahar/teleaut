@@ -76,23 +76,3 @@ export default function RelatedVideos({
     </div>
   );
 }
-
-// if (isLoading) {
-//   return (
-//     <div className="space-y-4 w-full">
-//       <h2 className="text-2xl font-semibold ">Explorer</h2>
-//       {[...Array(4)].map((i) => (
-//         <div key={i + 1} className="animate-pulse">
-//           <div className="flex gap-2">
-//             <div className="bg-gray-200 rounded-lg w-32 h-20"></div>
-//             <div className="flex-1">
-//               <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-//               <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
-//               <div className="h-3 bg-gray-200 rounded w-1/4"></div>
-//             </div>
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
