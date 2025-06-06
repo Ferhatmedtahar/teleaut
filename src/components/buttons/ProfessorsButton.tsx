@@ -1,4 +1,3 @@
-// app/etude/components/ProfessorsButton.tsx
 import { FaPaperPlane } from "react-icons/fa";
 
 type Props = {

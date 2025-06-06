@@ -71,10 +71,6 @@ export async function POST(request: NextRequest) {
 
     const url = await uploadToBunny(tempPath, finalPath, file.type);
 
-    // if (fileType === "video") {
-    //   await requestVideoConversion(finalPath);
-    // }
-
     if (userId) {
       await storeFileReference(userId, fileType, url);
     }

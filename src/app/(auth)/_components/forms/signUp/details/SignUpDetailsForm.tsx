@@ -159,7 +159,7 @@ export default function SignUpDetailsForm() {
         availableBranches.length != 1 &&
         availableBranches[0] != "Aucune filière"
       ) {
-        toast.error("Veuillez sélectionner une succursale");
+        toast.error("Veuillez sélectionner une branche ");
         return;
       }
       try {

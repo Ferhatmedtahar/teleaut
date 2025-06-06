@@ -59,7 +59,7 @@ export async function getUnverifiedTeachers() {
 
   if (error) {
     console.error("Error fetching unverified teachers:", error);
-    throw new Error("Failed to fetch unverified teachers");
+    return [];
   }
 
   return data ?? [];
@@ -98,7 +98,7 @@ export async function getTeacherFiles(
 
   if (error) {
     console.error("Error fetching teacher files:", error);
-    throw new Error("Failed to fetch teacher files");
+    return [];
   }
 
   return data || [];
@@ -117,13 +117,16 @@ export async function getStudentsList() {
 
     if (error) {
       console.error("Error fetching students:", error);
-      return { success: false, error: "Failed to fetch students" };
+      return {
+        success: false,
+        message: "Impossible de récupérer les étudiants",
+      };
     }
 
     return { success: true, data: data || [] };
   } catch (error) {
     console.error("Error in getStudentsList:", error);
-    return { success: false, error: "Failed to fetch students" };
+    return { success: false, message: "Impossible de récupérer les étudiants" };
   }
 }
 
@@ -135,14 +138,17 @@ export async function deleteStudent(id: string) {
 
     if (error) {
       console.error("Error deleting student:", error);
-      throw new Error("Failed to delete student");
+      return {
+        success: false,
+        message: "Échec de la suppression de l'étudiant",
+      };
     }
 
     revalidatePath("/admin/students-list");
-    return { success: true, message: "Student deleted successfully" };
+    return { success: true, message: "L'étudiant a été supprimé avec succès" };
   } catch (error) {
     console.error("Error in deleteStudent:", error);
-    return { success: false, message: "Failed to delete student" };
+    return { success: false, message: "Échec de la suppression de l'étudiant" };
   }
 }
 interface Teacher {
@@ -171,17 +177,20 @@ export async function getTeachersList(): Promise<{
 
     if (error) {
       console.error("Error fetching teachers:", error);
-      return { success: false, message: "Failed to fetch teachers" };
+      return {
+        success: false,
+        message: "Impossible de trouver des enseignants",
+      };
     }
 
     return {
       success: true,
-      message: "Teachers fetched successfully",
+      message: "Les enseignants ont été récupérés avec succès",
       data: data || [],
     };
   } catch (error) {
     console.error("Error in getTeachersList:", error);
-    return { success: false, message: "Failed to fetch teachers" };
+    return { success: false, message: "Impossible de trouver des enseignants" };
   }
 }
 
@@ -194,13 +203,22 @@ export async function deleteTeacher(id: string) {
 
     if (error) {
       console.error("Error deleting teacher:", error);
-      return { success: false, message: "Failed to delete teacher" };
+      return {
+        success: false,
+        message: "Échec de la suppression de l'enseignant",
+      };
     }
     revalidatePath("/admin/teachers-list");
-    return { success: true, message: "Teacher deleted successfully" };
+    return {
+      success: true,
+      message: "L'enseignant a été supprimé avec succès",
+    };
   } catch (error) {
     console.error("Error in deleteTeacher:", error);
-    return { success: false, message: "Failed to delete teacher" };
+    return {
+      success: false,
+      message: "Échec de la suppression de l'enseignant",
+    };
   }
 }
 
@@ -237,14 +255,14 @@ export async function deleteVideo(id: string) {
 
     if (error) {
       console.error("Error deleting video:", error);
-      throw new Error("Failed to delete video");
+      return { success: false, message: "Échec de la suppression de la vidéo" };
     }
 
     revalidatePath("/admin/videos-list");
-    return { success: true, message: "Video deleted successfully" };
+    return { success: true, message: "Vidéo supprimée avec succès" };
   } catch (error) {
     console.error("Error in deleteVideo:", error);
-    return { success: false, message: "Failed to delete video" };
+    return { success: false, message: "Échec de la suppression de la vidéo" };
   }
 }
 

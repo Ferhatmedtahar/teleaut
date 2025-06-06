@@ -92,7 +92,7 @@ export default function CommentSection({
 
   const onSubmit = async (data: CommentFormValues) => {
     if (!user?.id) {
-      toast.error("You must be logged in to comment");
+      toast.error("Vous devez être connecté pour commenter");
       return;
     }
 
@@ -121,7 +121,9 @@ export default function CommentSection({
 
     if (!result.success || !result.comment) {
       setComments((prev) => prev.filter((c) => c.id !== tempId));
-      toast.error("Failed to add comment", { description: result.message });
+      toast.error("Impossible d'ajouter un commentaire", {
+        description: result.message,
+      });
       return;
     }
 
@@ -140,7 +142,7 @@ export default function CommentSection({
       setHasMore(data.hasMore);
       setPage(1);
     } else {
-      toast.error("Failed to pin/unpin comment", {
+      toast.error("Impossible d'épingler/désépingler le commentaire", {
         description: result.message,
       });
     }

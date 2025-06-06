@@ -34,8 +34,6 @@ export async function uploadVideo({
   id?: string;
 }> {
   try {
-    // Upload video file to Bunny CDN
-    // const videoUrl = await uploadFile(videoFile, "video", teacher_id);
     const videoUrl = await uploadVideoUtil(videoFile, teacher_id);
 
     let thumbnailUrl = null;

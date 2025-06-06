@@ -153,7 +153,7 @@ export default function VideoUploadForm({
       availableBranches.length != 1 &&
       availableBranches[0] != "Aucune filière"
     ) {
-      toast.error("Please select a branch");
+      toast.error("Veuillez sélectionner une succursale");
       return;
     }
     if (!data.videoFile) {

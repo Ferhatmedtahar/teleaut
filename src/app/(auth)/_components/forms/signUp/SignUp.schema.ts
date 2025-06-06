@@ -25,7 +25,6 @@ export const SignUpSchema = z.object({
     .min(6, "Password must be at least 6 characters")
     .max(25),
 
-  //teacher
   diplomeFile: z
     .any()
     .refine((file) => {
@@ -54,48 +53,8 @@ export const SignUpSchema = z.object({
     .optional(),
 
   specialties: z.array(z.string()).optional(),
-  // specialty: z.string().optional(),
 });
 
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
 
 export type Roles = "teacher" | "student";
-
-//* for students removed  residence: z.string().min(3, "Residence must be at least 3 characters"),
-// .superRefine(
-//   (
-//     { password, repeatPassword, role, diplomeFile, identityFile, specialty },
-//     ctx
-//   ) => {
-//     if (password !== repeatPassword) {
-//       ctx.addIssue({
-//         code: z.ZodIssueCode.custom,
-//         message: "Passwords don't match",
-//       });
-//     }
-//     if (role === "teacher") {
-//       if (!diplomeFile) {
-//         ctx.addIssue({
-//           path: ["diplomeFile"],
-//           code: "custom",
-//           message: "Le fichier du diplôme est requis pour les enseignants",
-//         });
-//       }
-//       if (!identityFile) {
-//         ctx.addIssue({
-//           path: ["identityFile"],
-//           code: "custom",
-//           message:
-//             "La photo de la carte d'identité est requise pour les enseignants",
-//         });
-//       }
-//       if (!specialty) {
-//         ctx.addIssue({
-//           path: ["specialty"],
-//           code: "custom",
-//           message: "La spécialité est requise pour les enseignants",
-//         });
-//       }
-//     }
-//   }
-// );

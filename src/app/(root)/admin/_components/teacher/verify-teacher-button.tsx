@@ -39,13 +39,13 @@ export default function VerifyTeacherButton({
         toast.error(result.message);
       }
       if (result.success) {
-        toast.success("Teacher approved successfully");
+        toast.success("Enseignant approuvé avec succès");
       }
 
       router.refresh();
     } catch (err) {
       console.error(err);
-      toast.error("Failed to approve teacher");
+      toast.error("Échec de l'approbation de l'enseignant");
     } finally {
       setIsLoading(false);
     }
@@ -63,12 +63,12 @@ export default function VerifyTeacherButton({
         toast.error(result.message);
       }
       if (result.success) {
-        toast.success("Teacher rejected successfully");
+        toast.success("L'enseignant a été rejeté avec succès");
       }
       router.refresh();
     } catch (err) {
       console.error(err);
-      toast.error("Failed to reject teacher");
+      toast.error("Impossible de rejeter l'enseignant");
     } finally {
       setIsLoading(false);
     }
@@ -88,12 +88,12 @@ export default function VerifyTeacherButton({
         toast.error(result.message);
       }
       if (result.success) {
-        toast.success("Email resent successfully");
+        toast.success("E-mail renvoyé avec succès");
       }
       router.refresh();
     } catch (err) {
       console.error(err);
-      toast.error("Failed to resend email");
+      toast.error("Échec du renvoi de l'e-mail");
     } finally {
       setIsLoading(false);
     }
