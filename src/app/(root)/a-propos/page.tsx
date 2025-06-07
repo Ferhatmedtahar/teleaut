@@ -1,8 +1,16 @@
+import { Button } from "@/components/common/buttons/Button";
+
+export const metadata = {
+  title: "À propos | Apprends à ton rythme avec plusieurs professeurs",
+  description:
+    "Découvre notre plateforme éducative unique conçue pour les étudiants tunisiens. Apprends chaque matière avec des explications variées, accède à des cours personnalisés, et suis le programme officiel avec les meilleurs profs, à ton rythme.",
+};
+
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-background text-gray-800">
       <section className="relative overflow-hidden bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] text-white">
-        <div className="absolute inset-0 bg-gradient-to-br from-priomary-100/20 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-100/20 to-transparent"></div>
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
           <div className="text-center max-w-4xl mx-auto">
@@ -130,6 +138,10 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
+      </section>
+      <section className="text-center pb-12 text-gray-600 dark:text-primary-50">
+        <p className="py-2">Prêt(e) à apprendre autrement ?</p>
+        <Button className="rounded-full py-3 px-6">Commencer maintenant</Button>
       </section>
     </main>
   );

@@ -8,7 +8,11 @@ import ProfileContentStudent from "./_components/ProfileContent/ProfileContentSt
 import ProfileContentTeacher from "./_components/ProfileContent/ProfileContentTeacher";
 import SuggestionProfileStudentList from "./_components/stduentSugguestion/SugguestionProfileStudentList";
 import TeacherVideosList from "./_components/TeacherVideosList";
-
+export const metadata = {
+  title: "Mon profil",
+  description:
+    "Accédez à votre profil personnel pour consulter vos informations, vos vidéos, vos suggestions ou vos paramètres, selon votre rôle.",
+};
 async function ProfileContent() {
   const {
     user,

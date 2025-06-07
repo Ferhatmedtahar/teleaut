@@ -5,7 +5,46 @@ import { redirect } from "next/navigation";
 import ErrorProfile from "../_components/ErrorProfile";
 import ProfileContent from "../_components/profileByid/ProfileContent";
 import VisitorsProfile from "../_components/profileByid/visitorsTeacher/VisitorsProfile";
+import { Metadata } from "next";
+import { cache } from "react";
 
+const getUser = cache(getUserById);
+export async function generateMetadata({
+  params,
+}: {
+  readonly params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const { user } = await getUser(id);
+
+  return {
+    title: `Profil de ${user.first_name} ${user?.last_name}`,
+    description: user?.bio,
+    authors: [
+      {
+        name: user.first_name ?? "Teacher",
+      },
+    ],
+    openGraph: {
+      title: `${user.first_name} | Cognacia`,
+      description: user.bio,
+      type: "article",
+      url: `https://cognacia.vercel.app/profile/${user.id}`,
+      publishedTime: user?.created_at,
+      modifiedTime: user?.created_at,
+      authors: [`https://cognacia.vercel.app/profile/${user.id}`],
+      images: [
+        {
+          url: `${user?.profile_url}`,
+          width: 1024,
+          height: 576,
+          alt: `${user.first_name} ${user?.last_name}`,
+          type: "image/png",
+        },
+      ],
+    },
+  };
+}
 export default async function Profile({
   params,
 }: {
