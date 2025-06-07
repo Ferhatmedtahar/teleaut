@@ -149,7 +149,7 @@ export default function GuestNavbar({ className }: GuestNavbarProps) {
                 Se connecter
               </Button>
             </Link>
-            <Link href="/sign-up" passHref>
+            <Link href="/sign-up/info" passHref>
               <Button
                 variant="default"
                 size="sm"

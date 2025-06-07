@@ -35,8 +35,6 @@ export async function getRelatedVideos(
   let isFallback = false;
 
   if (videosToProcess.length === 0) {
-    console.log("No related videos found, fetching latest videos as fallback");
-
     const { data: latestVideos, error: latestError } = await supabase
       .from("videos")
       .select("*")

@@ -3,6 +3,11 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import ResetPasswordForm from "../_components/forms/reset-password/ResetPassword";
 import { verifyToken } from "../_lib/verifyToken";
+export const metadata = {
+  title: "Reinitialiser le mot de passe",
+  description: "Reinitialiser le mot de passe",
+};
+
 export default async function ResetPasswordPage({
   searchParams,
 }: {

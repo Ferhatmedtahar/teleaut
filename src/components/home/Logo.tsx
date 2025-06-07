@@ -4,9 +4,13 @@ import { useState } from "react";
 
 interface LogoProps {
   className?: string;
+  textColor?: string;
 }
 
-export default function CognaciaLogo({ className = "" }: LogoProps) {
+export default function CognaciaLogo({
+  className = "",
+  textColor = "text-primary",
+}: LogoProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -186,7 +190,9 @@ export default function CognaciaLogo({ className = "" }: LogoProps) {
 
       {/* Logo Text - Hidden on mobile, visible from sm and up */}
       <span
-        className="hidden sm:block font-sf-ui italic font-medium tracking-tight text-primary transition-colors duration-300 text-lg"
+        className={`${
+          textColor ? textColor : "text-white"
+        } hidden sm:block font-sf-ui italic font-medium tracking-tight transition-colors duration-300 text-lg `}
         style={{
           fontFamily: "var(--font-sans)",
           letterSpacing: "-0.02em",

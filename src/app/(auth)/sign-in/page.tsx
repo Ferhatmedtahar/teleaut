@@ -2,6 +2,11 @@ import SignInForm from "@/app/(auth)/_components/forms/signIn/SignIn";
 import { Button } from "@/components/common/buttons/Button";
 import * as motion from "motion/react-client";
 import Link from "next/link";
+
+export const metadata = {
+  title: "Connexion",
+  description: "Connexion",
+};
 export default function SignInPage() {
   return (
     <div className="bg-[#355869] dark:bg-[#1F2F3F] w-full relative  ">

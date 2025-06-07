@@ -1,8 +1,13 @@
 import SignUpBasicInfoForm from "@/app/(auth)/_components/forms/signUp/info/SignUpBasicInfoForm";
 import { Button } from "@/components/common/buttons/Button";
-
 import * as motion from "motion/react-client";
 import Link from "next/link";
+
+export const metadata = {
+  title: "S'inscrire - Informations de base",
+  description: "Informations de base sur l'inscription",
+};
+
 export default function page() {
   return (
     <div className="bg-[#355869] dark:bg-[#1F2F3F] w-full relative  ">
