@@ -4,7 +4,7 @@ export async function uploadFile(
   userId: string
 ): Promise<string> {
   if (!file) throw new Error(`${fileType} file is required`);
-  const BASE_URL = process.env.SITE_URL ?? "http://localhost:3000";
+  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
   const formData = new FormData();
   formData.append("file", file);
