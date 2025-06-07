@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Accordion,
   AccordionContent,
@@ -10,14 +8,15 @@ import { BookOpen, HelpCircle, Mail, MessageCircle, Phone } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 
+export const metadata = {
+  title: "Aide | Support & FAQ - Trouve tes réponses rapidement",
+  description:
+    "Besoin d'aide pour naviguer sur la plateforme ? Trouve facilement des vidéos, contacte un professeur, ou explore notre FAQ. Notre équipe est toujours disponible pour te guider.",
+};
 export default function AidePage() {
   return (
     <main className="min-h-screen bg-background text-gray-800 pb-20">
-      {/* Hero Section */}
-      <section
-        // className="relative overflow-hidden bg-[#0F2C3F] bg-gradient-to-tr from-primary-900 to-primary-700 dark:bg-gradient-to-tr dark:from-primary-900 dark:via-primary-800 dark:to-primary-700 text-white py-12 px-6 shadow-inner"
-        className="relative overflow-hidden bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] text-white py-12 px-6 shadow-inner"
-      >
+      <section className="relative overflow-hidden bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] text-white py-12 px-6 shadow-inner">
         <div className="absolute inset-0 bg-primary/5"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-primary-600/20 to-transparent"></div>
         <div className="relative z-10 max-w-4xl mx-auto text-center">

@@ -44,7 +44,7 @@ const sfUiText = localFont({
 export const metadata: Metadata = {
   title: "Cognacia",
   description:
-    "Cognacia is a E-learning platform for students and teachers, Based on Tunisia",
+    "Cognacia est une plateforme d'apprentissage en ligne pour les étudiants et les enseignants, basée en Tunisie",
 };
 
 export default function RootLayout({

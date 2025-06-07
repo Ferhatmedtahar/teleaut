@@ -64,15 +64,21 @@ export default function GuestHomePage({
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
-      <section className="opacity-95 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] px-4 py-24 sm:py-32 md:px-8 lg:px-10 relative border-b border-border/60 dark:border-border/90 ">
+      <section className="opacity-95 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] px-4 py-26 sm:py-32 md:px-8 lg:px-10 relative border-b border-border/60 dark:border-border/90 ">
         <Image
           src={`icons/guestBlob.svg`}
           alt="Background Blob"
-          className=" opacity-50 bottom-4 left-0 absolute z-10  pointer-events-none"
+          className=" opacity-60 bottom-4 left-0 absolute z-10  animate-pulse pointer-events-none"
           height={500}
           width={500}
         />
-
+        <Image
+          src={`icons/guestBlob.svg`}
+          alt="Background Blob"
+          className="  top-4 right-0 absolute z-10  animate-pulse pointer-events-none"
+          height={500}
+          width={500}
+        />
         <motion.div
           className="mx-auto max-w-4xl text-center relative z-0"
           initial="initial"
@@ -85,12 +91,12 @@ export default function GuestHomePage({
             className="mb-10"
           >
             <motion.div
-              className="cursor-default inline-flex items-center gap-2 px-4 py-2 rounded-full  border bg-primary-900/70 border-[#355869]/40 mb-10"
+              className="cursor-default inline-flex items-center gap-1.5 sm:gap-2 px-4 py-2 rounded-full  border bg-primary-900/70 border-[#355869]/40 mb-10"
               whileHover={{ scale: 1.03, y: -2 }}
               transition={{ duration: 0.8, ease: [0.22, 0.03, 0.26, 1] }}
             >
               <Sparkles className="w-4 h-4 text-white" />
-              <span className="text-sm font-medium text-white">
+              <span className="text-xs sm:text-sm font-medium text-white text-nowrap">
                 Plateforme d&apos;apprentissage de confiance
               </span>
             </motion.div>

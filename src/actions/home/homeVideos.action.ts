@@ -171,15 +171,12 @@ export async function getBranchAndClass(): Promise<{
   const supabase = await createClient();
 
   try {
-    // Get current user
     const { user, success } = await getCurrentUser();
-    console.log("Current user:", user);
     if (!success || !user) {
       console.error("Error getting current user:");
       return { success: false, branchAndClass: null };
     }
 
-    // Get user profile information
     const { data: userProfile, error: profileError } = await supabase
       .from("users")
       .select("class, branch, role")

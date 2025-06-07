@@ -38,7 +38,7 @@ export default function VideoHistory({
       className="flex flex-col sm:flex-row border-b border-border/20 dark:border-border/90 pb-3 sm:pb-4 gap-3 sm:gap-4"
     >
       {/* Video Thumbnail */}
-      <div className="relative h-[180px] sm:h-[90px] w-full sm:w-[160px] flex-shrink-0">
+      <div className="relative h-[180px] sm:h-[90px] w-full sm:w-[160px] flex-shrink-0 border border-border/30 dark:border-border/80 rounded-md ">
         <Link href={`/videos/${video.id}`}>
           <Image
             src={video.thumbnail_url ?? "/images/placeholder-thumbnail.jpg"}

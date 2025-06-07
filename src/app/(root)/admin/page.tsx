@@ -5,12 +5,11 @@ import StatsCards from "./_components/dashboard/StatsCards";
 import UserChart from "./_components/dashboard/user-chart";
 import VideoChart from "./_components/dashboard/VideoChart";
 import { getAdminStats, getVideoStatsOverTime } from "./_lib/admin";
-
 export const metadata = {
-  title: "Admin Dashboard",
-  description: "Admin dashboard for managing the platform",
+  title: "Tableau de Bord Admin | Gestion de la Plateforme",
+  description:
+    "Accédez aux outils essentiels pour gérer les utilisateurs, le contenu, les statistiques et les paramètres. Le centre de contrôle principal pour administrer efficacement la plateforme.",
 };
-
 async function DashboardContent() {
   const stats = await getAdminStats();
   const videosOverTime = await getVideoStatsOverTime();

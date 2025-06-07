@@ -1,6 +1,10 @@
 import { Button } from "@/components/common/buttons/Button";
 import Link from "next/link";
 import ForgotPasswordForm from "../_components/forms/forgot-password/ForgotPasswordForm";
+export const metadata = {
+  title: "Mot de passe oublé",
+  description: "Mot de passe oublé",
+};
 export default function ForgotPasswordPage() {
   return (
     <div className="bg-[#355869]  dark:bg-[#1F2F3F] w-full relative">
