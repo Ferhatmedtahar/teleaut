@@ -59,6 +59,7 @@
 // }
 // app/(root)/layout.tsx
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
+import GuestNavbar from "@/components/navigation/GuestNavBar";
 import {
   MobileSidebarDrawer,
   MobileSidebarProvider,
@@ -69,7 +70,6 @@ import { createClient } from "@/lib/supabase/server";
 import { UserProvider } from "@/providers/UserProvider";
 import { redirect } from "next/navigation";
 import AuthGuard from "../(auth)/_components/AuthGuardRouter";
-import GuestNavbar from "@/components/navigation/GuestNavBar";
 
 export default async function RootLayout({
   children,
