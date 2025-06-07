@@ -30,7 +30,7 @@ export async function getHomePageVideos(): Promise<{
       .select("*")
       .order("created_at", { ascending: false })
       .limit(10)
-      .neq("id", featuredVideos[0]?.id || "");
+      .neq("id", featuredVideos[0]?.id ?? "");
 
     if (explorerError) {
       console.error("Error fetching explorer videos:", explorerError);

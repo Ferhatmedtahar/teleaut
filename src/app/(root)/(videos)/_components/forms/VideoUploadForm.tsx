@@ -149,11 +149,11 @@ export default function VideoUploadForm({
 
   async function onSubmit(data: UploadVideoSchemaType) {
     if (
-      data.branch?.length !== 0 &&
+      data.branch?.length == 0 &&
       availableBranches.length != 1 &&
       availableBranches[0] != "Aucune filière"
     ) {
-      toast.error("Veuillez sélectionner une succursale");
+      toast.error("Veuillez sélectionner une branche");
       return;
     }
     if (!data.videoFile) {

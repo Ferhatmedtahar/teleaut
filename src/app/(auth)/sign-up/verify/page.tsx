@@ -22,10 +22,10 @@ export default function VerifyPage() {
     <div className="bg-[#355869] dark:bg-[#1F2F3F] w-full relative">
       <div className="flex flex-col items-center justify-center h-screen py-10 gap-6 sm:gap-8 md:gap-10 lg:gap-14 bg-gray-50 dark:bg-background  px-6 lg:items-start lg:px-24 lg:rounded-tl-[6rem]">
         <div className="flex flex-col items-center justify-center gap-4 w-full ">
-          <h1 className="text-xl text-gray-800 font-semibold">
+          <h1 className="text-xl text-gray-800 dark:text-primary-100 font-semibold">
             Verifying your account...
           </h1>
-          <p className="text-gray-500">
+          <p className="text-gray-500 dark:text-gray-400">
             Please wait while we complete your verification.
           </p>
           <div className="flex items-center justify-center">
