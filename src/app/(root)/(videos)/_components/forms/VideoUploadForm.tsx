@@ -370,7 +370,7 @@ export default function VideoUploadForm({
       // Upload video directly to Bunny Stream with progress tracking
       console.log(videoFile);
       const videoUrl = await uploadVideoDirectly(data.videoFile, userId);
-
+      console.log("VIDEO URL", videoUrl);
       toast.dismiss(uploadToastId);
       toast.success("Vidéo téléchargée avec succès!");
 
@@ -390,6 +390,7 @@ export default function VideoUploadForm({
         branch:
           data.branch?.length == 1 && data.branch[0] == "" ? null : data.branch,
       });
+      console.log(result);
 
       toast.dismiss(uploadToastId2);
 

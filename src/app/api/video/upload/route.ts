@@ -5,31 +5,73 @@ import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
 import { v4 as uuidv4 } from "uuid";
 
+// export async function POST(req: NextRequest) {
+//   try {
+//     const formData = await req.formData();
+//     const file = formData.get("file") as File;
+//     const userId = formData.get("userId") as string;
+
+//     if (!file || !userId) {
+//       return NextResponse.json(
+//         { message: "Missing file or user ID" },
+//         { status: 400 }
+//       );
+//     }
+//     console.log(file, userId);
+
+//     const fileExtension = file.name.split(".").pop();
+//     const fileName = `${uuidv4()}.${fileExtension}`;
+//     const tempPath = join("/tmp", fileName);
+
+//     const bytes = await file.arrayBuffer();
+//     const buffer = Buffer.from(bytes);
+//     await writeFile(tempPath, buffer);
+
+//     const videoUrl = await uploadToBunnyStream(tempPath, fileName, file.type);
+
+//     // Clean up temp file
+//     try {
+//       fs.unlinkSync(tempPath);
+//     } catch (err) {
+//       console.error("Failed to clean up temp file:", err);
+//     }
+
+//     return NextResponse.json({ success: true, videoUrl });
+//   } catch (err: any) {
+//     console.error(err);
+//     return NextResponse.json(
+//       { message: err.message ?? "Upload failed" },
+//       { status: 500 }
+//     );
+//   }
+// }
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
-    const file = formData.get("file") as File;
-    const userId = formData.get("userId") as string;
+    const { fileBase64, fileName, fileType, userId } = await req.json();
 
-    if (!file || !userId) {
+    if (!fileBase64 || !fileName || !fileType || !userId) {
       return NextResponse.json(
-        { message: "Missing file or user ID" },
+        { message: "Missing file, filename, type, or userId" },
         { status: 400 }
       );
     }
-    console.log(file, userId);
 
-    const fileExtension = file.name.split(".").pop();
-    const fileName = `${uuidv4()}.${fileExtension}`;
-    const tempPath = join("/tmp", fileName);
+    console.log("User ID:", userId);
+    console.log("Filename:", fileName);
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    // Strip base64 header if present
+    const base64Data = fileBase64.split(",").pop();
+    const buffer = Buffer.from(base64Data!, "base64");
+
+    const ext = fileName.split(".").pop();
+    const uniqueName = `${uuidv4()}.${ext}`;
+    const tempPath = join("/tmp", uniqueName);
+
     await writeFile(tempPath, buffer);
 
-    const videoUrl = await uploadToBunnyStream(tempPath, fileName, file.type);
+    const videoUrl = await uploadToBunnyStream(tempPath, uniqueName, fileType);
 
-    // Clean up temp file
+    // Clean up
     try {
       fs.unlinkSync(tempPath);
     } catch (err) {
@@ -38,7 +80,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, videoUrl });
   } catch (err: any) {
-    console.error(err);
+    console.error("Upload failed:", err);
     return NextResponse.json(
       { message: err.message ?? "Upload failed" },
       { status: 500 }
