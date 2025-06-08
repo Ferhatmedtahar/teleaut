@@ -4,12 +4,12 @@ export async function uploadVideoDirectly(
 ): Promise<string> {
   if (!file) throw new Error("Video file is required");
 
-  // const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const formData = new FormData();
   formData.append("file", file);
   formData.append("userId", userId);
   try {
-    const response = await fetch(`/api/video/upload`, {
+    const response = await fetch(`${BASE_URL}/api/video/upload`, {
       method: "POST",
       body: formData,
     });
