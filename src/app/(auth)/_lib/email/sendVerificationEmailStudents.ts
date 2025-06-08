@@ -39,14 +39,7 @@ export async function sendVerificationEmail(
       },
     });
 
-    // const verificationUrl = `https://${process.env.NEXT_PUBLIC_SITE_URL}/sign-up/verify?token=${token}`;
-    const verificationUrl = `${
-      process.env.NODE_ENV === "production" ? "https" : "http"
-    }://${
-      process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_SITE_URL
-        : "localhost:3000"
-    }/sign-up/verify?token=${token}`;
+    const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/sign-up/verify?token=${token}`;
 
     const mailOptions = {
       from: process.env.EMAIL_FROM,
@@ -148,7 +141,7 @@ export async function sendVerificationEmail(
         .cta-button {
             display: inline-block;
             background: linear-gradient(135deg, #355869 0%, #4a7280 100%);
-            color: white;
+            color: white !important;
             padding: 15px 30px;
             text-decoration: none;
             border-radius: 8px;

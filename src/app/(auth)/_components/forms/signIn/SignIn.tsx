@@ -116,7 +116,7 @@ export default function SignInForm() {
       </Button>
 
       <div className="text-center mt-6">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
           Vous n&apos;avez pas de compte ?{" "}
           <Link
             href="sign-up/info"

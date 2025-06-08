@@ -69,7 +69,9 @@ export default function UserDropDownMenu({
             redirect("/sign-in");
           }}
         >
-          <span className="text-destructive">Deconnection</span>
+          <span className="dark:text-destructive text-red-600">
+            Deconnection
+          </span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

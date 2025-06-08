@@ -147,186 +147,6 @@ export default function VideoUploadForm({
       }
     };
   }, [thumbnailPreview]);
-
-  // async function onSubmit(data: UploadVideoSchemaType) {
-  //   if (
-  //     data.branch?.length == 0 &&
-  //     availableBranches.length != 1 &&
-  //     availableBranches[0] != "Aucune filière"
-  //   ) {
-  //     toast.error("Veuillez sélectionner une branche");
-  //     return;
-  //   }
-  //   if (!data.videoFile) {
-  //     toast.error("Veuillez choisir un fichier vidéo");
-  //     return;
-  //   }
-
-  //   if (!data.class) {
-  //     toast.error("Veuillez choisir une classe");
-  //     return;
-  //   }
-
-  //   if (!data.subject || data.subject === "") {
-  //     toast.error("Veuillez choisir une matière");
-  //     return;
-  //   }
-
-  //   if (!data.title) {
-  //     toast.error("Veuillez choisir un titre");
-  //     return;
-  //   }
-
-  //   if (!data.thumbnailFile) {
-  //     toast.error("Veuillez choisir une thumbnail");
-  //     return;
-  //   }
-
-  //   let processingToastId: string | number | undefined = undefined;
-
-  //   try {
-  //     const uploadToastId = toast.loading("Téléchargement en cours...");
-
-  //     const result = await uploadVideo({
-  //       videoFile: data.videoFile,
-  //       thumbnailFile: data.thumbnailFile,
-  //       notesFile: data.notesFile ?? null,
-  //       documentsFile: data.documentsFile ?? null,
-  //       title: data.title,
-  //       subject: data.subject.toLowerCase(),
-  //       classValue: data.class.toLowerCase(),
-  //       description: data.description ?? "",
-  //       teacher_id: userId,
-  //       branch:
-  //         data.branch?.length == 1 && data.branch[0] == "" ? null : data.branch,
-  //     });
-
-  //     toast.dismiss(uploadToastId);
-
-  //     if (result.success) {
-  //       toast.success("Vidéo téléchargée, traitement commencé...");
-
-  //       const videoId = result.id;
-
-  //       processingToastId = toast.loading(
-  //         "Vidéo téléchargée, traitement en cours...",
-  //         {
-  //           id: `processing-toast`,
-  //           duration: Infinity,
-  //         }
-  //       );
-
-  //       // Polling logic
-  //       const checkStatus = async () => {
-  //         const BASE_URL =
-  //           process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  //         try {
-  //           const statusResponse = await fetch(
-  //             `${BASE_URL}/api/video/video-status/${videoId}`
-  //           );
-
-  //           if (!statusResponse.ok) {
-  //             console.error(
-  //               "Failed to fetch video status:",
-  //               await statusResponse.text()
-  //             );
-  //             toast.error("Échec du suivi de l'état du traitement vidéo.", {
-  //               id: processingToastId,
-  //             });
-  //             clearInterval(interval);
-  //             toast.dismiss(processingToastId);
-  //             return;
-  //           }
-
-  //           const data = await statusResponse.json();
-
-  //           const status = data.status;
-
-  //           let statusMessage = "Traitement vidéo...";
-  //           let shouldPoll = true;
-
-  //           switch (status) {
-  //             case 0:
-  //               statusMessage = "Vidéo en attente de traitement...";
-  //               break;
-  //             case 1:
-  //               statusMessage = "Début du traitement vidéo...";
-  //               break;
-  //             case 2:
-  //               statusMessage = "Encodage vidéo...";
-  //               break;
-  //             case 4:
-  //               statusMessage = "Traitement des résolutions...";
-  //               break;
-  //             case 3:
-  //               statusMessage = "Vidéo prête !";
-  //               shouldPoll = false;
-  //               break;
-  //             case 5:
-  //               statusMessage = "Échec du traitement vidéo.";
-  //               shouldPoll = false;
-  //               break;
-  //             default:
-  //               statusMessage = `Vous êtes presque arrivés!`;
-  //               break;
-  //           }
-
-  //           toast.loading(statusMessage, {
-  //             id: processingToastId,
-  //             duration: shouldPoll ? Infinity : 3000,
-  //           });
-
-  //           if (!shouldPoll) {
-  //             clearInterval(interval);
-
-  //             if (status === 3) {
-  //               toast.success("Vidéo prête !", { id: processingToastId });
-  //               router.push(`/videos/${videoId}`);
-  //             } else if (status === 5) {
-  //               toast.error("Échec du traitement vidéo.", {
-  //                 id: processingToastId,
-  //               });
-  //             }
-
-  //             toast.dismiss(processingToastId);
-  //           }
-  //         } catch (error) {
-  //           console.error("Erreur pendant le polling :", error);
-  //           toast.error("Erreur réseau pendant le suivi de la vidéo.", {
-  //             id: processingToastId,
-  //           });
-  //           clearInterval(interval);
-  //           toast.dismiss(processingToastId);
-  //         }
-  //       };
-
-  //       const interval = setInterval(checkStatus, 3000); // Start polling every 3s
-  //       checkStatus();
-
-  //       reset();
-  //       setThumbnailPreview(null);
-  //       if (videoInputRef.current) videoInputRef.current.value = "";
-  //       if (thumbnailInputRef.current) thumbnailInputRef.current.value = "";
-  //       if (notesInputRef.current) notesInputRef.current.value = "";
-  //       if (documentsInputRef.current) documentsInputRef.current.value = "";
-  //       setValue("subject", "");
-  //       setValue("class", "");
-  //       setValue("branch", []);
-  //       setSelectedClass("");
-  //       setAvailableBranches([]);
-  //     }
-  //   } catch (err) {
-  //     toast.dismiss();
-
-  //     console.error("Upload error:", err);
-
-  //     toast.error(
-  //       err instanceof Error
-  //         ? err.message
-  //         : "Une erreur s'est produite lors du téléchargement"
-  //     );
-  //   }
-  // }
   async function onSubmit(data: UploadVideoSchemaType) {
     if (
       data.branch?.length == 0 &&
@@ -367,10 +187,8 @@ export default function VideoUploadForm({
     try {
       uploadToastId = toast.loading("Téléchargement en cours...");
 
-      // Upload video directly to Bunny Stream with progress tracking
-      console.log(videoFile);
       const videoUrl = await uploadVideoSecureClient(data.videoFile, userId);
-      console.log("VIDEO URL", videoUrl);
+
       toast.dismiss(uploadToastId);
       toast.success("Vidéo téléchargée avec succès!");
 
@@ -390,7 +208,6 @@ export default function VideoUploadForm({
         branch:
           data.branch?.length == 1 && data.branch[0] == "" ? null : data.branch,
       });
-      console.log(result);
 
       toast.dismiss(uploadToastId2);
 
@@ -574,7 +391,7 @@ export default function VideoUploadForm({
                 type="button"
                 variant="outline"
                 onClick={() => videoInputRef.current?.click()}
-                className="bg-transparent border-white text-white hover:bg-white hover:text-primary-700"
+                className="bg-transparent border-white text-white hover:bg-white  hover:text-primary-700  dark:text-white dark:hover:text-white/85"
               >
                 Changer la vidéo
               </Button>
@@ -591,7 +408,7 @@ export default function VideoUploadForm({
                 type="button"
                 variant="outline"
                 onClick={() => videoInputRef.current?.click()}
-                className="bg-transparent border-white text-white hover:bg-white hover:text-primary-700"
+                className="bg-transparent border-white text-white hover:bg-white  dark:text-white dark:hover:text-white/85  hover:text-primary-700"
               >
                 Sélectionner un fichier
               </Button>
@@ -904,7 +721,7 @@ export default function VideoUploadForm({
               )}
             </div>
             {notesFile && (
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-300">
                 {notesFile.name} ({(notesFile.size / 1024).toFixed(2)} KB)
               </p>
             )}
@@ -949,7 +766,7 @@ export default function VideoUploadForm({
               )}
             </div>
             {documentsFile && (
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-300">
                 {documentsFile.name} ({(documentsFile.size / 1024).toFixed(2)}{" "}
                 KB)
               </p>
@@ -976,7 +793,7 @@ export default function VideoUploadForm({
             className={`border-2 border-dashed rounded-md h-48 flex flex-col items-center justify-center cursor-pointer relative overflow-hidden ${
               thumbnailPreview
                 ? "border-primary-400 bg-indigo-50"
-                : "hover:bg-gray-50 border-primary-400"
+                : "hover:bg-border/80 border-primary-400"
             }`}
             onClick={() => thumbnailInputRef.current?.click()}
           >
@@ -1013,9 +830,9 @@ export default function VideoUploadForm({
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-full p-4">
+              <div className="flex flex-col items-center justify-center text-gray-500  dark:text-gray-300  h-full p-4">
                 <ImagePlus className="w-10 h-10 text-gray-400 mb-2" />
-                <p className="text-sm text-gray-500 text-center">
+                <p className="text-sm text-gray-500  dark:text-gray-200 text-center">
                   Cliquez pour ajouter une miniature
                 </p>
               </div>

@@ -1,6 +1,4 @@
 "use client";
-import { useState } from "react";
-import { Check, ChevronsUpDown, X } from "lucide-react";
 import { Button } from "@/components/common/buttons/Button";
 import {
   Command,
@@ -17,6 +15,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Check, ChevronsUpDown, X } from "lucide-react";
+import { useState } from "react";
 
 // Define the specialty options grouped by school level
 const specialtyOptions = [
@@ -222,7 +222,7 @@ export default function SpecialtiesPicker({
       <Label className="block mb-2 font-medium">Spécialités</Label>
       <div className="relative mt-1">
         <Popover open={specialtiesOpen} onOpenChange={setSpecialtiesOpen}>
-          <PopoverTrigger asChild>
+          <PopoverTrigger asChild className="dark:hover:text-white">
             <Button
               aria-label="Sélectionner des spécialités"
               variant="outline"
@@ -234,17 +234,20 @@ export default function SpecialtiesPicker({
                   {selectedSpecialties.length > 1 ? "s" : ""}
                 </span>
               ) : (
-                <span className="text-muted-foreground">
+                <span className="text-primary-900 dark:text-primary-200">
                   Sélectionner des spécialités
                 </span>
               )}
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0  text-primary-900 dark:text-primary-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[300px] p-0" align="start">
-            <Command>
-              <CommandInput placeholder="Rechercher des spécialités..." />
-              <CommandEmpty className="p-2 text-sm">
+            <Command className=" dark:bg-primary-950">
+              <CommandInput
+                className="placeholder:text-primary-900 dark:placeholder:text-primary-200 text-primary-900 dark:text-white"
+                placeholder="Rechercher des spécialités..."
+              />
+              <CommandEmpty className="p-2 text-sm text-primary-900 dark:text-white">
                 Aucune spécialité trouvée.
               </CommandEmpty>
               <CommandList className="max-h-[300px]">
@@ -266,7 +269,7 @@ export default function SpecialtiesPicker({
                           >
                             <Check
                               className={cn(
-                                "mr-2 h-4 w-4",
+                                "mr-2 h-4 w-4 text-primary-900 dark:text-white",
                                 isSelected ? "opacity-100" : "opacity-0"
                               )}
                             />

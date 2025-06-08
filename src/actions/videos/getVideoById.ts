@@ -19,6 +19,24 @@ export async function getVideoById(id: string): Promise<{
     return { success: false };
   }
 
+  const [documentsRes, notesRes] = await Promise.all([
+    video.documents_url
+      ? supabase
+          .from("user_files")
+          .select("title")
+          .eq("file_url", video.documents_url)
+          .in("file_type", ["documents", "notes"])
+      : Promise.resolve({ data: [], error: null }),
+
+    video.notes_url
+      ? supabase
+          .from("user_files")
+          .select("title")
+          .eq("file_url", video.notes_url)
+          .in("file_type", ["documents", "notes"])
+      : Promise.resolve({ data: [], error: null }),
+  ]);
+
   const { data: teacher, error: teacherError } = await supabase
     .from("users")
     .select("id, first_name, last_name, profile_url")
@@ -43,6 +61,10 @@ export async function getVideoById(id: string): Promise<{
       ...video,
       teacher: {
         ...teacher,
+      },
+      documentsAndNotes: {
+        documents: documentsRes.data,
+        notes: notesRes.data,
       },
     },
   };

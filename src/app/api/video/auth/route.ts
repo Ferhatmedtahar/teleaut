@@ -11,8 +11,6 @@ export async function POST(req: NextRequest) {
     .select("id , role")
     .eq("id", userId)
     .single();
-  console.log(data, error);
-  // console.log(error || !data || data.role !== roles.teacher);
 
   if (error || !data || data.role !== roles.teacher) {
     console.error("Error fetching user:", error);

@@ -9,11 +9,16 @@ interface DocumentsTabProps {
   readonly documentsUrl: string | null;
   readonly notesUrl: string | null;
   readonly currentVideoId: string;
+  readonly fileNames: {
+    documents: { title: string }[];
+    notes: { title: string }[];
+  };
 }
 
 export default function DocumentsCommentsTab({
   documentsUrl,
   notesUrl,
+  fileNames,
   currentVideoId,
 }: DocumentsTabProps) {
   const [activeTab, setActiveTab] = useState("documents");
@@ -47,8 +52,20 @@ export default function DocumentsCommentsTab({
 
       <TabsContent value="documents" className="p-1">
         <div className="space-y-4">
-          {documentsUrl && <FileCard url={documentsUrl} key={documentsUrl} />}
-          {notesUrl && <FileCard url={notesUrl} key={notesUrl} />}
+          {documentsUrl && (
+            <FileCard
+              url={documentsUrl}
+              fileName={fileNames.documents[0].title}
+              key={documentsUrl}
+            />
+          )}
+          {notesUrl && (
+            <FileCard
+              url={notesUrl}
+              key={notesUrl}
+              fileName={fileNames.notes[0].title}
+            />
+          )}
 
           {!documentsUrl && !notesUrl && (
             <p className="text-center  text-primary-900  dark:text-primary-100">

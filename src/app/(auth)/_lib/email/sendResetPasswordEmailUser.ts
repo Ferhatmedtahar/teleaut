@@ -38,14 +38,7 @@ export async function sendResetPasswordEmail(
       },
     });
 
-    // const verificationUrl = `https://${process.env.NEXT_PUBLIC_SITE_URL}/reset-password?token=${token}`;
-    const verificationUrl = `${
-      process.env.NODE_ENV === "production" ? "https" : "http"
-    }://${
-      process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_SITE_URL
-        : "localhost:3000"
-    }/reset-password?token=${token}`;
+    const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password?token=${token}`;
 
     const mailOptions = {
       from: process.env.EMAIL_FROM,
@@ -195,7 +188,7 @@ export async function sendResetPasswordEmail(
         .cta-button {
             display: inline-block;
             background: linear-gradient(135deg, #355869 0%, #4a7280 100%);
-            color: white;
+            color: white !important;
             padding: 15px 30px;
             text-decoration: none;
             border-radius: 8px;
@@ -268,6 +261,7 @@ export async function sendResetPasswordEmail(
             .cta-button {
                 padding: 12px 25px;
                 font-size: 15px;
+
             }
             
             .security-badge {

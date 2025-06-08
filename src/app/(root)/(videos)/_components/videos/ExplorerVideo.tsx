@@ -29,7 +29,7 @@ export default function ExplorerVideo({ video, user }: ExplorerVideoProps) {
     }
     return views.toString();
   };
-  console.log(video);
+
   return (
     <Link href={`/videos/${video.id}`} className="group block w-full h-full">
       <article className="bg-white dark:bg-background rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ease-out group-hover:-translate-y-0.5 border border-border/30 dark:border-border/70 h-full flex flex-col">

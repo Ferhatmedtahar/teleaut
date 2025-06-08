@@ -18,7 +18,7 @@ export default function page() {
         >
           <SignUpDetailsForm />
           <div className="text-center mt-6">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Vous avez déjà un compte ?
               <Link
                 href="sign-in"
