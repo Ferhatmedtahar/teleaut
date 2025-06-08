@@ -153,7 +153,7 @@ export default function GuestNavbar({ className }: GuestNavbarProps) {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="px-2 sm:px-3 text-xs sm:text-sm h-8 sm:h-9 whitespace-nowrap border-[#355869]/10 hover:border-[#355869]/20 flex-shrink-0"
+                  className="px-2 sm:px-3 text-xs sm:text-sm h-8 sm:h-9 whitespace-nowrap border-[#355869]/10 hover:border-[#355869]/20 dark:hover:border-border/90 flex-shrink-0 "
                 >
                   <span className="hidden xs:inline">Se connecter</span>
                   <span className="xs:hidden">Connexion</span>
