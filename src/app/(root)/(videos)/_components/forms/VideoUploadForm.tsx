@@ -21,7 +21,7 @@ import ClassSelector from "@/components/common/select/ClassSelector";
 import { Label } from "@/components/ui/label";
 
 import { createVideoRecord } from "@/actions/videos/uploadVideo.action";
-import { uploadVideoDirectly } from "@/lib/helpers/directBunnyUpload";
+import { uploadVideoDirectly } from "@/lib/helpers/uploadVideo";
 import { useRouter } from "next/navigation";
 import BranchPicker from "./BranchPicker";
 import { uploadVideoSchema, UploadVideoSchemaType } from "./UploadVideoSchema";
