@@ -21,7 +21,7 @@ import ClassSelector from "@/components/common/select/ClassSelector";
 import { Label } from "@/components/ui/label";
 
 import { createVideoRecord } from "@/actions/videos/uploadVideo.action";
-import { uploadVideoDirectly } from "@/lib/helpers/uploadVideo";
+import { uploadVideoSecureClient } from "@/lib/helpers/uploadVideo";
 import { useRouter } from "next/navigation";
 import BranchPicker from "./BranchPicker";
 import { uploadVideoSchema, UploadVideoSchemaType } from "./UploadVideoSchema";
@@ -369,7 +369,7 @@ export default function VideoUploadForm({
 
       // Upload video directly to Bunny Stream with progress tracking
       console.log(videoFile);
-      const videoUrl = await uploadVideoDirectly(data.videoFile, userId);
+      const videoUrl = await uploadVideoSecureClient(data.videoFile, userId);
       console.log("VIDEO URL", videoUrl);
       toast.dismiss(uploadToastId);
       toast.success("Vidéo téléchargée avec succès!");
