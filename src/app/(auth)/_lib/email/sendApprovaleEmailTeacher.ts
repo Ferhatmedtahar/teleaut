@@ -38,7 +38,7 @@ export async function sendVerificationEmailTeacher(
       },
     });
 
-    const verificationUrl = `https://${process.env.NEXT_PUBLIC_SITE_URL}/sign-up/verify?token=${token}`;
+    const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/sign-up/verify?token=${token}`;
 
     const mailOptions = {
       from: process.env.EMAIL_FROM,
@@ -283,9 +283,19 @@ export async function sendVerificationEmailTeacher(
                     Pour accéder à votre tableau de bord enseignant et commencer votre parcours pédagogique, 
                     veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous.
                 </p>
-                <a href="${verificationUrl}" class="cta-button">
-                    Confirmer mon Adresse Email
-                </a>
+                <a href="${verificationUrl}" 
+   class="cta-button" 
+   style="display: inline-block;
+          background: linear-gradient(135deg, #355869 0%, #4a7280 100%);
+          color: white !important;
+          padding: 15px 30px;
+          text-decoration: none;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 16px;
+          box-shadow: 0 4px 15px rgba(53, 88, 105, 0.3);">
+   Confirmer mon Adresse Email
+</a>
             </div>
        
             <p class="footer-text">

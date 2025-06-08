@@ -3,9 +3,14 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function FileCard({ url }: { readonly url: string }) {
+export default function FileCard({
+  url,
+  fileName,
+}: {
+  readonly url: string;
+  readonly fileName?: string;
+}) {
   const fileNameWithExtension = url.split("/").pop() ?? "";
-  const fileName = fileNameWithExtension.split(".")[0].slice(0, 6);
   const fileType = fileNameWithExtension.split(".").pop();
   const { theme } = useTheme();
   return (
@@ -21,7 +26,7 @@ export default function FileCard({ url }: { readonly url: string }) {
             {fileType?.toUpperCase() ?? "FILE"}
           </span>
           <p className="font-medium text-gray-800 dark:text-white">
-            {fileName}
+            {fileName ?? "Docs"}
           </p>
         </div>
         {theme === "dark" ? (

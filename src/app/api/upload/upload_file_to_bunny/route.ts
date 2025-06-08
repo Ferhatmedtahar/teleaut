@@ -1,11 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
+import fs from "fs";
 import { writeFile } from "fs/promises";
+import { IncomingMessage } from "http";
+import https from "https";
 import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
 import { v4 as uuidv4 } from "uuid";
-import fs from "fs";
-import { IncomingMessage } from "http";
-import https from "https";
 
 export async function POST(request: NextRequest) {
   try {
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     const url = await uploadToBunny(tempPath, finalPath, file.type);
 
     if (userId) {
-      await storeFileReference(userId, fileType, url);
+      await storeFileReference(userId, fileType, file.name, url);
     }
 
     return NextResponse.json({
@@ -137,6 +137,7 @@ async function uploadToBunny(
 async function storeFileReference(
   userId: string,
   fileType: string,
+  file_name: string,
   url: string
 ): Promise<void> {
   const supabase = await createClient();
@@ -145,10 +146,11 @@ async function storeFileReference(
 
   const pullUrl = url.replace(`${STORAGE_ZONE_NAME}/`, "");
   const file_path = url.replace(`https://${hostname}/`, "");
-  // Store file reference in Supabase
+
   const { error } = await supabase.from("user_files").insert({
     user_id: userId,
     file_type: fileType,
+    title: file_name,
     file_url: pullUrl,
     file_path,
     created_at: new Date().toISOString(),

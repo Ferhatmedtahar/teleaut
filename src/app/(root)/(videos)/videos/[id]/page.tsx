@@ -100,6 +100,7 @@ async function VideoContent({ id }: { readonly id: string }) {
           <DocumentsCommentsTab
             documentsUrl={video.documents_url}
             notesUrl={video.notes_url}
+            fileNames={video.documentsAndNotes}
             currentVideoId={video.id}
           />
         </div>

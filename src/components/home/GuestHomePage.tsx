@@ -64,18 +64,18 @@ export default function GuestHomePage({
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
-      <section className="opacity-95 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] px-4 py-26 sm:py-32 md:px-8 lg:px-10 relative border-b border-border/60 dark:border-border/90 ">
+      <section className="opacity-95 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] px-4 py-12 sm:py-14 md:px-8 lg:px-10 relative border-b border-border/60 dark:border-border/90 ">
         <Image
           src={`icons/guestBlob.svg`}
           alt="Background Blob"
-          className=" opacity-60 bottom-4 left-0 absolute z-10  animate-pulse pointer-events-none"
+          className=" dark:opacity-40 opacity-60 bottom-4 left-0 absolute z-10  animate-pulse pointer-events-none"
           height={500}
           width={500}
         />
         <Image
           src={`icons/guestBlob.svg`}
           alt="Background Blob"
-          className="  top-4 right-0 absolute z-10  animate-pulse pointer-events-none"
+          className=" dark:opacity-50  opacity-70 top-0 right-0 absolute z-10  animate-pulse pointer-events-none"
           height={500}
           width={500}
         />
@@ -101,10 +101,10 @@ export default function GuestHomePage({
               </span>
             </motion.div>
 
-            <h1 className="  text-white/85   text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl leading-tight">
+            <h1 className="  text-white/90    text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl leading-tight">
               Bienvenue sur{" "}
               <motion.span
-                className="bg-gradient-to-r from-primary-800 via-primary/80 to-primary-500/60 bg-clip-text text-transparent"
+                className="bg-gradient-to-r from-primary-800 via-primary-500 to-primary-300 bg-[length:200%_200%] bg-clip-text text-transparent"
                 animate={{
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                 }}
@@ -126,7 +126,7 @@ export default function GuestHomePage({
               delay: 0.1,
               ease: [0.22, 0.03, 0.26, 1],
             }}
-            className="mb-12 text-lg text-white/90 dark:text-muted-foreground md:text-xl max-w-2xl mx-auto leading-relaxed"
+            className="mb-12 text-lg text-white/90 dark:text-primary-50 md:text-xl max-w-2xl mx-auto leading-relaxed"
           >
             Découvrez une plateforme d&apos;apprentissage innovante où
             enseignants et étudiants se connectent pour partager des
@@ -166,7 +166,7 @@ export default function GuestHomePage({
                 <Button
                   variant="outline"
                   size="lg"
-                  className=" bg-white/95 w-full sm:w-auto px-8 py-3 border-border/70 hover:border-[#355869]/20"
+                  className="dark:hover:text-white/90 bg-white/95 w-full sm:w-auto px-8 py-3 border-border/70 hover:border-[#355869]/20 transition-colors duration-200 "
                 >
                   Se connecter
                 </Button>
@@ -195,7 +195,7 @@ export default function GuestHomePage({
           </div>
         </motion.section>
       ) : (
-        <section className="px-4 py-24 md:px-6 lg:px-10">
+        <section className="px-4 py-16 md:px-6 lg:px-10">
           <div className="mx-auto max-w-6xl space-y-24">
             {explorerVideos.length > 0 ? (
               <motion.div
@@ -215,7 +215,7 @@ export default function GuestHomePage({
                   {search ? `Résultats pour "${search}"` : " Dernières vidéos"}
                 </motion.h2>
                 <motion.div
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-8"
                   variants={staggerContainer}
                 >
                   {explorerVideos.slice(0, 6).map((video) => (
@@ -309,17 +309,17 @@ export default function GuestHomePage({
                 variants={scaleIn}
                 whileHover={{ y: -1, scale: 1.01 }}
                 transition={{ duration: 0.5, ease: [0.22, 0.03, 0.26, 1] }}
-                className="text-center p-10 rounded-xl border border-[#355869]/5 bg-gradient-to-br from-card via-card to-card/95 shadow-lg hover:shadow-xl transition-shadow duration-1000"
+                className="text-center p-10 rounded-xl border border-border/30 dark:border-border/70 bg-gradient-to-br from-card via-card to-card/95 dark:from-border/15 dark:via-border/30 dark:to-border/40 shadow-lg hover:shadow-xl transition-shadow duration-1000"
               >
                 <motion.div
                   className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-[#355869]/10 to-primary/10"
                   whileHover={{ rotate: 3 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <feature.icon className="h-7 w-7 text-[#355869]" />
+                  <feature.icon className="h-7 w-7 text-border dark:text-card" />
                 </motion.div>
                 <h3 className="mb-4 text-xl font-semibold">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="dark:text-primary-50 text-primary-900 leading-relaxed">
                   {feature.description}
                 </p>
               </motion.div>
@@ -329,12 +329,26 @@ export default function GuestHomePage({
       </section>
 
       <motion.section
-        className="px-4 py-24 md:px-6 lg:px-10 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] relative overflow-hidden"
+        className=" px-4 py-24 md:px-6 lg:px-10 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] relative overflow-hidden"
         initial="initial"
         whileInView="animate"
         viewport={{ once: true, margin: "-50%" }}
         variants={staggerContainer}
       >
+        <Image
+          src={`icons/guestBlob.svg`}
+          alt="Background Blob"
+          className="  top-4 right-0 dark:opacity-50 absolute z-10  animate-pulse pointer-events-none"
+          height={500}
+          width={500}
+        />{" "}
+        <Image
+          src={`icons/guestBlob.svg`}
+          alt="Background Blob"
+          className=" opacity-60  dark:opacity-50  bottom-4 left-0 absolute z-10  animate-pulse pointer-events-none"
+          height={500}
+          width={500}
+        />
         <motion.div
           className="mx-auto max-w-4xl relative z-10"
           variants={staggerContainer}
@@ -355,7 +369,7 @@ export default function GuestHomePage({
                 transition={{ duration: 0.5, ease: [0.22, 0.03, 0.26, 1] }}
               >
                 <motion.div
-                  className="mb-3 text-4xl font-bold text-primary-50"
+                  className="mb-3 text-4xl font-bold text-white dark:text-white"
                   initial={{ scale: 0.95, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
                   viewport={{ once: true, amount: 0.1 }}
@@ -367,7 +381,9 @@ export default function GuestHomePage({
                 >
                   {stat.number}
                 </motion.div>
-                <div className="text-primary-100 font-medium">{stat.label}</div>
+                <div className=" dark:text-white/90 text-white/80 font-medium">
+                  {stat.label}
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -398,7 +414,7 @@ export default function GuestHomePage({
               delay: 0.1,
               ease: [0.22, 0.03, 0.26, 1],
             }}
-            className="mb-12 text-lg text-muted-foreground leading-relaxed"
+            className="mb-12 text-lg dark:text-primary-50 text-primary-900 leading-relaxed"
           >
             Rejoignez des milliers d&apos;apprenants qui transforment déjà leur
             avenir avec Cognacia.

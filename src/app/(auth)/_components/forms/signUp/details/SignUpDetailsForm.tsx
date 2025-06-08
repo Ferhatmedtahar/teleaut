@@ -406,7 +406,7 @@ export default function SignUpDetailsForm() {
           type="button"
           variant="outline"
           onClick={() => router.replace("/sign-up/info")}
-          className=" flex-1  py-4 "
+          className=" flex-1  py-4 dark:hover:text-white/90"
         >
           Back
         </Button>

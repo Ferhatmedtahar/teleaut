@@ -56,9 +56,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log("User ID:", userId);
-    console.log("Filename:", fileName);
-
     // Strip base64 header if present
     const base64Data = fileBase64.split(",").pop();
     const buffer = Buffer.from(base64Data!, "base64");

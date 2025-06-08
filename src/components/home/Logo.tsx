@@ -3,24 +3,24 @@
 import { useState } from "react";
 
 interface LogoProps {
-  className?: string;
-  textColor?: string;
+  readonly className?: string;
+  readonly textColor?: string;
 }
 
 export default function CognaciaLogo({
   className = "",
-  textColor = "text-primary",
+  textColor = "text-primary dark:text-primary-50",
 }: LogoProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
-      className={`${className} px-2 flex items-center gap-2`}
+      className={`${className} px-2 flex items-center gap-1`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Logo Icon */}
-      <div className="w-8 h-8 flex-shrink-0">
+      <div className="w-8 h-8 lg:h-9 lg:w-9 flex-shrink-0">
         <svg viewBox="0 0 120 120" className="w-full h-full">
           <defs>
             <linearGradient
@@ -191,8 +191,8 @@ export default function CognaciaLogo({
       {/* Logo Text - Hidden on mobile, visible from sm and up */}
       <span
         className={`${
-          textColor ? textColor : "text-white"
-        } hidden sm:block font-sf-ui italic font-medium tracking-tight transition-colors duration-300 text-lg `}
+          textColor ?? "text-white"
+        } hidden sm:block font-sf-ui italic font-medium tracking-tight transition-colors duration-300 text-lg lg:text-xl xl:text-2xl`}
         style={{
           fontFamily: "var(--font-sans)",
           letterSpacing: "-0.02em",
