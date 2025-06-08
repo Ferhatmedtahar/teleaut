@@ -20,7 +20,8 @@ import { toast } from "sonner";
 import ClassSelector from "@/components/common/select/ClassSelector";
 import { Label } from "@/components/ui/label";
 
-import { uploadVideo } from "@/actions/videos/uploadVideo.action";
+import { createVideoRecord } from "@/actions/videos/uploadVideo.action";
+import { uploadVideoDirectly } from "@/lib/helpers/directBunnyUpload";
 import { useRouter } from "next/navigation";
 import BranchPicker from "./BranchPicker";
 import { uploadVideoSchema, UploadVideoSchemaType } from "./UploadVideoSchema";
@@ -96,7 +97,7 @@ export default function VideoUploadForm({
   const thumbnailFile = watch("thumbnailFile");
   const notesFile = watch("notesFile");
   const documentsFile = watch("documentsFile");
-  const selectedClasses = watch("class") as string; // Ensure this is an array
+  const selectedClasses = watch("class") as string;
 
   const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -147,6 +148,185 @@ export default function VideoUploadForm({
     };
   }, [thumbnailPreview]);
 
+  // async function onSubmit(data: UploadVideoSchemaType) {
+  //   if (
+  //     data.branch?.length == 0 &&
+  //     availableBranches.length != 1 &&
+  //     availableBranches[0] != "Aucune filière"
+  //   ) {
+  //     toast.error("Veuillez sélectionner une branche");
+  //     return;
+  //   }
+  //   if (!data.videoFile) {
+  //     toast.error("Veuillez choisir un fichier vidéo");
+  //     return;
+  //   }
+
+  //   if (!data.class) {
+  //     toast.error("Veuillez choisir une classe");
+  //     return;
+  //   }
+
+  //   if (!data.subject || data.subject === "") {
+  //     toast.error("Veuillez choisir une matière");
+  //     return;
+  //   }
+
+  //   if (!data.title) {
+  //     toast.error("Veuillez choisir un titre");
+  //     return;
+  //   }
+
+  //   if (!data.thumbnailFile) {
+  //     toast.error("Veuillez choisir une thumbnail");
+  //     return;
+  //   }
+
+  //   let processingToastId: string | number | undefined = undefined;
+
+  //   try {
+  //     const uploadToastId = toast.loading("Téléchargement en cours...");
+
+  //     const result = await uploadVideo({
+  //       videoFile: data.videoFile,
+  //       thumbnailFile: data.thumbnailFile,
+  //       notesFile: data.notesFile ?? null,
+  //       documentsFile: data.documentsFile ?? null,
+  //       title: data.title,
+  //       subject: data.subject.toLowerCase(),
+  //       classValue: data.class.toLowerCase(),
+  //       description: data.description ?? "",
+  //       teacher_id: userId,
+  //       branch:
+  //         data.branch?.length == 1 && data.branch[0] == "" ? null : data.branch,
+  //     });
+
+  //     toast.dismiss(uploadToastId);
+
+  //     if (result.success) {
+  //       toast.success("Vidéo téléchargée, traitement commencé...");
+
+  //       const videoId = result.id;
+
+  //       processingToastId = toast.loading(
+  //         "Vidéo téléchargée, traitement en cours...",
+  //         {
+  //           id: `processing-toast`,
+  //           duration: Infinity,
+  //         }
+  //       );
+
+  //       // Polling logic
+  //       const checkStatus = async () => {
+  //         const BASE_URL =
+  //           process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  //         try {
+  //           const statusResponse = await fetch(
+  //             `${BASE_URL}/api/video/video-status/${videoId}`
+  //           );
+
+  //           if (!statusResponse.ok) {
+  //             console.error(
+  //               "Failed to fetch video status:",
+  //               await statusResponse.text()
+  //             );
+  //             toast.error("Échec du suivi de l'état du traitement vidéo.", {
+  //               id: processingToastId,
+  //             });
+  //             clearInterval(interval);
+  //             toast.dismiss(processingToastId);
+  //             return;
+  //           }
+
+  //           const data = await statusResponse.json();
+
+  //           const status = data.status;
+
+  //           let statusMessage = "Traitement vidéo...";
+  //           let shouldPoll = true;
+
+  //           switch (status) {
+  //             case 0:
+  //               statusMessage = "Vidéo en attente de traitement...";
+  //               break;
+  //             case 1:
+  //               statusMessage = "Début du traitement vidéo...";
+  //               break;
+  //             case 2:
+  //               statusMessage = "Encodage vidéo...";
+  //               break;
+  //             case 4:
+  //               statusMessage = "Traitement des résolutions...";
+  //               break;
+  //             case 3:
+  //               statusMessage = "Vidéo prête !";
+  //               shouldPoll = false;
+  //               break;
+  //             case 5:
+  //               statusMessage = "Échec du traitement vidéo.";
+  //               shouldPoll = false;
+  //               break;
+  //             default:
+  //               statusMessage = `Vous êtes presque arrivés!`;
+  //               break;
+  //           }
+
+  //           toast.loading(statusMessage, {
+  //             id: processingToastId,
+  //             duration: shouldPoll ? Infinity : 3000,
+  //           });
+
+  //           if (!shouldPoll) {
+  //             clearInterval(interval);
+
+  //             if (status === 3) {
+  //               toast.success("Vidéo prête !", { id: processingToastId });
+  //               router.push(`/videos/${videoId}`);
+  //             } else if (status === 5) {
+  //               toast.error("Échec du traitement vidéo.", {
+  //                 id: processingToastId,
+  //               });
+  //             }
+
+  //             toast.dismiss(processingToastId);
+  //           }
+  //         } catch (error) {
+  //           console.error("Erreur pendant le polling :", error);
+  //           toast.error("Erreur réseau pendant le suivi de la vidéo.", {
+  //             id: processingToastId,
+  //           });
+  //           clearInterval(interval);
+  //           toast.dismiss(processingToastId);
+  //         }
+  //       };
+
+  //       const interval = setInterval(checkStatus, 3000); // Start polling every 3s
+  //       checkStatus();
+
+  //       reset();
+  //       setThumbnailPreview(null);
+  //       if (videoInputRef.current) videoInputRef.current.value = "";
+  //       if (thumbnailInputRef.current) thumbnailInputRef.current.value = "";
+  //       if (notesInputRef.current) notesInputRef.current.value = "";
+  //       if (documentsInputRef.current) documentsInputRef.current.value = "";
+  //       setValue("subject", "");
+  //       setValue("class", "");
+  //       setValue("branch", []);
+  //       setSelectedClass("");
+  //       setAvailableBranches([]);
+  //     }
+  //   } catch (err) {
+  //     toast.dismiss();
+
+  //     console.error("Upload error:", err);
+
+  //     toast.error(
+  //       err instanceof Error
+  //         ? err.message
+  //         : "Une erreur s'est produite lors du téléchargement"
+  //     );
+  //   }
+  // }
   async function onSubmit(data: UploadVideoSchemaType) {
     if (
       data.branch?.length == 0 &&
@@ -181,19 +361,29 @@ export default function VideoUploadForm({
       return;
     }
 
+    let uploadToastId: string | number | undefined = undefined;
     let processingToastId: string | number | undefined = undefined;
 
     try {
-      const uploadToastId = toast.loading("Téléchargement en cours...");
+      uploadToastId = toast.loading("Téléchargement en cours...");
 
-      const result = await uploadVideo({
-        videoFile: data.videoFile,
+      // Upload video directly to Bunny Stream with progress tracking
+      console.log(videoFile);
+      const videoUrl = await uploadVideoDirectly(data.videoFile, userId);
+
+      toast.dismiss(uploadToastId);
+      toast.success("Vidéo téléchargée avec succès!");
+
+      // Now upload other files and create video record
+      const uploadToastId2 = toast.loading("Traitement des fichiers...");
+
+      const result = await createVideoRecord({
+        videoUrl,
         thumbnailFile: data.thumbnailFile,
         notesFile: data.notesFile ?? null,
         documentsFile: data.documentsFile ?? null,
         title: data.title,
         subject: data.subject.toLowerCase(),
-
         classValue: data.class.toLowerCase(),
         description: data.description ?? "",
         teacher_id: userId,
@@ -201,10 +391,10 @@ export default function VideoUploadForm({
           data.branch?.length == 1 && data.branch[0] == "" ? null : data.branch,
       });
 
-      toast.dismiss(uploadToastId);
+      toast.dismiss(uploadToastId2);
 
       if (result.success) {
-        toast.success("Vidéo téléchargée, traitement commencé...");
+        toast.success("Vidéo créée avec succès!");
 
         const videoId = result.id;
 
@@ -216,7 +406,7 @@ export default function VideoUploadForm({
           }
         );
 
-        // Polling logic
+        // Rest of your polling logic remains the same
         const checkStatus = async () => {
           const BASE_URL =
             process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -239,7 +429,6 @@ export default function VideoUploadForm({
             }
 
             const data = await statusResponse.json();
-
             const status = data.status;
 
             let statusMessage = "Traitement vidéo...";
@@ -300,7 +489,7 @@ export default function VideoUploadForm({
           }
         };
 
-        const interval = setInterval(checkStatus, 3000); // Start polling every 3s
+        const interval = setInterval(checkStatus, 3000);
         checkStatus();
 
         reset();
@@ -316,7 +505,8 @@ export default function VideoUploadForm({
         setAvailableBranches([]);
       }
     } catch (err) {
-      toast.dismiss();
+      toast.dismiss(uploadToastId);
+      toast.dismiss(processingToastId);
 
       console.error("Upload error:", err);
 
@@ -327,6 +517,7 @@ export default function VideoUploadForm({
       );
     }
   }
+
   const clearFile = (type: "video" | "thumbnail" | "notes" | "documents") => {
     switch (type) {
       case "video":

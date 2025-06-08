@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+    console.log(file, userId);
 
     const fileExtension = file.name.split(".").pop();
     const fileName = `${uuidv4()}.${fileExtension}`;
