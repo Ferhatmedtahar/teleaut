@@ -1,12 +1,12 @@
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { getUserById } from "@/actions/profile/getUserById.action";
 import { roles } from "@/types/roles.enum";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import ErrorProfile from "../_components/ErrorProfile";
 import ProfileContent from "../_components/profileByid/ProfileContent";
 import VisitorsProfile from "../_components/profileByid/visitorsTeacher/VisitorsProfile";
-import { Metadata } from "next";
-import { cache } from "react";
 
 const getUser = cache(getUserById);
 export async function generateMetadata({
@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { user } = await getUser(id);
 
   return {
-    title: `Profil de ${user.first_name} ${user?.last_name}`,
+    title: `Profil de ${user.first_name} ${user?.last_name} | Cognacia`,
     description: user?.bio,
     authors: [
       {

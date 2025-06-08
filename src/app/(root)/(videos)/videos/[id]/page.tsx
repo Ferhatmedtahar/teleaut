@@ -22,7 +22,7 @@ export async function generateMetadata({
   const { data: video } = await getVideo(id);
 
   return {
-    title: video.title,
+    title: `${video.title} | Cognacia`,
     description: video.description,
     authors: [
       {
