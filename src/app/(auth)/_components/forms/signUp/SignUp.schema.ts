@@ -9,7 +9,7 @@ export const SignUpSchema = z.object({
     .string()
     .refine(
       (value) => /^(\+216)\d{8}$/.test(value ?? ""),
-      "Invalid phone number"
+      "Le numéro de téléphone doit être au format +216 suivi de 8 chiffres (ex: +21612345678)"
     ),
   role: z.enum(["teacher", "student"], {
     message: "Please select a role",
