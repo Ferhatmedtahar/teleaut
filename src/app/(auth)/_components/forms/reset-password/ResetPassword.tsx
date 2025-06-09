@@ -83,14 +83,14 @@ export default function ResetPasswordForm({ id }: { readonly id: string }) {
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center justify-center focus:ouline-none"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center justify-center focus:outline-none focus:ring-1 focus:rounded-md   focus:ring-primary-100 "
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
-                  <FiEye className="h-5 w-5 text-gray-500" />
+                  <FiEye className="h-5 w-5 text-gray-500 dark:text-gray-300" />
                 ) : (
-                  <FiEyeOff className="h-5 w-5 text-gray-500" />
+                  <FiEyeOff className="h-5 w-5 text-gray-500 dark:text-gray-300" />
                 )}
               </button>
             </div>

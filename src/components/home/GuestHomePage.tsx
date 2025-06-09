@@ -222,7 +222,6 @@ export default function GuestHomePage({
                     <motion.div
                       key={video.id}
                       variants={scaleIn}
-                      // whileHover={{ y: -1 }}
                       viewport={{ once: true }}
                       transition={{
                         duration: 0.8,
@@ -234,7 +233,7 @@ export default function GuestHomePage({
                   ))}
                 </motion.div>
               </motion.div>
-            ) : (
+            ) : search ? (
               <div>
                 <motion.h2
                   variants={fadeInUp}
@@ -257,6 +256,28 @@ export default function GuestHomePage({
                   <strong>&quot;{search}&quot;</strong>. Nous vous invitons à
                   explorer d&apos;autres sujets passionnants — votre prochaine
                   découverte vous attend.
+                </motion.p>
+              </div>
+            ) : (
+              <div>
+                <motion.h2
+                  variants={fadeInUp}
+                  className="text-3xl font-bold mb-10 text-center"
+                  transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+                >
+                  {search ? `Résultats pour "${search}"` : "Dernières vidéos"}
+                </motion.h2>
+
+                <motion.p
+                  variants={fadeInUp}
+                  className="text-lg text-center text-primary-900 dark:text-primary-50/75 max-w-xl mx-auto"
+                  transition={{
+                    duration: 0.7,
+                    ease: [0.22, 0.03, 0.26, 1],
+                    delay: 0.1,
+                  }}
+                >
+                  Aucune vidéo n&apos;a été trouvée.
                 </motion.p>
               </div>
             )}

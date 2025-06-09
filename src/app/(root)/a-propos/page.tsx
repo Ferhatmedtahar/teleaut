@@ -1,5 +1,3 @@
-import { Button } from "@/components/common/buttons/Button";
-
 export const metadata = {
   title: "À propos | Apprends à ton rythme avec plusieurs professeurs",
   description:
@@ -139,10 +137,10 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      <section className="text-center pb-12 text-gray-600 dark:text-primary-50">
+      {/* <section className="text-center pb-12 text-gray-600 dark:text-primary-50">
         <p className="py-2">Prêt(e) à apprendre autrement ?</p>
         <Button className="rounded-full py-3 px-6">Commencer maintenant</Button>
-      </section>
+      </section> */}
     </main>
   );
 }
