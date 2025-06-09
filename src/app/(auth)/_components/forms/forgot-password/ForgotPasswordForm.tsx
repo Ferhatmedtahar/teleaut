@@ -50,7 +50,7 @@ export default function ForgotPasswordForm() {
         <CardTitle className="text-2xl font-bold text-center">
           mot de passe oublié
         </CardTitle>
-        <CardDescription className="text-center">
+        <CardDescription className="text-center text-primary-900 dark:text-primary-100">
           Entrez votre adresse e-mail pour recevoir un lien de réinitialisation
           du mot de passe
         </CardDescription>

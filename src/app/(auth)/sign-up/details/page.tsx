@@ -1,14 +1,20 @@
 import SignUpDetailsForm from "@/app/(auth)/_components/forms/signUp/details/SignUpDetailsForm";
-
+import MobileCognaciaLogo from "@/components/home/MobileLogo";
 import * as motion from "motion/react-client";
 import Link from "next/link";
 export const metadata = {
   title: "S'inscrire - Détails d'inscription",
   description: "Détails d'inscription",
 };
-export default function page() {
+export default function Page() {
   return (
     <div className="bg-[#355869] dark:bg-[#1F2F3F] w-full relative  ">
+      <Link
+        href="/"
+        className="lg:hidden absolute top-5 left-5 sm:top-10 sm:left-10"
+      >
+        <MobileCognaciaLogo textColor="text-primary dark:text-primary-50" />
+      </Link>
       <div className="flex flex-col items-center justify-center h-screen py-10 gap-6 sm:gap-8 md:gap-10 lg:gap-14 bg-gray-50 dark:bg-background  px-6 lg:items-start lg:px-24 lg:rounded-tl-[6rem]">
         <motion.div
           initial={{ opacity: 0 }}
@@ -21,7 +27,7 @@ export default function page() {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Vous avez déjà un compte ?
               <Link
-                href="sign-in"
+                href="/sign-in"
                 className="text-blue-600 hover:text-blue-800 font-medium transition duration-200"
               >
                 Connectez-vous

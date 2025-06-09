@@ -9,7 +9,7 @@ export default function Layout({
   return (
     <div className="flex min-h-screen flex-col lg:flex-row bg-gray-50 dark:bg-background ">
       <Background />
-      <main className="w-full lg:w-1/2 ">{children}</main>
+      <main className="w-full lg:w-1/2 relative ">{children}</main>
     </div>
   );
 }

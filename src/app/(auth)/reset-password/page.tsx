@@ -21,7 +21,7 @@ export default async function ResetPasswordPage({
   return (
     <div className="bg-[#355869] dark:bg-[#1F2F3F] w-full relative">
       <Link href="/sign-in" className="absolute top-10 right-10">
-        <Button size={"lg"} className="text-base cursor-pointer">
+        <Button size={"sm"} className="text-sm sm:text-base cursor-pointer">
           connecter
         </Button>
       </Link>
