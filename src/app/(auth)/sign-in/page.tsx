@@ -1,5 +1,6 @@
 import SignInForm from "@/app/(auth)/_components/forms/signIn/SignIn";
 import { Button } from "@/components/common/buttons/Button";
+import MobileCognaciaLogo from "@/components/home/MobileLogo";
 import * as motion from "motion/react-client";
 import Link from "next/link";
 
@@ -10,8 +11,17 @@ export const metadata = {
 export default function SignInPage() {
   return (
     <div className="bg-[#355869] dark:bg-[#1F2F3F] w-full relative  ">
-      <Link href="/sign-up/info" className="absolute top-10 right-10">
-        <Button size={"lg"} className="text-base cursor-pointer">
+      <Link
+        href="/"
+        className="lg:hidden absolute top-5 left-5 sm:top-10 sm:left-10"
+      >
+        <MobileCognaciaLogo textColor="text-primary dark:text-primary-50" />
+      </Link>
+      <Link
+        href="/sign-up/info"
+        className="absolute top-5 right-5 sm:top-10 sm:right-10"
+      >
+        <Button className="text-sm sm:text-base cursor-pointer">
           S&apos;inscrire
         </Button>
       </Link>
@@ -23,8 +33,8 @@ export default function SignInPage() {
           className="flex  flex-col items-center lg:items-start  justify-center gap-6  max-w-md  p-2"
         >
           <div className="flex flex-col gap-1">
-            <h1 className="text-2xl font-bold">Se connecter</h1>
-            <p className="text-lg">
+            <h1 className="text-xl sm:text-2xl font-bold">Se Connecter</h1>
+            <p className="text-sm sm:text-lg">
               Ravi de vous revoir. Veuillez vous connecter à votre compte
             </p>
           </div>

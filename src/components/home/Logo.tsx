@@ -15,13 +15,12 @@ export default function CognaciaLogo({
 
   return (
     <div
-      className={`${className} px-2 flex items-center gap-1`}
+      className={`${className}  px-2 flex items-center gap-1`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Logo Icon */}
-      <div className="w-8 h-8 lg:h-9 lg:w-9 flex-shrink-0">
-        <svg viewBox="0 0 120 120" className="w-full h-full">
+      <div className="w-8 h-8 lg:h-9 lg:w-9 flex-shrink-0 ">
+        <svg viewBox="0 0 120 120" className="w-full h-full ">
           <defs>
             <linearGradient
               id="logoGradient"
@@ -41,7 +40,7 @@ export default function CognaciaLogo({
             cy="60"
             r="54"
             fill="url(#logoGradient)"
-            className={`transition-all duration-300 ${
+            className={`transition-all duration-300  ${
               isHovered ? "opacity-95" : "opacity-100"
             }`}
           />
