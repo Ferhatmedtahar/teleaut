@@ -56,10 +56,14 @@ export default function WatchHistory({
               filteredVideos.map((video) => (
                 <VideoHistory key={video.id} video={video} />
               ))
-            ) : (
+            ) : searchQuery ? (
               <p className="text-primary-900 dark:text-primary-100 text-sm sm:text-base">
                 Aucun résultat trouvé pour &quot;{searchQuery}&quot;. Essayez
                 d&apos;autres mots-clés ou vérifiez l&apos;orthographe.
+              </p>
+            ) : (
+              <p className="text-primary-900 dark:text-primary-100 text-sm sm:text-base">
+                Vous n&apos;avez pas encore regardé de videoer.
               </p>
             )}
           </div>
