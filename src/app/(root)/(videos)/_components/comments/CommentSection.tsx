@@ -24,8 +24,8 @@ import CommentItem from "./CommentItem";
 const commentSchema = z.object({
   content: z
     .string()
-    .min(1, "Comment cannot be empty")
-    .max(2000, "Comment is too long"),
+    .min(1, "Le commentaire ne peut pas être vide")
+    .max(2000, "Le commentaire est trop long"),
 });
 
 type CommentFormValues = z.infer<typeof commentSchema>;

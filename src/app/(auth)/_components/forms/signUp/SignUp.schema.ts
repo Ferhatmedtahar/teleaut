@@ -2,8 +2,12 @@ import { z } from "zod";
 const ACCEPTED_MIME_TYPES = ["application/pdf", "image/jpeg", "image/png"];
 //!the entire SignUpSchema
 export const SignUpSchema = z.object({
-  firstName: z.string().min(3, "First name must be at least 3 characters"),
-  lastName: z.string().min(3, "Last name must be at least 3 characters"),
+  firstName: z
+    .string()
+    .min(3, "Le prénom doit comporter au moins 3 caractères"),
+  lastName: z
+    .string()
+    .min(3, "Le nom de famille doit comporter au moins 3 caractères"),
   email: z.string().email(),
   phoneNumber: z
     .string()
@@ -12,17 +16,20 @@ export const SignUpSchema = z.object({
       "Le numéro de téléphone doit être au format +216 suivi de 8 chiffres (ex: +21612345678)"
     ),
   role: z.enum(["teacher", "student"], {
-    message: "Please select a role",
+    message: "Veuillez sélectionner un rôle",
   }),
 
   branch: z.string().optional(),
   class: z.string({
-    message: "Please select a class",
+    message: "Veuillez sélectionner une classe",
   }),
-  password: z.string().min(6, "Password must be at least 6 characters").max(25),
+  password: z
+    .string()
+    .min(6, "Le mot de passe doit comporter au moins 6 caractères")
+    .max(25),
   confirmPassword: z
     .string()
-    .min(6, "Password must be at least 6 characters")
+    .min(6, "Le mot de passe doit comporter au moins 6 caractères")
     .max(25),
 
   diplomeFile: z
@@ -30,7 +37,7 @@ export const SignUpSchema = z.object({
     .refine((file) => {
       return (
         file[0] instanceof File && ACCEPTED_MIME_TYPES.includes(file[0].type),
-        "Diplôme must be a PDF, JPG, or PNG file"
+        "Le diplôme doit être un fichier PDF, JPG ou PNG"
       );
     })
     .optional(),
@@ -40,7 +47,7 @@ export const SignUpSchema = z.object({
     .refine(
       (file) =>
         file[0] instanceof File && ACCEPTED_MIME_TYPES.includes(file[0].type),
-      "Carte d'identité must be a PDF file"
+      "La carte d'identité doit être un fichier PDF"
     )
     .optional(),
   identityFileBack: z
@@ -48,7 +55,7 @@ export const SignUpSchema = z.object({
     .refine(
       (file) =>
         file[0] instanceof File && ACCEPTED_MIME_TYPES.includes(file[0].type),
-      "Carte d'identité must be a PDF file"
+      "La carte d'identité doit être un fichier PDF"
     )
     .optional(),
 
