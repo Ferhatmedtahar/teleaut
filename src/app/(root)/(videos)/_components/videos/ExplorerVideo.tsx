@@ -52,10 +52,16 @@ export default function ExplorerVideo({ video, user }: ExplorerVideoProps) {
             </span>
           </div>
 
-          {/* Class badge with enhanced contrast */}
-          <div className="  absolute top-3 right-3 opacity-90 group-hover:opacity-100 transition-opacity duration-300">
-            <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-white/90 text-slate-900 backdrop-blur-md border border-black/10 shadow-lg">
-              {video.class}
+          {/* Class badge with enhanced contrast*/}
+          <div className="hidden lg:block  absolute top-3 right-3 opacity-90 group-hover:opacity-100 transition-opacity duration-300">
+            <span className="inline-flex items-center px-1.5 py-1.5 rounded-full text-xs font-semibold bg-white/90 text-slate-900 backdrop-blur-md border border-black/10 shadow-lg">
+              {video.class == "4ème année secondaire (bac)"
+                ? video.class
+                    ?.split(" ")
+                    .slice(0, -1)
+                    .join(" ")
+                    .replace("année", "an.")
+                : video.class?.replace("année", "an.")}
             </span>
           </div>
 
@@ -106,7 +112,7 @@ export default function ExplorerVideo({ video, user }: ExplorerVideoProps) {
                 </span>
               ))}
               {video.branch.length > 2 && (
-                <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-teal-50 text-teal-700 dark:bg-teal-900/20 dark:text-teal-300 border border-teal-200/50 dark:border-teal-700/50">
                   +{video.branch.length - 2}
                 </span>
               )}
