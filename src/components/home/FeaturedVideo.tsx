@@ -131,12 +131,17 @@ export default function FeaturedVideo({
                 </div>
               </div>
 
-              {featuredVideo.views && (
+              {featuredVideo?.views > 0 ? (
                 <div className="flex items-center gap-1.5 text-primary-900 dark:text-primary-50">
                   <Eye className="h-4 w-4" />
                   <span className="text-sm font-medium">
                     {featuredVideo.views.toLocaleString()} vues
                   </span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 text-primary-900 dark:text-primary-50">
+                  <Eye className="h-4 w-4" />
+                  <span className="text-sm font-medium">0 vues</span>
                 </div>
               )}
             </div>

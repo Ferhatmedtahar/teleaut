@@ -28,7 +28,7 @@ export async function signInAction(
     if (!data) {
       return {
         state: "ERROR",
-        error: "Invalid email or password",
+        error: "E-mail ou mot de passe invalide",
         inputs: { email, password },
       };
     }
@@ -43,7 +43,7 @@ export async function signInAction(
     if (data?.verification_status !== VERIFICATION_STATUS.APPROVED) {
       return {
         state: "ERROR",
-        error: "Account not verified",
+        error: "Compte non vérifié",
         inputs: { email, password },
       };
     }
@@ -52,7 +52,7 @@ export async function signInAction(
     if (!isPasswordCorrect) {
       return {
         state: "ERROR",
-        error: "Invalid email or password",
+        error: "E-mail ou mot de passe invalide",
         inputs: { email, password },
       };
     }
