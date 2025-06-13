@@ -20,7 +20,6 @@ export async function uploadVideoSecureClient(
 
     const { libraryId, apiKey } = await authResponse.json();
 
-    // Now do everything client-side with the credentials
     const videoId = await createVideoObjectClient(libraryId, apiKey, file.name);
     const uploadUrl = `https://video.bunnycdn.com/library/${libraryId}/videos/${videoId}`;
 

@@ -1,103 +1,58 @@
 "use client";
 import { Button } from "@/components/common/buttons/Button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileText, ImagePlus, Loader2, Plus, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-
-import ClassSelector from "@/components/common/select/ClassSelector";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 
-import { createVideoRecord } from "@/actions/videos/uploadVideo.action";
+import { createFeaturedVideoRecord } from "@/actions/videos/uploadFeaturedVideo.action";
 import { uploadVideoSecureClient } from "@/lib/helpers/uploadVideo";
 import { useRouter } from "next/navigation";
-import BranchPicker from "./BranchPicker";
-import { uploadVideoSchema, UploadVideoSchemaType } from "./UploadVideoSchema";
+import {
+  featuredVideoSchema,
+  FeaturedVideoSchemaType,
+} from "./FeaturedVideoSchema";
 
-function capitalizeFirstLetter(val: string) {
-  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
-}
-
-export default function VideoUploadForm({
-  userSpecialties,
+export default function FeaturedVideoUploadForm({
   userId,
 }: {
-  readonly userSpecialties: string[];
   readonly userId: string;
 }) {
   const router = useRouter();
-  const subjectOptions = userSpecialties.map((spec) => {
-    // Match "Professeur d'" or "Professeur de " followed by the subject
-    const match = spec.match(/Professeur d'(.+)|Professeur de (.+)/i);
-    return match ? match[1] || match[2] : spec;
-  });
 
-  // Refs for file inputs
   const videoInputRef = useRef<HTMLInputElement>(null);
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
-  const notesInputRef = useRef<HTMLInputElement>(null);
+
   const documentsInputRef = useRef<HTMLInputElement>(null);
-  const allBranches = Object.values(studentClassesAndBranches);
 
-  const [selectedClass, setSelectedClass] = useState<string>("");
-  const [availableBranches, setAvailableBranches] = useState<string[]>([]);
-  const handleClassChange = (value: keyof typeof studentClassesAndBranches) => {
-    setSelectedClass(value);
-    setAvailableBranches(studentClassesAndBranches[value] ?? []);
-    setValue("class", value);
-    setValue("branch", [""]); // Reset branch when class changes
-  };
-
-  // Handle branch selection
-  const handleBranchChange = (branches: string[]) => {
-    setValue("branch", branches);
-  };
-
-  // State for previews
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
-  // Setup react-hook-form
+
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors, isSubmitting },
     reset,
     setValue,
     watch,
-  } = useForm<UploadVideoSchemaType>({
-    resolver: zodResolver(uploadVideoSchema),
+  } = useForm<FeaturedVideoSchemaType>({
+    resolver: zodResolver(featuredVideoSchema),
     defaultValues: {
       title: "",
-      subject: "",
-      class: "",
-      branch: [""],
       description: "",
+      is_featured: false,
     },
   });
 
-  useEffect(() => {
-    if (subjectOptions.length === 1) {
-      setValue("subject", subjectOptions[0].toLowerCase());
-    }
-  }, [subjectOptions, setValue]);
-
   const videoFile = watch("videoFile");
   const thumbnailFile = watch("thumbnailFile");
-  const notesFile = watch("notesFile");
   const documentsFile = watch("documentsFile");
-  const selectedClasses = watch("class") as string;
+  const isFeatured = watch("is_featured");
 
   const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -123,14 +78,6 @@ export default function VideoUploadForm({
     }
   };
 
-  // Handle file selection for notes
-  const handleNotesSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setValue("notesFile", file);
-    }
-  };
-
   // Handle file selection for documents
   const handleDocumentsSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -147,27 +94,10 @@ export default function VideoUploadForm({
       }
     };
   }, [thumbnailPreview]);
-  async function onSubmit(data: UploadVideoSchemaType) {
-    if (
-      data.branch?.length == 0 &&
-      availableBranches.length != 1 &&
-      availableBranches[0] != "Aucune filière"
-    ) {
-      toast.error("Veuillez sélectionner une branche");
-      return;
-    }
+
+  async function onSubmit(data: FeaturedVideoSchemaType) {
     if (!data.videoFile) {
       toast.error("Veuillez choisir un fichier vidéo");
-      return;
-    }
-
-    if (!data.class) {
-      toast.error("Veuillez choisir une classe");
-      return;
-    }
-
-    if (!data.subject || data.subject === "") {
-      toast.error("Veuillez choisir une matière");
       return;
     }
 
@@ -195,24 +125,20 @@ export default function VideoUploadForm({
       // Now upload other files and create video record
       const uploadToastId2 = toast.loading("Traitement des fichiers...");
 
-      const result = await createVideoRecord({
+      const result = await createFeaturedVideoRecord({
         videoUrl,
         thumbnailFile: data.thumbnailFile,
-        notesFile: data.notesFile ?? null,
         documentsFile: data.documentsFile ?? null,
         title: data.title,
-        subject: data.subject.toLowerCase(),
-        classValue: data.class.toLowerCase(),
         description: data.description ?? "",
-        teacher_id: userId,
-        branch:
-          data.branch?.length == 1 && data.branch[0] == "" ? null : data.branch,
+        admin_id: userId,
+        is_featured: data.is_featured,
       });
 
       toast.dismiss(uploadToastId2);
 
       if (result.success) {
-        toast.success("Vidéo créée avec succès!");
+        toast.success("Vidéo mise en avant créée avec succès!");
 
         const videoId = result.id;
 
@@ -224,13 +150,13 @@ export default function VideoUploadForm({
           }
         );
 
-        // Rest of your polling logic remains the same
+        // Video processing status polling
         const checkStatus = async () => {
           const BASE_URL =
             process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
           try {
             const statusResponse = await fetch(
-              `${BASE_URL}/api/video/video-status/${videoId}`
+              `${BASE_URL}/api/video/featured-video-status/${videoId}`
             );
 
             if (!statusResponse.ok) {
@@ -288,7 +214,7 @@ export default function VideoUploadForm({
 
               if (status === 3) {
                 toast.success("Vidéo prête !", { id: processingToastId });
-                router.push(`/videos/${videoId}`);
+                router.push(`/admin/featured-videos/${videoId}`);
               } else if (status === 5) {
                 toast.error("Échec du traitement vidéo.", {
                   id: processingToastId,
@@ -314,13 +240,8 @@ export default function VideoUploadForm({
         setThumbnailPreview(null);
         if (videoInputRef.current) videoInputRef.current.value = "";
         if (thumbnailInputRef.current) thumbnailInputRef.current.value = "";
-        if (notesInputRef.current) notesInputRef.current.value = "";
+
         if (documentsInputRef.current) documentsInputRef.current.value = "";
-        setValue("subject", "");
-        setValue("class", "");
-        setValue("branch", []);
-        setSelectedClass("");
-        setAvailableBranches([]);
       }
     } catch (err) {
       toast.dismiss(uploadToastId);
@@ -336,7 +257,7 @@ export default function VideoUploadForm({
     }
   }
 
-  const clearFile = (type: "video" | "thumbnail" | "notes" | "documents") => {
+  const clearFile = (type: "video" | "thumbnail" | "documents") => {
     switch (type) {
       case "video":
         setValue("videoFile", undefined);
@@ -346,10 +267,6 @@ export default function VideoUploadForm({
         setValue("thumbnailFile", undefined);
         setThumbnailPreview(null);
         if (thumbnailInputRef.current) thumbnailInputRef.current.value = "";
-        break;
-      case "notes":
-        setValue("notesFile", undefined);
-        if (notesInputRef.current) notesInputRef.current.value = "";
         break;
       case "documents":
         setValue("documentsFile", undefined);
@@ -391,7 +308,7 @@ export default function VideoUploadForm({
                 type="button"
                 variant="outline"
                 onClick={() => videoInputRef.current?.click()}
-                className="bg-transparent border-white text-white hover:bg-white  hover:text-primary-700  dark:text-white dark:hover:text-white/85"
+                className="bg-transparent border-white text-white hover:bg-white hover:text-primary-700 dark:text-white dark:hover:text-white/85"
               >
                 Changer la vidéo
               </Button>
@@ -399,7 +316,9 @@ export default function VideoUploadForm({
           ) : (
             <>
               <Upload className="w-16 h-16 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Publier un vidéo</h3>
+              <h3 className="text-xl font-semibold mb-2">
+                Publier une vidéo mise en avant
+              </h3>
               <p className="text-sm text-center mb-4 max-w-md opacity-90">
                 Glissez et déposez votre fichier vidéo ici, ou cliquez pour
                 sélectionner
@@ -408,7 +327,7 @@ export default function VideoUploadForm({
                 type="button"
                 variant="outline"
                 onClick={() => videoInputRef.current?.click()}
-                className="bg-transparent border-white text-white hover:bg-white  dark:text-white dark:hover:text-white/85  hover:text-primary-700"
+                className="bg-transparent border-white text-white hover:bg-white dark:text-white dark:hover:text-white/85 hover:text-primary-700"
               >
                 Sélectionner un fichier
               </Button>
@@ -429,7 +348,10 @@ export default function VideoUploadForm({
         </div>
       </div>
 
-      <h2 className="text-2xl font-bold my-4">Informations de la vidéo</h2>
+      <h2 className="text-2xl font-bold my-4">
+        Informations de la vidéo mise en avant
+      </h2>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
           {/* Title Input */}
@@ -450,221 +372,21 @@ export default function VideoUploadForm({
             )}
           </div>
 
-          {/* Subject Dropdown */}
-          <div>
-            <label htmlFor="subject" className="block text-sm font-medium mb-1">
-              Veuillez entrer la matière <span className="text-red-500">*</span>
-            </label>
-
-            {subjectOptions.length === 1 ? (
-              <Input
-                type="text"
-                value={subjectOptions[0]}
-                readOnly
-                className="cursor-not-allowed focus-visible:ring-0   text-gray-700 dark:text-gray-200 w-full text-sm border  rounded px-3 py-2"
-                // className="w-full bg-gray-100 text-sm text-gray-700 border border-gray-300 rounded px-3 py-2"
-              />
-            ) : (
-              <Controller
-                name="subject"
-                control={control}
-                rules={{ required: "La matière est requise." }}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger
-                      className={`w-full ${
-                        errors.subject ? "border-red-500" : ""
-                      }`}
-                    >
-                      <SelectValue placeholder="La matière" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {subjectOptions.map((subject) => (
-                        <SelectItem key={subject} value={subject.toLowerCase()}>
-                          {subject}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            )}
-            {/* {subjectOptions.length === 1 ? (
-              <>
-                <input
-                  type="text"
-                  value={subjectOptions[0]}
-                  readOnly
-                  className="w-full bg-gray-100 text-sm hover:cusror-not-allowed text-gray-700 border border-gray-300 rounded px-3 py-2"
-                />
-                <input
-                  type="hidden"
-                  className="hover:cusror-not-allowed"
-                  value={subjectOptions[0].toLowerCase()}
-                  {...register("subject", {
-                    required: "La matière est requise.",
-                  })}
-                />
-              </>
-            ) : (
-              <Controller
-                name="subject"
-                control={control}
-                rules={{ required: "La matière est requise." }}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger
-                      className={`w-full ${
-                        errors.subject ? "border-red-500" : ""
-                      }`}
-                    >
-                      <SelectValue placeholder="La matière" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {subjectOptions.map((subject) => (
-                        <SelectItem key={subject} value={subject.toLowerCase()}>
-                          {subject}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            )} */}
-
-            {errors.subject && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.subject.message}
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <Label>Classe</Label>
-            {/* <ClassSelector handleClassChange={handleClassChange} /> */}
-            <ClassSelector handleClassChange={handleClassChange} />
-
-            <Input type="hidden" {...register("class")} />
-            {"class" in errors && errors.class && (
-              <p className="text-red-500">{errors.class.message}</p>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-1">
-            {/* <Label>Filière</Label> */}
-            {/* <BranchSelector
-              handleBranchChange={handleBranchChange}
-              selectedClass={
-                selectedClass as keyof typeof studentClassesAndBranches
-              }
-              availableBranches={availableBranches}
-            /> */}
-            {/* <Select
-              disabled={!selectedClass || availableBranches.length <= 1}
-              onValueChange={handleBranchChange}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue
-                  placeholder={
-                    !selectedClass
-                      ? "Sélectionnez d'abord une classe"
-                      : availableBranches.length <= 1
-                      ? availableBranches[0]
-                      : "Sélectionnez votre filière"
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {availableBranches.map((branch) => (
-                  <SelectItem key={branch} value={branch}>
-                    {branch}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select> */}
-            <BranchPicker
-              onChange={handleBranchChange}
-              className={selectedClass}
+          {/* Featured Status Checkbox */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="is_featured"
+              {...register("is_featured")}
+              checked={isFeatured}
+              onCheckedChange={(checked) => setValue("is_featured", !!checked)}
             />
-            <Input type="hidden" {...register("branch")} />
-            {"branch" in errors && errors.branch && (
-              <p className="text-red-500">{errors.branch.message}</p>
-            )}
+            <Label htmlFor="is_featured" className="text-sm font-medium">
+              Marquer comme vidéo mise en avant
+              <span className="text-gray-500 text-xs ml-1">
+                (Cette vidéo apparaîtra en priorité)
+              </span>
+            </Label>
           </div>
-          {/* Class Dropdown */}
-          {/* <div>
-            <label htmlFor="class" className="block text-sm font-medium mb-1">
-              Veuillez entrer la classe <span className="text-red-500">*</span>
-            </label>
-            <Controller
-              name="class"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger
-                    className={`w-full ${errors.class ? "border-red-500" : ""}`}
-                  >
-                    <SelectValue placeholder="La classe" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {studentClasses.map((classOption) => (
-                      <SelectItem
-                        key={classOption}
-                        value={classOption.toLowerCase()}
-                      >
-                        {classOption}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {errors.class && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.class.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label htmlFor="branch" className="block text-sm font-medium mb-1">
-              Veuillez entrer la classe <span className="text-red-500">*</span>
-            </label>
-            <Controller
-              name="branch"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger
-                    className={`w-full ${errors.class ? "border-red-500" : ""}`}
-                  >
-                    <SelectValue placeholder="La branche" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {/*todo BRANCH ADD /}
-                    {studentClasses.map((branchOption) => (
-                      <SelectItem
-                        key={branchOption}
-                        value={branchOption.toLowerCase()}
-                      >
-                        {branchOption}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {errors.branch && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.branch.message}
-              </p>
-            )}
-          </div> */}
 
           {/* Description Textarea */}
           <div>
@@ -688,62 +410,16 @@ export default function VideoUploadForm({
             )}
           </div>
 
-          {/* Notes File Upload */}
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="notes"
-              className="text-sm font-medium dark:text-white/90"
-            >
-              soumettre des notes
-              <span className="text-gray-500 dark:text-gray-400 text-xs">
-                (optionnel) Veuillez combiner vos documents et cours en un seul
-                document et les télécharger ici.
-              </span>
-            </label>
-            <div className="flex items-center gap-2">
-              <input
-                type="file"
-                id="notes"
-                ref={notesInputRef}
-                onChange={handleNotesSelect}
-                accept=".pdf,.png,.jpg,.jpeg"
-                className="dark:text-white  dark:placeholder:text-white/80 placeholder:text-muted-foreground selection:bg-primary selection:text-[#355869]  dark:bg-primary/30 border-primary-400  block w-full file:mr-4 file:py-2 file:px-4 file:rounded-r-md file:border-0 file:text-sm file:font-medium file:bg-primary/30 dark:file:bg-primary/50  dark:file:text-white/90  file:text-primary-950 hover:file:bg-primary-100 hover:cursor-pointer border  rounded-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-              {notesFile && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => clearFile("notes")}
-                  className="flex-shrink-0"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
-              )}
-            </div>
-            {notesFile && (
-              <p className="text-sm text-gray-500 dark:text-gray-300">
-                {notesFile.name} ({(notesFile.size / 1024).toFixed(2)} KB)
-              </p>
-            )}
-            {errors.notesFile && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.notesFile.message as string}
-              </p>
-            )}
-          </div>
-
           {/* Other Documents File Upload */}
           <div className="flex flex-col gap-2">
             <label
               htmlFor="documents"
-              className="text-sm font-medium  dark:text-white/90"
+              className="text-sm font-medium dark:text-white/90"
             >
               soumettre d&apos;autres documents
               <span className="text-gray-500 dark:text-gray-400 text-xs">
                 {" "}
-                (optionnel)Veuillez combiner vos documents en un seul document
-                et les télécharger ici.
+                (optionnel)
               </span>
             </label>
             <div className="flex items-center gap-2">
@@ -753,7 +429,7 @@ export default function VideoUploadForm({
                 ref={documentsInputRef}
                 onChange={handleDocumentsSelect}
                 accept=".pdf,.png,.jpg,.jpeg"
-                className="dark:text-white  dark:placeholder:text-white/80 placeholder:text-muted-foreground selection:bg-primary selection:text-[#355869]  dark:bg-primary/30 border-primary-400  block w-full file:mr-4 file:py-2 file:px-4 file:rounded-r-md file:border-0 file:text-sm file:font-medium file:bg-primary/30 dark:file:bg-primary/50  dark:file:text-white/90  file:text-primary-950 hover:file:bg-primary-100 hover:cursor-pointer border  rounded-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="dark:text-white dark:placeholder:text-white/80 placeholder:text-muted-foreground selection:bg-primary selection:text-[#355869] dark:bg-primary/30 border-primary-400 block w-full file:mr-4 file:py-2 file:px-4 file:rounded-r-md file:border-0 file:text-sm file:font-medium file:bg-primary/30 dark:file:bg-primary/50 dark:file:text-white/90 file:text-primary-950 hover:file:bg-primary-100 hover:cursor-pointer border rounded-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
               {documentsFile && (
                 <Button
@@ -832,9 +508,9 @@ export default function VideoUploadForm({
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center text-gray-500  dark:text-gray-300  h-full p-4">
+              <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-300 h-full p-4">
                 <ImagePlus className="w-10 h-10 text-gray-400 mb-2" />
-                <p className="text-sm text-gray-500  dark:text-gray-200 text-center">
+                <p className="text-sm text-gray-500 dark:text-gray-200 text-center">
                   Cliquez pour ajouter une miniature
                 </p>
               </div>
@@ -848,7 +524,7 @@ export default function VideoUploadForm({
         type="submit"
         variant="default"
         size="lg"
-        className="w-full  md:w-auto lg:w-1/4    xl:h-10 flex items-center justify-center gap-2"
+        className="w-full md:w-auto lg:w-1/4 xl:h-10 flex items-center justify-center gap-2"
         disabled={isSubmitting}
       >
         {isSubmitting ? (
@@ -859,7 +535,7 @@ export default function VideoUploadForm({
         ) : (
           <>
             <Plus className="h-4 w-4" />
-            <span>Publier</span>
+            <span>Publier vidéo mise en avant</span>
           </>
         )}
       </Button>
