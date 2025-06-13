@@ -120,20 +120,40 @@ export default function VideoListVisitor({
     [allVideos]
   );
 
-  // Extract unique branches from ALL video data (not filtered videos)
-  const branches = useMemo(
-    () => [...new Set(allVideos.map((video) => video.branch).filter(Boolean))],
-    [allVideos]
-  );
+  // Extract unique branches from ALL video data - Returns string[][] as expected by FilterBar
+  const branches = useMemo(() => {
+    const uniqueBranches = new Set<string>();
 
-  // Filter videos based on URL parameters
+    allVideos.forEach((video) => {
+      if (video.branch && Array.isArray(video.branch)) {
+        video.branch.forEach((branch) => {
+          if (branch && typeof branch === "string") {
+            uniqueBranches.add(branch);
+          }
+        });
+      }
+    });
+
+    // Convert to string[][] format as expected by FilterBar
+    return Array.from(uniqueBranches).map((branch) => [branch]);
+  }, [allVideos]);
+
+  // Filter videos based on URL parameters - Fixed branch filtering
   const filteredVideos = useMemo(() => {
     return videos.filter((video) => {
-      return (
-        (selectedBranch ? video.branch?.includes(selectedBranch) : true) &&
-        (selectedClass ? video.class === selectedClass : true) &&
-        (selectedSubject ? video.subject === selectedSubject : true)
-      );
+      const matchesClass = selectedClass ? video.class === selectedClass : true;
+      const matchesSubject = selectedSubject
+        ? video.subject === selectedSubject
+        : true;
+
+      // Fixed branch filtering to handle array of strings
+      const matchesBranch = selectedBranch
+        ? Array.isArray(video.branch)
+          ? video.branch.includes(selectedBranch)
+          : video.branch === selectedBranch
+        : true;
+
+      return matchesClass && matchesSubject && matchesBranch;
     });
   }, [videos, selectedBranch, selectedClass, selectedSubject]);
 
@@ -159,12 +179,16 @@ export default function VideoListVisitor({
     );
   }
 
-  // Validate filter data types
+  // Updated validation for filter data types
   if (
     !Array.isArray(classes) ||
     !Array.isArray(branches) ||
     !classes.every((item) => typeof item === "string") ||
-    !branches.every((item) => typeof item === "object")
+    !branches.every(
+      (item) =>
+        Array.isArray(item) &&
+        item.every((subItem) => typeof subItem === "string")
+    ) // Updated validation for string[][]
   ) {
     console.error("Invalid filter data types", { classes, branches });
 

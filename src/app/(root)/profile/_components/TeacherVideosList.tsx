@@ -93,7 +93,6 @@ export default function TeacherVideosList({
       </div>
     );
   }
-  console.log("subjects", subjects, "classes", classes, "branches", branches);
   return (
     <div className="p-8 flex flex-col gap-4">
       <h2 className="text-2xl lg:text-3xl font-semibold">Vos vidéos</h2>
