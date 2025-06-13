@@ -1,6 +1,8 @@
 "use client";
 import { Button } from "@/components/common/buttons/Button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileText, ImagePlus, Loader2, Plus, Upload, X } from "lucide-react";
@@ -8,8 +10,6 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 
 import { createFeaturedVideoRecord } from "@/actions/videos/uploadFeaturedVideo.action";
 import { uploadVideoSecureClient } from "@/lib/helpers/uploadVideo";
@@ -156,7 +156,7 @@ export default function FeaturedVideoUploadForm({
             process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
           try {
             const statusResponse = await fetch(
-              `${BASE_URL}/api/video/featured-video-status/${videoId}`
+              `${BASE_URL}/api/video/video-status/${videoId}`
             );
 
             if (!statusResponse.ok) {
@@ -214,7 +214,7 @@ export default function FeaturedVideoUploadForm({
 
               if (status === 3) {
                 toast.success("Vidéo prête !", { id: processingToastId });
-                router.push(`/admin/featured-videos/${videoId}`);
+                router.push(`/videos/${videoId}`);
               } else if (status === 5) {
                 toast.error("Échec du traitement vidéo.", {
                   id: processingToastId,
@@ -468,7 +468,7 @@ export default function FeaturedVideoUploadForm({
             </p>
           )}
           <div
-            className={`border-2 border-dashed rounded-md h-48 flex flex-col items-center justify-center cursor-pointer relative overflow-hidden ${
+            className={`border-2 group border-dashed rounded-md h-48 flex flex-col items-center justify-center cursor-pointer relative overflow-hidden ${
               thumbnailPreview
                 ? "border-primary-400 bg-indigo-50"
                 : "hover:bg-border/80 border-primary-400"
@@ -487,7 +487,7 @@ export default function FeaturedVideoUploadForm({
             {thumbnailPreview ? (
               <div className="relative w-full h-full group">
                 <Image
-                  src={thumbnailPreview || "/placeholder.svg"}
+                  src={thumbnailPreview || "/images/placeholder-thumbnail.jpg"}
                   alt="Thumbnail preview"
                   fill
                   className="object-cover rounded-md"
@@ -508,9 +508,9 @@ export default function FeaturedVideoUploadForm({
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-300 h-full p-4">
-                <ImagePlus className="w-10 h-10 text-gray-400 mb-2" />
-                <p className="text-sm text-gray-500 dark:text-gray-200 text-center">
+              <div className="  flex flex-col items-center justify-center text-gray-500 dark:text-gray-300 h-full p-4">
+                <ImagePlus className="w-10 h-10 text-gray-400 mb-2 group-hover:text-gray-700 dark:group-hover:text-gray-100" />
+                <p className="text-sm group-hover:text-gray-700 dark:group-hover:text-gray-100 text-gray-500 dark:text-gray-400 text-center">
                   Cliquez pour ajouter une miniature
                 </p>
               </div>

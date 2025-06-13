@@ -11,12 +11,14 @@ export async function POST(req: NextRequest) {
     .select("id , role")
     .eq("id", userId)
     .single();
-
-  if (error || !data || data.role !== roles.teacher) {
+  if (
+    error ||
+    !data ||
+    (data.role !== roles.teacher && data.role !== roles.admin)
+  ) {
     console.error("Error fetching user:", error);
     return NextResponse.json({ error: "UnAuthorized Access" }, { status: 401 });
   }
-
   return NextResponse.json({
     libraryId: process.env.BUNNY_STREAM_LIBRARY_ID!,
     apiKey: process.env.BUNNY_STREAM_API_KEY!,

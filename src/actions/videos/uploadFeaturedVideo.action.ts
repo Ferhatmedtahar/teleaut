@@ -27,13 +27,11 @@ export async function createFeaturedVideoRecord({
   id?: string;
 }> {
   try {
-    // Upload thumbnail (required)
     let thumbnailUrl = null;
     if (thumbnailFile) {
       thumbnailUrl = await uploadFile(thumbnailFile, "thumbnail", admin_id);
     }
 
-    // Upload documents (optional)
     let documentsUrl = null;
     if (documentsFile) {
       documentsUrl = await uploadFile(documentsFile, "documents", admin_id);
@@ -41,21 +39,22 @@ export async function createFeaturedVideoRecord({
 
     const supabase = await createClient();
 
-    // Option 1: Using existing videos table with new columns
+    // Insert data matching your actual database schema
     const featuredVideoData = {
       title,
       description: description || "",
       video_url: videoUrl,
       thumbnail_url: thumbnailUrl,
       documents_url: documentsUrl,
-      admin_id,
-      is_featured, // For existing table approach
-      video_type: "featured",
+      teacher_id: admin_id,
+      is_featured,
       status: 0, // Initial status - pending processing
-      created_at: new Date().toISOString(),
-      // Set required fields for videos table
-      class: "N/A", // Not applicable for featured videos
-      subject: "N/A", // Not applicable for featured videos
+      // Required fields with default values for admin videos
+      class: "FEATURED", // or whatever makes sense for your admin videos
+      subject: "GENERAL", // or whatever makes sense for your admin videos
+      // Optional: set branch if needed
+      // branch: ["ALL"], // or leave as null if not needed
+      // created_at will be set automatically by the database default
     };
 
     // Insert into videos table
@@ -64,27 +63,6 @@ export async function createFeaturedVideoRecord({
       .insert(featuredVideoData)
       .select("id")
       .single();
-
-    // Alternative: If using separate featured_videos table
-    /*
-    const featuredVideoData = {
-      title,
-      description: description || "",
-      video_url: videoUrl,
-      thumbnail_url: thumbnailUrl,
-      documents_url: documentsUrl,
-      admin_id,
-      is_active,
-      status: 0,
-      created_at: new Date().toISOString(),
-    };
-
-    const { data, error } = await supabase
-      .from("featured_videos")
-      .insert(featuredVideoData)
-      .select("id")
-      .single();
-    */
 
     if (error) {
       console.error("Error storing featured video in Supabase:", error);
@@ -107,61 +85,6 @@ export async function createFeaturedVideoRecord({
     };
   }
 }
-
-// Helper function to get the current active featured video
-export async function getActiveFeaturedVideo() {
-  const supabase = await createClient();
-
-  // Option 1: From videos table
-  const { data, error } = await supabase
-    .from("videos")
-    .select("*")
-    .eq("is_featured", true)
-    .eq("video_type", "featured")
-    .single();
-
-  // Alternative: From separate featured_videos table
-  /*
-  const { data, error } = await supabase
-    .from("featured_videos")
-    .select("*")
-    .eq("is_active", true)
-    .single();
-  */
-
-  if (error) {
-    console.error("Error fetching active featured video:", error);
-    return null;
-  }
-
-  return data;
-}
-
-// Helper function to deactivate all featured videos
-export async function deactivateAllFeaturedVideos() {
-  const supabase = await createClient();
-
-  // Option 1: Update videos table
-  const { error } = await supabase
-    .from("videos")
-    .update({ is_featured: false })
-    .eq("video_type", "featured");
-
-  // Alternative: Update featured_videos table
-  /*
-  const { error } = await supabase
-    .from("featured_videos")
-    .update({ is_active: false })
-    .eq("is_active", true);
-  */
-
-  if (error) {
-    console.error("Error deactivating featured videos:", error);
-    return false;
-  }
-
-  return true;
-}
 // "use server";
 
 // import { uploadFile } from "@/lib/helpers/uploadFile";
@@ -170,7 +93,6 @@ export async function deactivateAllFeaturedVideos() {
 // interface CreateFeaturedVideoRecordParams {
 //   videoUrl: string;
 //   thumbnailFile: File;
-//   notesFile: File | null;
 //   documentsFile: File | null;
 //   title: string;
 //   description: string;
@@ -181,7 +103,6 @@ export async function deactivateAllFeaturedVideos() {
 // export async function createFeaturedVideoRecord({
 //   videoUrl,
 //   thumbnailFile,
-//   notesFile,
 //   documentsFile,
 //   title,
 //   description,
@@ -199,37 +120,34 @@ export async function deactivateAllFeaturedVideos() {
 //       thumbnailUrl = await uploadFile(thumbnailFile, "thumbnail", admin_id);
 //     }
 
-//     // Upload notes (optional)
-//     let notesUrl = null;
-//     if (notesFile) {
-//       notesUrl = await uploadFile(notesFile, "notes", admin_id);
-//     }
-
 //     // Upload documents (optional)
 //     let documentsUrl = null;
 //     if (documentsFile) {
 //       documentsUrl = await uploadFile(documentsFile, "documents", admin_id);
 //     }
 
-//     // Prepare featured video data
+//     const supabase = await createClient();
+
+//     // Option 1: Using existing videos table with new columns
 //     const featuredVideoData = {
 //       title,
 //       description: description || "",
 //       video_url: videoUrl,
 //       thumbnail_url: thumbnailUrl,
-//       notes_url: notesUrl,
 //       documents_url: documentsUrl,
-//       admin_id,
+//       teacher_id: admin_id,
 //       is_featured,
-//       status: 0, // Initial status - pending processing
+//       video_type: "featured",
+//       status: 0,
 //       created_at: new Date().toISOString(),
+
+//       class: "N/A",
+//       subject: "N/A",
 //     };
 
-//     const supabase = await createClient();
-
-//     // Insert into featured_videos table (adjust table name as needed)
+//     // Insert into videos table
 //     const { data, error } = await supabase
-//       .from("featured_videos") // Assuming this is your table name
+//       .from("videos")
 //       .insert(featuredVideoData)
 //       .select("id")
 //       .single();
@@ -255,3 +173,97 @@ export async function deactivateAllFeaturedVideos() {
 //     };
 //   }
 // }
+
+// // "use server";
+
+// // import { uploadFile } from "@/lib/helpers/uploadFile";
+// // import { createClient } from "@/lib/supabase/server";
+
+// // interface CreateFeaturedVideoRecordParams {
+// //   videoUrl: string;
+// //   thumbnailFile: File;
+// //   notesFile: File | null;
+// //   documentsFile: File | null;
+// //   title: string;
+// //   description: string;
+// //   admin_id: string;
+// //   is_featured: boolean;
+// // }
+
+// // export async function createFeaturedVideoRecord({
+// //   videoUrl,
+// //   thumbnailFile,
+// //   notesFile,
+// //   documentsFile,
+// //   title,
+// //   description,
+// //   admin_id,
+// //   is_featured,
+// // }: CreateFeaturedVideoRecordParams): Promise<{
+// //   success: boolean;
+// //   message?: string;
+// //   id?: string;
+// // }> {
+// //   try {
+// //     // Upload thumbnail (required)
+// //     let thumbnailUrl = null;
+// //     if (thumbnailFile) {
+// //       thumbnailUrl = await uploadFile(thumbnailFile, "thumbnail", admin_id);
+// //     }
+
+// //     // Upload notes (optional)
+// //     let notesUrl = null;
+// //     if (notesFile) {
+// //       notesUrl = await uploadFile(notesFile, "notes", admin_id);
+// //     }
+
+// //     // Upload documents (optional)
+// //     let documentsUrl = null;
+// //     if (documentsFile) {
+// //       documentsUrl = await uploadFile(documentsFile, "documents", admin_id);
+// //     }
+
+// //     // Prepare featured video data
+// //     const featuredVideoData = {
+// //       title,
+// //       description: description || "",
+// //       video_url: videoUrl,
+// //       thumbnail_url: thumbnailUrl,
+// //       notes_url: notesUrl,
+// //       documents_url: documentsUrl,
+// //       admin_id,
+// //       is_featured,
+// //       status: 0, // Initial status - pending processing
+// //       created_at: new Date().toISOString(),
+// //     };
+
+// //     const supabase = await createClient();
+
+// //     // Insert into featured_videos table (adjust table name as needed)
+// //     const { data, error } = await supabase
+// //       .from("featured_videos") // Assuming this is your table name
+// //       .insert(featuredVideoData)
+// //       .select("id")
+// //       .single();
+
+// //     if (error) {
+// //       console.error("Error storing featured video in Supabase:", error);
+// //       return {
+// //         success: false,
+// //         message: "Échec du stockage de la vidéo mise en avant",
+// //       };
+// //     }
+
+// //     return {
+// //       success: true,
+// //       message: "Vidéo mise en avant créée avec succès",
+// //       id: data.id,
+// //     };
+// //   } catch (error) {
+// //     console.error("Error creating featured video record:", error);
+// //     return {
+// //       success: false,
+// //       message: "Échec de la création de la vidéo mise en avant",
+// //     };
+// //   }
+// // }

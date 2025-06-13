@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2GB
-const MAX_IMAGE_SIZE = 50 * 1024 * 1024; // 50MB
-const MAX_DOCUMENT_SIZE = 50 * 1024 * 1024; // 50MB
+const MAX_IMAGE_SIZE = 100 * 1024 * 1024; // 50MB
+const MAX_DOCUMENT_SIZE = 100 * 1024 * 1024; // 50MB
 
 const ACCEPTED_VIDEO_TYPES = [
   "video/mp4",
@@ -38,7 +38,6 @@ export const featuredVideoSchema = z.object({
     .max(1000, "La description ne peut pas dépasser 1000 caractères")
     .optional(),
 
-  // Fix: Remove .default() and make it required in the schema
   is_featured: z.boolean(),
 
   videoFile: z
