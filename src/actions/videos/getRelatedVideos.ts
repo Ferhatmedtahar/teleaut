@@ -23,7 +23,7 @@ export async function getRelatedVideos(
     .neq("id", currentVideoId)
     .eq("subject", subject)
     .eq("class", classValue.toLowerCase())
-    .order("views", { ascending: false })
+    .not("class", "eq", "FEATURED")
     .limit(limit);
 
   if (relatedError) {
@@ -40,6 +40,7 @@ export async function getRelatedVideos(
       .select("*")
       .neq("id", currentVideoId) // Still exclude current video
       .order("created_at", { ascending: false }) // Order by latest
+      .not("class", "eq", "FEATURED")
       .limit(limit);
 
     if (latestError) {

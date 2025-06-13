@@ -550,37 +550,6 @@ export default function VideoUploadForm({
           </div>
 
           <div className="flex flex-col gap-1">
-            {/* <Label>Filière</Label> */}
-            {/* <BranchSelector
-              handleBranchChange={handleBranchChange}
-              selectedClass={
-                selectedClass as keyof typeof studentClassesAndBranches
-              }
-              availableBranches={availableBranches}
-            /> */}
-            {/* <Select
-              disabled={!selectedClass || availableBranches.length <= 1}
-              onValueChange={handleBranchChange}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue
-                  placeholder={
-                    !selectedClass
-                      ? "Sélectionnez d'abord une classe"
-                      : availableBranches.length <= 1
-                      ? availableBranches[0]
-                      : "Sélectionnez votre filière"
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {availableBranches.map((branch) => (
-                  <SelectItem key={branch} value={branch}>
-                    {branch}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select> */}
             <BranchPicker
               onChange={handleBranchChange}
               className={selectedClass}
@@ -590,83 +559,7 @@ export default function VideoUploadForm({
               <p className="text-red-500">{errors.branch.message}</p>
             )}
           </div>
-          {/* Class Dropdown */}
-          {/* <div>
-            <label htmlFor="class" className="block text-sm font-medium mb-1">
-              Veuillez entrer la classe <span className="text-red-500">*</span>
-            </label>
-            <Controller
-              name="class"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger
-                    className={`w-full ${errors.class ? "border-red-500" : ""}`}
-                  >
-                    <SelectValue placeholder="La classe" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {studentClasses.map((classOption) => (
-                      <SelectItem
-                        key={classOption}
-                        value={classOption.toLowerCase()}
-                      >
-                        {classOption}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {errors.class && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.class.message}
-              </p>
-            )}
-          </div>
 
-          <div>
-            <label htmlFor="branch" className="block text-sm font-medium mb-1">
-              Veuillez entrer la classe <span className="text-red-500">*</span>
-            </label>
-            <Controller
-              name="branch"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger
-                    className={`w-full ${errors.class ? "border-red-500" : ""}`}
-                  >
-                    <SelectValue placeholder="La branche" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {/*todo BRANCH ADD /}
-                    {studentClasses.map((branchOption) => (
-                      <SelectItem
-                        key={branchOption}
-                        value={branchOption.toLowerCase()}
-                      >
-                        {branchOption}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {errors.branch && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.branch.message}
-              </p>
-            )}
-          </div> */}
-
-          {/* Description Textarea */}
           <div>
             <label
               htmlFor="description"
@@ -688,7 +581,6 @@ export default function VideoUploadForm({
             )}
           </div>
 
-          {/* Notes File Upload */}
           <div className="flex flex-col gap-2">
             <label
               htmlFor="notes"

@@ -25,6 +25,7 @@ export default function RelatedVideos({
         subject,
         classValue
       );
+      console.log(relatedVideos);
       setVideos(relatedVideos);
       setIsLoading(false);
     };

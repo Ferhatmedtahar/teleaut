@@ -41,6 +41,7 @@ function getSubjectsForClassAndBranch(
 
 export default async function HomePage() {
   const { success, featuredVideo, explorerVideos } = await getHomePageVideos();
+  console.log({ featuredVideo, explorerVideos });
   const { success: branchAndClassSuccess, branchAndClass } =
     await getBranchAndClass();
 
@@ -57,9 +58,6 @@ export default async function HomePage() {
     );
   }
 
-  // Get subjects based on user's class and branch (if available)
-  console.log("branchAndClass", branchAndClass);
-  console.log("branchAndClassSuccess", branchAndClassSuccess);
   const userSubjects =
     branchAndClassSuccess && branchAndClass
       ? getSubjectsForClassAndBranch(
@@ -67,9 +65,7 @@ export default async function HomePage() {
           branchAndClass.branch || undefined
         )
       : [];
-  console.log("userSubjects", userSubjects);
 
-  // Create subjects array with "Tous" (All) as first option
   const subjects = ["Tous", ...userSubjects];
 
   // Filter videos by subject
@@ -104,7 +100,7 @@ export default async function HomePage() {
                 filterVideosBySubject([featuredVideo], subject.toLowerCase())
                   .length > 0 && (
                   <section>
-                    <h2 className="text-2xl font-bold mb-4">Featured</h2>
+                    <h2 className="text-2xl font-bold mb-4">En vedette</h2>
                     <FeaturedVideo featuredVideo={featuredVideo} />
                   </section>
                 )}
@@ -119,7 +115,7 @@ export default async function HomePage() {
                 return (
                   filteredVideos.length > 0 && (
                     <section>
-                      <h2 className="text-2xl font-bold mb-4">Explorer</h2>
+                      <h2 className="text-2xl font-bold mb-4">Explorateur</h2>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredVideos.map((video) => (
                           <ExplorerVideo
@@ -153,13 +149,11 @@ export default async function HomePage() {
         </Tabs>
       )}
 
-      {/* Fallback when no subjects are available */}
       {subjects.length <= 1 && (
         <>
-          {/* Featured Section */}
           {featuredVideo && (
             <section>
-              <h2 className="text-2xl font-bold mb-4">Featured</h2>
+              <h2 className="text-2xl font-bold mb-4">En vedette</h2>
               <FeaturedVideo featuredVideo={featuredVideo} />
             </section>
           )}
@@ -167,7 +161,7 @@ export default async function HomePage() {
           {/* Explorer Section */}
           {explorerVideos.length > 0 && (
             <section>
-              <h2 className="text-2xl font-bold mb-4">Explorer</h2>
+              <h2 className="text-2xl font-bold mb-4">Explorateur</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {explorerVideos.map((video) => (
                   <ExplorerVideo

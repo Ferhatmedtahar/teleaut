@@ -49,8 +49,9 @@ export async function getVideosGuestPage(
           `title.ilike.%${search}%, description.ilike.%${search}%, subject.ilike.%${search}%`
         )
         .order("created_at", { ascending: false })
-        .limit(limit);
-
+        .limit(limit)
+        .not("is_featured", "eq", true)
+        .not("class", "eq", "FEATURED");
       if (error) {
         console.error("Error fetching guest page videos:", error);
         return { success: false, videos: [] };

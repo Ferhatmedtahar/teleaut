@@ -19,10 +19,7 @@ export default async function UploadVideoPage() {
   if (user?.role == roles.admin) {
     return (
       <div className=" mx-auto p-8">
-        <FeaturedVideoUploadForm
-          userId={currentUser.id}
-          // userSpecialties={currentUser.specialties}
-        />
+        <FeaturedVideoUploadForm userId={currentUser.id} />
       </div>
     );
   }
