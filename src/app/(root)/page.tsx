@@ -115,7 +115,7 @@ export default async function Page({ searchParams }: SearchPageProps) {
     success,
     videos: searchVideos,
     teachers: searchTeachers,
-    students: searchStudents,
+    // students: searchStudents,
   } = await getSearchResults(query);
 
   if (!success) {
@@ -138,7 +138,7 @@ export default async function Page({ searchParams }: SearchPageProps) {
       activeFilter={activeFilter}
       initialVideos={searchVideos}
       searchTeachers={searchTeachers}
-      searchStudents={searchStudents}
+      // searchStudents={searchStudents}
     />
   );
 }

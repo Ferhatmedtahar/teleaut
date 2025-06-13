@@ -114,6 +114,8 @@ export function FilterModal({
             return diffDays <= 7;
           case "Ce mois":
             return diffDays <= 30;
+          case "Cette année":
+            return diffDays <= 365;
           default:
             return true;
         }
@@ -236,22 +238,24 @@ export function FilterModal({
           {/* Date Filter */}
           <div className="space-y-2 sm:space-y-3">
             <h4 className="font-medium text-sm sm:text-base">Date</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              {["Aujourd'hui", "Cette semaine", "Ce mois"].map((option) => (
-                <Button
-                  key={option}
-                  variant={
-                    filters.dateFilter === option ? "default" : "outline"
-                  }
-                  size="sm"
-                  onClick={() =>
-                    setFilters((prev) => ({ ...prev, dateFilter: option }))
-                  }
-                  className="text-xs sm:text-sm w-full"
-                >
-                  {option}
-                </Button>
-              ))}
+            <div className="grid grid-cols-2 gap-2">
+              {["Aujourd'hui", "Cette semaine", "Ce mois", "Cette année"].map(
+                (option) => (
+                  <Button
+                    key={option}
+                    variant={
+                      filters.dateFilter === option ? "default" : "outline"
+                    }
+                    size="sm"
+                    onClick={() =>
+                      setFilters((prev) => ({ ...prev, dateFilter: option }))
+                    }
+                    className="text-xs sm:text-sm w-full"
+                  >
+                    {option}
+                  </Button>
+                )
+              )}
             </div>
           </div>
 

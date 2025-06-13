@@ -25,7 +25,7 @@ interface SearchResultsClientProps {
   readonly activeFilter: string;
   readonly initialVideos: RelatedVideo[];
   readonly searchTeachers: any[];
-  readonly searchStudents: any[];
+  // readonly searchStudents: any[];
 }
 
 export function SearchResultsClient({
@@ -33,8 +33,8 @@ export function SearchResultsClient({
   activeFilter,
   initialVideos,
   searchTeachers,
-  searchStudents,
-}: SearchResultsClientProps) {
+}: // searchStudents,
+SearchResultsClientProps) {
   const [filteredVideos, setFilteredVideos] =
     useState<RelatedVideo[]>(initialVideos);
   const [currentTab, setCurrentTab] = useState(activeFilter);
@@ -45,8 +45,8 @@ export function SearchResultsClient({
     setFilteredVideos(initialVideos);
   }, [initialVideos]);
 
-  const subjects = ["Tout", "Professeur", "Vidéos", "Élève"];
-
+  const subjects = ["Tout", "Professeur", "Vidéos"];
+  // "Élève"
   const handleFiltersChange = (videos: RelatedVideo[]) => {
     setFilteredVideos(videos);
   };
@@ -64,17 +64,19 @@ export function SearchResultsClient({
     switch (currentTab) {
       case "tout":
         return (
-          filteredVideos.length + searchTeachers.length + searchStudents.length
+          filteredVideos.length + searchTeachers.length
+          //  + searchStudents.length
         );
       case "professeur":
         return searchTeachers.length;
       case "vidéos":
         return filteredVideos.length;
-      case "élève":
-        return searchStudents.length;
+      // case "élève":
+      //   return searchStudents.length;
       default:
         return (
-          filteredVideos.length + searchTeachers.length + searchStudents.length
+          filteredVideos.length + searchTeachers.length
+          // + searchStudents.length
         );
     }
   };
@@ -132,13 +134,13 @@ export function SearchResultsClient({
                   {subject === "Tout" && ` (${totalResults})`}
                   {subject === "Professeur" && ` (${searchTeachers.length})`}
                   {subject === "Vidéos" && ` (${filteredVideos.length})`}
-                  {subject === "Élève" && ` (${searchStudents.length})`}
+                  {/* {subject === "Élève" && ` (${searchStudents.length})`} */}
                 </span>
                 <span className="md:hidden text-primary-900  dark:text-primary-100 ">
                   {subject === "Tout" && "Tout"}
                   {subject === "Professeur" && "Prof"}
                   {subject === "Vidéos" && "Vidéos"}
-                  {subject === "Élève" && "Élève"}
+                  {/* {subject === "Élève" && "Élève"} */}
                 </span>
               </TabsTrigger>
             ))}
@@ -149,11 +151,18 @@ export function SearchResultsClient({
         {/* All Results Tab */}
         <TabsContent value="tout" className="space-y-6 mt-6">
           {/* Videos Section */}
-          {filteredVideos.length > 0 && (
-            <section>
-              <h2 className="text-2xl font-bold mb-4">
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold">
                 Vidéos ({filteredVideos.length})
               </h2>
+              {/* Add FilterModal to the "Tout" tab videos section */}
+              <FilterModal
+                searchVideos={initialVideos}
+                onFiltersChange={handleFiltersChange}
+              />
+            </div>
+            {filteredVideos.length > 0 ? (
               <div className="grid md:grid-cols-3 gap-6">
                 {filteredVideos.map((video) => (
                   <ExplorerVideo
@@ -165,8 +174,18 @@ export function SearchResultsClient({
                   />
                 ))}
               </div>
-            </section>
-          )}
+            ) : (
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium mb-2">
+                  Aucune vidéo trouvée
+                </h3>
+                <p className="text-primary-900 dark:text-primary-100">
+                  Aucune vidéo ne correspond à votre recherche &quot;{query}
+                  &quot;.
+                </p>
+              </div>
+            )}
+          </section>
 
           {/* Teachers Section */}
           {searchTeachers.length > 0 && (
@@ -183,7 +202,7 @@ export function SearchResultsClient({
           )}
 
           {/* Students Section */}
-          {searchStudents.length > 0 && (
+          {/* {searchStudents.length > 0 && (
             <section>
               <h2 className="text-2xl font-bold mb-4">
                 Élèves ({searchStudents.length})
@@ -217,7 +236,7 @@ export function SearchResultsClient({
                 ))}
               </div>
             </section>
-          )}
+          )} */}
         </TabsContent>
 
         {/* Teachers Only Tab */}
@@ -231,7 +250,7 @@ export function SearchResultsClient({
                 {searchTeachers.map((teacher) => (
                   <Card
                     key={teacher.id}
-                    className="p-4 text-center hover:shadow-lg transition-shadow cursor-pointer"
+                    className="p-4 text-center hover:shadow-lg shadow-border/10 border border-border/30 dark:border-border/70 transition-shadow cursor-pointer"
                   >
                     <Avatar className="h-20 w-20 mx-auto mb-3">
                       <AvatarImage
@@ -310,7 +329,7 @@ export function SearchResultsClient({
         </TabsContent>
 
         {/* Students Only Tab */}
-        <TabsContent value="élève" className="space-y-6 mt-6">
+        {/* <TabsContent value="élève" className="space-y-6 mt-6">
           <section>
             <h2 className="text-2xl font-bold mb-4">
               Élèves ({searchStudents.length})
@@ -356,7 +375,7 @@ export function SearchResultsClient({
               </div>
             )}
           </section>
-        </TabsContent>
+        </TabsContent> */}
       </Tabs>
 
       {/* No Results - Only show when all categories are empty */}
