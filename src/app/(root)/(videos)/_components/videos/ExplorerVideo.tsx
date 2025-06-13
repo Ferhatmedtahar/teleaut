@@ -1,8 +1,9 @@
 "use client";
 
+import { Button } from "@/components/ui/button"; // Add this import
 import { RelatedVideo } from "@/types/RelatedVideos.interface";
 import { formatDistanceToNow } from "date-fns";
-import { Clock, Eye } from "lucide-react";
+import { Clock, Eye, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -33,7 +34,6 @@ export default function ExplorerVideo({ video, user }: ExplorerVideoProps) {
   return (
     <Link href={`/videos/${video.id}`} className="group block w-full h-full">
       <article className="bg-white dark:bg-background rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ease-out group-hover:-translate-y-0.5 border border-border/30 dark:border-border/70 h-full flex flex-col">
-        {/* Thumbnail Container */}
         <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
           <Image
             src={video.thumbnail_url ?? "/images/placeholder-thumbnail.png"}
@@ -42,8 +42,17 @@ export default function ExplorerVideo({ video, user }: ExplorerVideoProps) {
             className="object-cover transition-transform duration-500 group-hover:scale-104"
           />
 
-          {/* Enhanced overlay gradient for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-black/15" />
+
+          <div className="absolute inset-0 flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <Button
+              size="icon"
+              variant="outline"
+              className="hover:cursor-pointer rounded-full h-14 w-14 bg-background/90 backdrop-blur-sm border-1 hover:bg-border hover:text-primary-foreground transition-all duration-200"
+            >
+              <Play className="h-6 w-6 ml-0.5" />
+            </Button>
+          </div>
 
           {/* Subject badge with enhanced contrast */}
           <div className=" absolute top-3 left-3 opacity-90 group-hover:opacity-100 transition-opacity duration-300">

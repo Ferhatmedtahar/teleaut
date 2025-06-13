@@ -7,13 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { educationMapping } from "@/lib/constants/EducationsMapping";
 import FeaturedVideo from "./FeaturedVideo";
 
-function getTeacherName(teacher: any): string {
-  if (!teacher) return "Professeur";
-  return (
-    `${teacher.first_name ?? ""} ${teacher.last_name ?? ""}`.trim() ||
-    "Professeur"
-  );
-}
+// function getTeacherName(teacher: any): string {
+//   if (!teacher) return "Professeur";
+//   return (
+//     `${teacher.first_name ?? ""} ${teacher.last_name ?? ""}`.trim() ||
+//     "Professeur"
+//   );
+// }
 
 function getSubjectsForClassAndBranch(
   className?: string,

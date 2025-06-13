@@ -115,9 +115,11 @@ export default function FilterBar({
 
   return (
     <div className="flex flex-col gap-4 mb-6">
-      <h3 className="text-md font-medium">Filter Videos </h3>
+      {classes.length >= 2 && (
+        <h3 className="text-md font-medium">Filter Videos </h3>
+      )}
       <div className="flex flex-wrap gap-4 items-center">
-        {classes.length > 2 && (
+        {classes.length >= 2 && (
           <div className="flex flex-col gap-1">
             <Label htmlFor="class-filter">Class</Label>
             <Select value={currentClass} onValueChange={handleClassChange}>

@@ -88,15 +88,14 @@ export default function TeacherVideosList({
   ) {
     return (
       <div className="p-8 flex flex-col gap-4">
-        <h2 className="text-2xl lg:text-3xl font-semibold">Your Videos</h2>
-        <p>Loading videos...</p>
+        <h2 className="text-2xl lg:text-3xl font-semibold">Vos vidéos</h2>
+        <p>Chargement des vidéos...</p>
       </div>
     );
   }
-
   return (
     <div className="p-8 flex flex-col gap-4">
-      <h2 className="text-2xl lg:text-3xl font-semibold">Your Videos</h2>
+      <h2 className="text-2xl lg:text-3xl font-semibold">Vos vidéos</h2>
 
       {videos.length > 0 && (
         <FilterBar
@@ -145,14 +144,14 @@ export default function TeacherVideosList({
               />
             ))
           ) : (
-            <p>No videos match the selected filters.</p>
+            <p>Aucune vidéo ne correspond aux filtres sélectionnés.</p>
           )}
         </div>
       )}
 
       {!initialLoading && videos.length === 0 && (
         <p className="text-gray-500 text-center py-4">
-          Teacher has no videos yet!
+          L&apos;enseignant n&apos;a pas encore de vidéos!
         </p>
       )}
 
@@ -163,7 +162,7 @@ export default function TeacherVideosList({
           className="mt-6 self-center bg-primary text-white py-2 px-4 rounded hover:bg-primary/90 transition"
         >
           {loading && <span className="animate-spin mr-2">⌛</span>}
-          {loading ? "Loading..." : "Load More"}
+          {loading ? "Chargement..." : "Charger plus"}
         </Button>
       )}
     </div>

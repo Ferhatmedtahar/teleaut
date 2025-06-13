@@ -61,7 +61,7 @@ export default function TeacherCard({ teacher }: TeacherCardProps) {
       <div className="mt-auto">
         <div className="flex items-center text-sm text-muted-foreground mb-2">
           <GraduationCap className="w-4 h-4 mr-1 text-primary" />
-          <span className="dark:text-white/95">Spécialités</span>
+          <span className="dark:text-white/95">Spécialités:</span>
         </div>
         <div className="flex flex-wrap gap-2 mb-4">
           {subjects.slice(0, 4).map((subject, index) => (

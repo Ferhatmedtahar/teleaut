@@ -85,7 +85,7 @@ export async function getSearchResults(query: string): Promise<{
   success: boolean;
   videos: RelatedVideo[];
   teachers: any[];
-  students: any[];
+  // students: any[];
 }> {
   const supabase = await createClient();
 
@@ -102,7 +102,7 @@ export async function getSearchResults(query: string): Promise<{
 
     if (videosError) {
       console.error("Error searching videos:", videosError);
-      return { success: false, videos: [], teachers: [], students: [] };
+      return { success: false, videos: [], teachers: [] };
     }
 
     // Search teachers based on name
@@ -115,21 +115,21 @@ export async function getSearchResults(query: string): Promise<{
 
     if (teachersError) {
       console.error("Error searching teachers:", teachersError);
-      return { success: false, videos: [], teachers: [], students: [] };
+      return { success: false, videos: [], teachers: [] };
     }
 
-    // Search students based on name
-    const { data: students, error: studentsError } = await supabase
-      .from("users")
-      .select("id, first_name, last_name, profile_url")
-      .or(`first_name.ilike.%${query}%, last_name.ilike.%${query}%`)
-      .eq("role", roles.student)
-      .limit(10);
+    // // Search students based on name
+    // const { data: students, error: studentsError } = await supabase
+    //   .from("users")
+    //   .select("id, first_name, last_name, profile_url")
+    //   .or(`first_name.ilike.%${query}%, last_name.ilike.%${query}%`)
+    //   .eq("role", roles.student)
+    //   .limit(10);
 
-    if (studentsError) {
-      console.error("Error searching students:", studentsError);
-      return { success: false, videos: [], teachers: [], students: [] };
-    }
+    // if (studentsError) {
+    //   console.error("Error searching students:", studentsError);
+    //   return { success: false, videos: [], teachers: [],  };
+    // }
 
     // Enrich videos with teacher information
     const videosWithTeachers = await Promise.all(
@@ -151,11 +151,10 @@ export async function getSearchResults(query: string): Promise<{
       success: true,
       videos: videosWithTeachers,
       teachers: teachers || [],
-      students: students || [],
     };
   } catch (error) {
     console.error("Error in getSearchResults:", error);
-    return { success: false, videos: [], teachers: [], students: [] };
+    return { success: false, videos: [], teachers: [] };
   }
 }
 
