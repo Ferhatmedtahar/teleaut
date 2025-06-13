@@ -13,9 +13,11 @@ export async function getHomePageVideos(): Promise<{
   const supabase = await createClient();
 
   try {
+    // 1. Try to get the latest featured video
     const { data: featuredVideos, error: featuredError } = await supabase
       .from("videos")
       .select("*")
+      .eq("is_featured", true)
       .order("created_at", { ascending: false })
       .limit(1);
 
@@ -24,36 +26,54 @@ export async function getHomePageVideos(): Promise<{
       return { success: false, featuredVideo: null, explorerVideos: [] };
     }
 
-    // Get other recent videos for explorer section (excluding the featured one)
+    let featuredVideo = featuredVideos[0];
+
+    // 2. If no featured video exists, fallback to most recent video
+    if (!featuredVideo) {
+      const { data: fallbackVideos, error: fallbackError } = await supabase
+        .from("videos")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      if (fallbackError) {
+        console.error("Error fetching fallback featured video:", fallbackError);
+        return { success: false, featuredVideo: null, explorerVideos: [] };
+      }
+
+      featuredVideo = fallbackVideos[0] ?? null;
+    }
+
     const { data: explorerVideosData, error: explorerError } = await supabase
       .from("videos")
       .select("*")
       .order("created_at", { ascending: false })
       .limit(10)
-      .neq("id", featuredVideos[0]?.id ?? "");
+      .not("id", "eq", featuredVideo?.id ?? "")
+      .not("is_featured", "eq", true)
+      .not("class", "eq", "FEATURED");
 
     if (explorerError) {
       console.error("Error fetching explorer videos:", explorerError);
       return { success: false, featuredVideo: null, explorerVideos: [] };
     }
 
-    // Get teacher info for featured video
+    // 4. Get teacher for featured video
     let featuredVideoWithTeacher = null;
-    if (featuredVideos && featuredVideos.length > 0) {
-      const { data: featuredTeacher, error: featuredTeacherError } =
-        await supabase
-          .from("users")
-          .select("id, first_name, last_name, profile_url")
-          .eq("id", featuredVideos[0].teacher_id)
-          .single();
+    if (featuredVideo) {
+      const { data: teacher, error: teacherError } = await supabase
+        .from("users")
+        .select("id, first_name, last_name, profile_url")
+        .eq("id", featuredVideo.teacher_id)
+        .single();
 
       featuredVideoWithTeacher = {
-        ...featuredVideos[0],
-        teacher: featuredTeacherError ? null : featuredTeacher,
+        ...featuredVideo,
+        teacher: teacherError ? null : teacher,
       };
     }
 
-    // Get teacher info for explorer videos
+    // 5. Get teachers for explorer videos
     const explorerVideosWithTeachers = await Promise.all(
       explorerVideosData.map(async (video) => {
         const { data: teacher, error: teacherError } = await supabase
@@ -79,6 +99,81 @@ export async function getHomePageVideos(): Promise<{
     return { success: false, featuredVideo: null, explorerVideos: [] };
   }
 }
+
+// export async function getHomePageVideos(): Promise<{
+//   success: boolean;
+//   featuredVideo: RelatedVideo | null;
+//   explorerVideos: RelatedVideo[];
+// }> {
+//   const supabase = await createClient();
+
+//   try {
+//     const { data: featuredVideos, error: featuredError } = await supabase
+//       .from("videos")
+//       .select("*")
+//       .order("created_at", { ascending: false })
+//       .limit(1);
+
+//     if (featuredError) {
+//       console.error("Error fetching featured video:", featuredError);
+//       return { success: false, featuredVideo: null, explorerVideos: [] };
+//     }
+
+//     // Get other recent videos for explorer section (excluding the featured one)
+//     const { data: explorerVideosData, error: explorerError } = await supabase
+//       .from("videos")
+//       .select("*")
+//       .order("created_at", { ascending: false })
+//       .limit(10)
+//       .neq("id", featuredVideos[0]?.id ?? "");
+
+//     if (explorerError) {
+//       console.error("Error fetching explorer videos:", explorerError);
+//       return { success: false, featuredVideo: null, explorerVideos: [] };
+//     }
+
+//     // Get teacher info for featured video
+//     let featuredVideoWithTeacher = null;
+//     if (featuredVideos && featuredVideos.length > 0) {
+//       const { data: featuredTeacher, error: featuredTeacherError } =
+//         await supabase
+//           .from("users")
+//           .select("id, first_name, last_name, profile_url")
+//           .eq("id", featuredVideos[0].teacher_id)
+//           .single();
+
+//       featuredVideoWithTeacher = {
+//         ...featuredVideos[0],
+//         teacher: featuredTeacherError ? null : featuredTeacher,
+//       };
+//     }
+
+//     // Get teacher info for explorer videos
+//     const explorerVideosWithTeachers = await Promise.all(
+//       explorerVideosData.map(async (video) => {
+//         const { data: teacher, error: teacherError } = await supabase
+//           .from("users")
+//           .select("id, first_name, last_name, profile_url")
+//           .eq("id", video.teacher_id)
+//           .single();
+
+//         return {
+//           ...video,
+//           teacher: teacherError ? null : teacher,
+//         };
+//       })
+//     );
+
+//     return {
+//       success: true,
+//       featuredVideo: featuredVideoWithTeacher,
+//       explorerVideos: explorerVideosWithTeachers,
+//     };
+//   } catch (error) {
+//     console.error("Error in getHomePageVideos:", error);
+//     return { success: false, featuredVideo: null, explorerVideos: [] };
+//   }
+// }
 
 // Get search results based on query
 export async function getSearchResults(query: string): Promise<{

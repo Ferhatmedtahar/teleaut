@@ -20,6 +20,7 @@ import RenderStars from "./RenderStars";
 import ShareLink from "./ShareLink";
 
 interface VideoInfoProps {
+  readonly is_Ad: boolean;
   readonly video: {
     readonly id: string;
     readonly title: string;
@@ -36,7 +37,7 @@ interface VideoInfoProps {
   };
 }
 
-export default function VideoInfo({ video }: VideoInfoProps) {
+export default function VideoInfo({ video, is_Ad = false }: VideoInfoProps) {
   const [ratingStats, setRatingStats] = useState({
     averageRating: 0,
     totalRatings: 0,
@@ -130,11 +131,13 @@ export default function VideoInfo({ video }: VideoInfoProps) {
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight text-gray-900 dark:text-white flex-1">
             {video.title}
           </h1>
-          <div className="flex-shrink-0">
-            <span className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200 text-sm font-semibold">
-              Niveau : {video.class}
-            </span>
-          </div>
+          {!is_Ad && (
+            <div className="flex-shrink-0">
+              <span className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200 text-sm font-semibold">
+                Niveau : {video.class}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Branches */}
@@ -235,7 +238,7 @@ export default function VideoInfo({ video }: VideoInfoProps) {
               {video.teacher.first_name} {video.teacher.last_name}
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Enseignant
+              {is_Ad ? "administrateur" : "Enseignant"}
             </p>
           </div>
         </Link>

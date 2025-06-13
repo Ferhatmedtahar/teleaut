@@ -492,7 +492,7 @@ export default function FeaturedVideoUploadForm({
                   fill
                   className="object-cover rounded-md"
                 />
-                <div className="absolute inset-0 gradient-bg-light bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 duration-200 transition-all">
+                <div className="absolute inset-0 gradient-bg-light bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 duration-300 transition-all">
                   <Button
                     type="button"
                     variant={`secondary`}

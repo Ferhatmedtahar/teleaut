@@ -91,7 +91,7 @@ async function VideoContent({ id }: { readonly id: string }) {
           videoUrl={video.video_url}
           thumbnailUrl={video.thumbnail_url}
         />
-        <VideoInfo video={video} />
+        <VideoInfo video={video} is_Ad={video.class == "FEATURED"} />
         <VideoDescription description={video.description} />
       </div>
 

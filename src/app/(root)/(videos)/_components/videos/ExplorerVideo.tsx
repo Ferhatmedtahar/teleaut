@@ -93,7 +93,7 @@ export default function ExplorerVideo({ video, user }: ExplorerVideoProps) {
           {/* Teacher info - removed online indicator */}
           <div className="flex items-center gap-3 mb-4">
             <Image
-              src={user.profile_url ?? "/images/placeholder-profile.png"}
+              src={user.profile_url || "/images/placeholder-profile.png"}
               alt={`${user.first_name} ${user.last_name}`}
               width={40}
               height={40}
@@ -104,7 +104,7 @@ export default function ExplorerVideo({ video, user }: ExplorerVideoProps) {
                 {user.first_name} {user.last_name}
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Teacher
+                Professeur(e)
               </p>
             </div>
           </div>
