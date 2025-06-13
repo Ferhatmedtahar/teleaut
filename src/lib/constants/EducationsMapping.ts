@@ -182,6 +182,7 @@ export const educationMapping: Record<string, Record<string, string[]>> = {
     ],
     Mathématiques: [
       "Mathématiques",
+      "test",
       "Sciences Physiques",
       "Informatique",
       "Français",

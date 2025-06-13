@@ -8,19 +8,24 @@ export async function uploadVideoSecureClient(
   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
   try {
+    console.log(`Starting secure client upload for: ${file.name}`);
+    console.log("base url", BASE_URL);
     const authResponse = await fetch(`${BASE_URL}/api/video/auth`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId }),
     });
 
+    console.log("auth response", authResponse);
     if (!authResponse.ok) {
-      throw new Error("Failed to get upload credentials");
+      throw new Error(
+        "Échec de l'obtention des informations d'identification de téléchargement"
+      );
     }
 
     const { libraryId, apiKey } = await authResponse.json();
-
-    // Now do everything client-side with the credentials
+    console.log("libraryId", libraryId);
+    console.log("apiKey", apiKey);
     const videoId = await createVideoObjectClient(libraryId, apiKey, file.name);
     const uploadUrl = `https://video.bunnycdn.com/library/${libraryId}/videos/${videoId}`;
 
@@ -29,62 +34,10 @@ export async function uploadVideoSecureClient(
     return `https://iframe.mediadelivery.net/embed/${libraryId}/${videoId}`;
   } catch (error) {
     console.error("Upload error:", error);
-    throw new Error(error instanceof Error ? error.message : "Upload failed");
+    throw new Error("échec du téléchargement");
   }
 }
-// export async function uploadVideoDirectlyClientOnly(
-//   file: File,
-//   userId: string,
-//   onProgress?: (progress: number) => void
-// ): Promise<string> {
-//   if (!file) throw new Error("Video file is required");
 
-//   // Validate file type
-//   if (!file.type.startsWith("video/")) {
-//     throw new Error("Please select a valid video file");
-//   }
-
-//   // Optional: Client-side size validation
-//   const maxSize = 500 * 1024 * 1024; // 500MB
-//   if (file.size > maxSize) {
-//     throw new Error("File is too large. Maximum size is 500MB.");
-//   }
-
-//   // ⚠️ These would need to be environment variables exposed to the client
-//   // This is the security trade-off - your API keys are visible in the browser
-//   const BUNNY_LIBRARY_ID = process.env.NEXT_PUBLIC_BUNNY_STREAM_LIBRARY_ID!;
-//   const BUNNY_API_KEY = process.env.NEXT_PUBLIC_BUNNY_STREAM_API_KEY!;
-
-//   if (!BUNNY_LIBRARY_ID || !BUNNY_API_KEY) {
-//     throw new Error("Bunny Stream credentials not configured");
-//   }
-
-//   try {
-//     console.log(`Starting direct client upload for: ${file.name}`);
-
-//     // Step 1: Create video object directly from client
-//     const videoId = await createVideoObjectClient(
-//       BUNNY_LIBRARY_ID,
-//       BUNNY_API_KEY,
-//       file.name
-//     );
-
-//     // Step 2: Upload directly to Bunny Stream
-//     const uploadUrl = `https://video.bunnycdn.com/library/${BUNNY_LIBRARY_ID}/videos/${videoId}`;
-//     await uploadToBunnyDirect(file, uploadUrl, BUNNY_API_KEY, onProgress);
-
-//     // Step 3: Return embed URL
-//     const embedUrl = `https://iframe.mediadelivery.net/embed/${BUNNY_LIBRARY_ID}/${videoId}`;
-
-//     console.log("Upload completed successfully!");
-//     return embedUrl;
-//   } catch (error) {
-//     console.error("Upload error:", error);
-//     throw new Error(error instanceof Error ? error.message : "Upload failed");
-//   }
-// }
-
-// Client-side function to create video object in Bunny Stream
 async function createVideoObjectClient(
   libraryId: string,
   apiKey: string,

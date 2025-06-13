@@ -696,7 +696,8 @@ export default function VideoUploadForm({
             >
               soumettre des notes
               <span className="text-gray-500 dark:text-gray-400 text-xs">
-                (optionnel)
+                (optionnel) Veuillez combiner vos documents et cours en un seul
+                document et les télécharger ici.
               </span>
             </label>
             <div className="flex items-center gap-2">
@@ -741,7 +742,8 @@ export default function VideoUploadForm({
               soumettre d&apos;autres documents
               <span className="text-gray-500 dark:text-gray-400 text-xs">
                 {" "}
-                (optionnel)
+                (optionnel)Veuillez combiner vos documents en un seul document
+                et les télécharger ici.
               </span>
             </label>
             <div className="flex items-center gap-2">

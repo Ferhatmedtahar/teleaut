@@ -58,6 +58,8 @@ export default async function HomePage() {
   }
 
   // Get subjects based on user's class and branch (if available)
+  console.log("branchAndClass", branchAndClass);
+  console.log("branchAndClassSuccess", branchAndClassSuccess);
   const userSubjects =
     branchAndClassSuccess && branchAndClass
       ? getSubjectsForClassAndBranch(
@@ -65,6 +67,7 @@ export default async function HomePage() {
           branchAndClass.branch || undefined
         )
       : [];
+  console.log("userSubjects", userSubjects);
 
   // Create subjects array with "Tous" (All) as first option
   const subjects = ["Tous", ...userSubjects];
