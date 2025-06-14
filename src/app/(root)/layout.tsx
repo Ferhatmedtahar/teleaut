@@ -57,8 +57,9 @@
 //     </div>
 //   );
 // }
-// app/(root)/layout.tsx
+
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
+
 import GuestNavbar from "@/components/navigation/GuestNavBar";
 import {
   MobileSidebarDrawer,
@@ -91,7 +92,6 @@ export default async function RootLayout({
     );
   }
 
-  // Authenticated user flow
   const { user } = result;
   const supabase = await createClient();
   const { data: userInfo } = await supabase
@@ -121,6 +121,7 @@ export default async function RootLayout({
               <AuthGuard />
               {children}
             </main>
+            {/* <Footer /> */}
           </div>
         </MobileSidebarProvider>
       </UserProvider>
