@@ -51,13 +51,15 @@ export function FilterModal({
 }: FilterModalProps) {
   const [open, setOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>(initialFilterState);
+  console.log("search videos", { searchVideos, filters });
 
   // Get available branches based on selected class
-  const availableBranches = filters.selectedClass
-    ? studentClassesAndBranches[
-        filters.selectedClass as keyof typeof studentClassesAndBranches
-      ] || []
-    : [];
+  const availableBranches =
+    filters.selectedClass == "4ème année secondaire (bac)"
+      ? studentClassesAndBranches["4ème année secondaire (BAC)"] || []
+      : studentClassesAndBranches[
+          filters.selectedClass as keyof typeof studentClassesAndBranches
+        ] || [];
 
   // Function to filter videos based on current filters
   const filterVideos = (
@@ -78,11 +80,11 @@ export function FilterModal({
     // Filter by class - FIXED: use 'class' instead of 'class_level'
     if (currentFilters.selectedClass) {
       filtered = filtered.filter(
-        (video) => (video as any).class === currentFilters.selectedClass
+        (video) =>
+          (video as any).class.toLowerCase() === currentFilters.selectedClass
       );
     }
 
-    // Filter by branch - FIXED: check if branch array includes the selected branch
     if (
       currentFilters.selectedBranch &&
       currentFilters.selectedBranch !== "Aucune filière"
@@ -273,7 +275,7 @@ export function FilterModal({
               </SelectTrigger>
               <SelectContent>
                 {studentClasses.map((cls) => (
-                  <SelectItem key={cls} value={cls}>
+                  <SelectItem key={cls} value={cls.toLowerCase()}>
                     {cls}
                   </SelectItem>
                 ))}

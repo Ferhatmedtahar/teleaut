@@ -83,6 +83,7 @@ SearchResultsClientProps) {
 
   const totalResults = getTotalResults();
 
+  console.log("filteredVideos", filteredVideos);
   return (
     <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg min-h-screen">
       <div>
