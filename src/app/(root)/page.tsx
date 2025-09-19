@@ -49,7 +49,6 @@
 // }
 
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
-import { getVideosGuestPage } from "@/actions/home/getHomeVideo";
 import { getSearchResults } from "@/actions/home/homeVideos.action";
 import { Button } from "@/components/common/buttons/Button";
 import GuestHomePage from "@/components/home/GuestHomePage";
@@ -97,12 +96,7 @@ export default async function Page({ searchParams }: SearchPageProps) {
       );
     }
 
-    const { success, videos } = await getVideosGuestPage(search, 6);
-
-    if (!success) {
-      return null;
-    }
-    return <GuestHomePage videos={videos} success={success} search={search} />;
+    return <GuestHomePage />;
   }
 
   // For authenticated users

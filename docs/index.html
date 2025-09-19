@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Healthcare API Documentation</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --light-color: #ecf0f1;
+        --dark-color: #2c3e50;
+        --success-color: #2ecc71;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --text-color: #333;
+        --border-radius: 4px;
+        --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: #f8f9fa;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      header h1 {
+        margin-bottom: 10px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      button {
+        background-color: var(--secondary-color);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      button:hover {
+        background-color: #2980b9;
+      }
+
+      .search-container {
+        position: relative;
+      }
+
+      #search {
+        padding: 8px 15px;
+        padding-right: 35px;
+        border-radius: var(--border-radius);
+        border: 1px solid #ddd;
+        width: 250px;
+      }
+
+      .search-container i {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #777;
+      }
+
+      .api-section {
+        background-color: white;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+      }
+
+      .section-header {
+        background-color: var(--light-color);
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .section-header h2 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.3rem;
+        color: var(--primary-color);
+      }
+
+      .section-content {
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+      }
+
+      .section-content.active {
+        max-height: 5000px;
+        padding: 20px;
+      }
+
+      .subsection {
+        margin-bottom: 20px;
+        border: 1px solid #eee;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+      }
+
+      .subsection-header {
+        background-color: #f8f9fa;
+        padding: 12px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+      }
+
+      .subsection-header h3 {
+        font-size: 1.1rem;
+        color: var(--dark-color);
+      }
+
+      .subsection-content {
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+      }
+
+      .subsection-content.active {
+        max-height: 3000px;
+        padding: 15px;
+      }
+
+      .endpoint {
+        margin-bottom: 15px;
+        border: 1px solid #eee;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+      }
+
+      .endpoint-header {
+        background-color: #f8f9fa;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+      }
+
+      .method {
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 3px;
+        margin-right: 10px;
+        font-size: 0.8rem;
+        min-width: 60px;
+        text-align: center;
+      }
+
+      .get {
+        background-color: #61affe;
+        color: white;
+      }
+
+      .post {
+        background-color: #49cc90;
+        color: white;
+      }
+
+      .put {
+        background-color: #fca130;
+        color: white;
+      }
+
+      .delete {
+        background-color: #f93e3e;
+        color: white;
+      }
+
+      .path {
+        font-family: monospace;
+        font-size: 0.9rem;
+        flex-grow: 1;
+      }
+
+      .endpoint-header .toggle-btn {
+        background: none;
+        color: #777;
+        padding: 0;
+        margin-left: auto;
+      }
+
+      .endpoint-content {
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+      }
+
+      .endpoint-content.active {
+        max-height: 2000px;
+        padding: 15px;
+      }
+
+      .code-block {
+        background-color: #f8f9fa;
+        border-radius: var(--border-radius);
+        padding: 15px;
+        margin-top: 10px;
+      }
+
+      .code-block h4 {
+        margin-bottom: 8px;
+        color: var(--dark-color);
+      }
+
+      pre {
+        background-color: #f1f1f1;
+        padding: 10px;
+        border-radius: 3px;
+        overflow-x: auto;
+        margin-bottom: 10px;
+      }
+
+      code {
+        font-family: "Courier New", Courier, monospace;
+        font-size: 0.9rem;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 40px;
+        padding: 20px;
+        color: #777;
+        border-top: 1px solid #eee;
+      }
+
+      .toggle-btn i {
+        transition: transform 0.3s ease;
+      }
+
+      .toggle-btn.active i {
+        transform: rotate(180deg);
+      }
+
+      @media (max-width: 768px) {
+        header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .actions {
+          margin-top: 15px;
+          width: 100%;
+        }
+
+        #search {
+          width: 100%;
+        }
+
+        .section-header h2 {
+          font-size: 1.1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Healthcare Application API Documentation</h1>
+        <div class="actions">
+          <button id="expand-all">Expand All</button>
+          <button id="collapse-all">Collapse All</button>
+          <div class="search-container">
+            <input type="text" id="search" placeholder="Search endpoints..." />
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <!-- User Management Section -->
+        <section class="api-section">
+          <div class="section-header">
+            <h2><i class="fas fa-users"></i> 1. User Management</h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <!-- Authentication Subsection -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <h3>Authentication</h3>
+                <button class="toggle-btn">
+                  <i class="fas fa-chevron-down"></i>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="path">/api/auth/login</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Login with email/password, Google, or Facebook.</p>
+                    <div class="code-block">
+                      <h4>Request Body:</h4>
+                      <pre><code>{ 
+  "email": "user@example.com", 
+  "password": "password123" 
+}</code></pre>
+                      <p>Or for social login:</p>
+                      <pre><code>{ 
+  "provider": "google", 
+  "token": "oauth-token" 
+}</code></pre>
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "token": "jwt-auth-token", 
+  "user_id": "123", 
+  "user_type": "patient" 
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="path">/api/auth/register</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Register a new user (patient, doctor, or admin).</p>
+                    <div class="code-block">
+                      <h4>Request Body:</h4>
+                      <pre><code>{ 
+  "first_name": "John", 
+  "last_name": "Doe", 
+  "email": "john@example.com", 
+  "password": "securepass123", 
+  "phone": "+1234567890", 
+  "user_type": "patient", 
+  "registration_method": "email" 
+}</code></pre>
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "user_id": "123", 
+  "token": "jwt-auth-token" 
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="path">/api/auth/logout</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Logout the user.</p>
+                    <div class="code-block">
+                      <h4>Request Body:</h4>
+                      <pre><code>{ 
+  "token": "jwt-auth-token" 
+}</code></pre>
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "message": "Logged out successfully" 
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="path">/api/auth/reset-password-otp</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Request a password reset with email or phone.</p>
+                    <div class="code-block">
+                      <h4>Request Body:</h4>
+                      <pre><code>{ 
+  "email": "user@example.com" 
+}</code></pre>
+                      <p>Or:</p>
+                      <pre><code>{ 
+  "phone": "+1234567890" 
+}</code></pre>
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "otp": "123456" 
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="path">/api/auth/reset-password</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Reset a password.</p>
+                    <div class="code-block">
+                      <h4>Request Body:</h4>
+                      <pre><code>{ 
+  "password": "oldpassword", 
+  "new_password": "newpassword123" 
+}</code></pre>
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "message": "Reset password successfully" 
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="path">/api/auth/verify-phone</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Verify the user's phone.</p>
+                    <div class="code-block">
+                      <h4>Request Body:</h4>
+                      <pre><code>{ 
+  "phone": "+1234567890" 
+}</code></pre>
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "otp": "123456" 
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- User Profile Subsection -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <h3>User Profile</h3>
+                <button class="toggle-btn">
+                  <i class="fas fa-chevron-down"></i>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/api/users/{user_id}</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Fetch user profile by ID.</p>
+                    <div class="code-block">
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "user_data": {
+    "id": "123",
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@example.com",
+    "phone": "+1234567890",
+    "user_type": "patient",
+    "profile_picture_url": "https://example.com/profile.jpg",
+    "created_at": "2023-01-01T12:00:00Z",
+    "updated_at": "2023-01-15T14:30:00Z"
+  }
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method put">PUT</span>
+                    <span class="path">/api/users/{user_id}</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Update user profile.</p>
+                    <div class="code-block">
+                      <h4>Request Body:</h4>
+                      <pre><code>{ 
+  "first_name": "John",
+  "last_name": "Smith",
+  "phone": "+1987654321",
+  "profile_picture_url": "https://example.com/new-profile.jpg"
+}</code></pre>
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "updated_user_details": {
+    "id": "123",
+    "first_name": "John",
+    "last_name": "Smith",
+    "email": "john@example.com",
+    "phone": "+1987654321",
+    "profile_picture_url": "https://example.com/new-profile.jpg",
+    "updated_at": "2023-02-01T10:15:00Z"
+  }
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method delete">DELETE</span>
+                    <span class="path">/api/users/{user_id}</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Delete a user account.</p>
+                    <div class="code-block">
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "message": "User deleted" 
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Role-Specific Data Subsection -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <h3>Role-Specific Data</h3>
+                <button class="toggle-btn">
+                  <i class="fas fa-chevron-down"></i>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/api/users/{user_id}/patient-data</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Fetch patient-specific data (if user_type = patient).</p>
+                    <div class="code-block">
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "contact_info": {
+    "email": "john@example.com",
+    "phone": "+1234567890"
+  },
+  "address": {
+    "street": "123 Main St",
+    "city": "Anytown",
+    "state": "CA",
+    "zip": "12345",
+    "country": "USA"
+  },
+  "current_medications": ["Medication A", "Medication B"],
+  "allergies": ["Peanuts", "Penicillin"],
+  "payment_methods": [
+    {
+      "id": "pm_123",
+      "type": "credit_card",
+      "provider": "Visa",
+      "last4": "4242"
+    }
+  ]
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method put">PUT</span>
+                    <span class="path">/api/users/{user_id}/patient-data</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Update patient-specific data.</p>
+                    <div class="code-block">
+                      <h4>Request Body:</h4>
+                      <pre><code>{ 
+  "address": {
+    "street": "456 Oak Ave",
+    "city": "Newtown",
+    "state": "NY",
+    "zip": "54321",
+    "country": "USA"
+  },
+  "current_medications": ["Medication C", "Medication D"],
+  "allergies": ["Shellfish", "Penicillin"]
+}</code></pre>
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "updated_patient_data": {
+    "address": {
+      "street": "456 Oak Ave",
+      "city": "Newtown",
+      "state": "NY",
+      "zip": "54321",
+      "country": "USA"
+    },
+    "current_medications": ["Medication C", "Medication D"],
+    "allergies": ["Shellfish", "Penicillin"]
+  }
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/api/users/{user_id}/doctor-data</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Fetch doctor-specific data (if user_type = doctor).</p>
+                    <div class="code-block">
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "specialties_id": "spec_123",
+  "hospital": "General Hospital",
+  "years_of_experience": 10,
+  "certifications": ["Board Certified", "Specialty Certification"],
+  "education": [
+    {
+      "degree": "MD",
+      "institution": "Medical University",
+      "year": 2010
+    }
+  ],
+  "availability_days": ["Monday", "Wednesday", "Friday"],
+  "availability_times": ["09:00-12:00", "14:00-17:00"],
+  "consultation_fee": 150,
+  "subscription_plan": "Premium"
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="endpoint">
+                  <div class="endpoint-header">
+                    <span class="method put">PUT</span>
+                    <span class="path">/api/users/{user_id}/doctor-data</span>
+                    <button class="toggle-btn">
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                  </div>
+                  <div class="endpoint-content">
+                    <p>Update doctor-specific data.</p>
+                    <div class="code-block">
+                      <h4>Request Body:</h4>
+                      <pre><code>{ 
+  "specialties_id": "spec_456",
+  "hospital": "City Medical Center",
+  "years_of_experience": 12,
+  "consultation_fee": 175,
+  "availability_days": ["Tuesday", "Thursday", "Saturday"],
+  "availability_times": ["10:00-13:00", "15:00-18:00"]
+}</code></pre>
+                      <h4>Response:</h4>
+                      <pre><code>{ 
+  "updated_doctor_data": {
+    "specialties_id": "spec_456",
+    "hospital": "City Medical Center",
+    "years_of_experience": 12,
+    "consultation_fee": 175,
+    "availability_days": ["Tuesday", "Thursday", "Saturday"],
+    "availability_times": ["10:00-13:00", "15:00-18:00"]
+  }
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Specialties Section -->
+        <section class="api-section">
+          <div class="section-header">
+            <h2><i class="fas fa-stethoscope"></i> 2. Specialties</h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/specialties</span>
+                <button class="toggle-btn">
+                  <i class="fas fa-chevron-down"></i>
+                </button>
+              </div>
+              <div class="endpoint-content">
+                <p>Fetch all specialties.</p>
+                <div class="code-block">
+                  <h4>Response:</h4>
+                  <pre><code>[ 
+  {
+    "id": "spec_123",
+    "name": "Cardiology",
+    "description": "Deals with disorders of the heart"
+  },
+  {
+    "id": "spec_124",
+    "name": "Neurology",
+    "description": "Deals with disorders of the nervous system"
+  }
+]</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="endpoint">
+              <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/specialties/{specialty_id}</span>
+                <button class="toggle-btn">
+                  <i class="fas fa-chevron-down"></i>
+                </button>
+              </div>
+              <div class="endpoint-content">
+                <p>Fetch details of a specific specialty.</p>
+                <div class="code-block">
+                  <h4>Response:</h4>
+                  <pre><code>{
+  "id": "spec_123",
+  "name": "Cardiology",
+  "description": "Deals with disorders of the heart",
+  "created_at": "2022-01-01T00:00:00Z",
+  "updated_at": "2022-01-01T00:00:00Z"
+}</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- More endpoints would be added here -->
+          </div>
+        </section>
+
+        <!-- Additional sections would be added here -->
+        <section class="api-section">
+          <div class="section-header">
+            <h2><i class="fas fa-calendar-alt"></i> 3. Appointments</h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <!-- Appointment endpoints would be added here -->
+            <p>Appointment endpoints documentation...</p>
+          </div>
+        </section>
+
+        <section class="api-section">
+          <div class="section-header">
+            <h2><i class="fas fa-prescription"></i> 4. Prescriptions</h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <!-- Prescription endpoints would be added here -->
+            <p>Prescription endpoints documentation...</p>
+          </div>
+        </section>
+
+        <section class="api-section">
+          <div class="section-header">
+            <h2><i class="fas fa-comments"></i> 5. Chats and Messages</h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <!-- Chat endpoints would be added here -->
+            <p>Chat and message endpoints documentation...</p>
+          </div>
+        </section>
+
+        <section class="api-section">
+          <div class="section-header">
+            <h2><i class="fas fa-users"></i> 6. Groups</h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <!-- Group endpoints would be added here -->
+            <p>Group endpoints documentation...</p>
+          </div>
+        </section>
+
+        <section class="api-section">
+          <div class="section-header">
+            <h2>
+              <i class="fas fa-comment-medical"></i> 7. Patient Discussions
+            </h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <!-- Discussion endpoints would be added here -->
+            <p>Patient discussion endpoints documentation...</p>
+          </div>
+        </section>
+
+        <section class="api-section">
+          <div class="section-header">
+            <h2><i class="fas fa-history"></i> 8. History</h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <!-- History endpoints would be added here -->
+            <p>History endpoints documentation...</p>
+          </div>
+        </section>
+
+        <section class="api-section">
+          <div class="section-header">
+            <h2><i class="fas fa-user-shield"></i> 9. Admin Endpoints</h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <!-- Admin endpoints would be added here -->
+            <p>Admin endpoints documentation...</p>
+          </div>
+        </section>
+
+        <section class="api-section">
+          <div class="section-header">
+            <h2><i class="fas fa-credit-card"></i> 10. Payment Methods</h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <!-- Payment method endpoints would be added here -->
+            <p>Payment method endpoints documentation...</p>
+          </div>
+        </section>
+
+        <section class="api-section">
+          <div class="section-header">
+            <h2><i class="fas fa-money-bill-wave"></i> 11. Payments</h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <!-- Payment endpoints would be added here -->
+            <p>Payment endpoints documentation...</p>
+          </div>
+        </section>
+
+        <section class="api-section">
+          <div class="section-header">
+            <h2><i class="fas fa-sync"></i> 12. Subscriptions</h2>
+            <button class="toggle-btn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="section-content">
+            <!-- Subscription endpoints would be added here -->
+            <p>Subscription endpoints documentation...</p>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>&copy; 2023 Healthcare API Documentation. All rights reserved.</p>
+      </footer>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle functionality for sections, subsections, and endpoints
+        const toggleButtons = document.querySelectorAll(".toggle-btn");
+
+        toggleButtons.forEach((button) => {
+          button.addEventListener("click", function (e) {
+            e.stopPropagation();
+
+            const parent = this.parentElement;
+            const content = parent.nextElementSibling;
+
+            // Toggle active class on content
+            content.classList.toggle("active");
+
+            // Toggle active class on button for rotation
+            this.classList.toggle("active");
+
+            // If it's a section header, close other sections
+            if (parent.classList.contains("section-header")) {
+              const otherSections = document.querySelectorAll(
+                ".section-content.active"
+              );
+              otherSections.forEach((section) => {
+                if (section !== content) {
+                  section.classList.remove("active");
+                  section.previousElementSibling
+                    .querySelector(".toggle-btn")
+                    .classList.remove("active");
+                }
+              });
+            }
+          });
+        });
+
+        // Make section headers clickable
+        const sectionHeaders = document.querySelectorAll(".section-header");
+        sectionHeaders.forEach((header) => {
+          header.addEventListener("click", function (e) {
+            if (
+              e.target === this ||
+              e.target.tagName === "H2" ||
+              e.target.tagName === "I"
+            ) {
+              const button = this.querySelector(".toggle-btn");
+              button.click();
+            }
+          });
+        });
+
+        // Make subsection headers clickable
+        const subsectionHeaders =
+          document.querySelectorAll(".subsection-header");
+        subsectionHeaders.forEach((header) => {
+          header.addEventListener("click", function (e) {
+            if (e.target === this || e.target.tagName === "H3") {
+              const button = this.querySelector(".toggle-btn");
+              button.click();
+            }
+          });
+        });
+
+        // Make endpoint headers clickable
+        const endpointHeaders = document.querySelectorAll(".endpoint-header");
+        endpointHeaders.forEach((header) => {
+          header.addEventListener("click", function (e) {
+            if (
+              e.target === this ||
+              e.target.classList.contains("method") ||
+              e.target.classList.contains("path")
+            ) {
+              const button = this.querySelector(".toggle-btn");
+              button.click();
+            }
+          });
+        });
+
+        // Expand All button
+        document
+          .getElementById("expand-all")
+          .addEventListener("click", function () {
+            const allContents = document.querySelectorAll(
+              ".section-content, .subsection-content, .endpoint-content"
+            );
+            const allButtons = document.querySelectorAll(".toggle-btn");
+
+            allContents.forEach((content) => {
+              content.classList.add("active");
+            });
+
+            allButtons.forEach((button) => {
+              button.classList.add("active");
+            });
+          });
+
+        // Collapse All button
+        document
+          .getElementById("collapse-all")
+          .addEventListener("click", function () {
+            const allContents = document.querySelectorAll(
+              ".section-content, .subsection-content, .endpoint-content"
+            );
+            const allButtons = document.querySelectorAll(".toggle-btn");
+
+            allContents.forEach((content) => {
+              content.classList.remove("active");
+            });
+
+            allButtons.forEach((button) => {
+              button.classList.remove("active");
+            });
+          });
+
+        // Search functionality
+        document
+          .getElementById("search")
+          .addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase();
+
+            if (searchTerm.length < 2) {
+              // Reset all visibility if search term is too short
+              document.querySelectorAll(".api-section").forEach((section) => {
+                section.style.display = "block";
+              });
+              return;
+            }
+
+            document.querySelectorAll(".api-section").forEach((section) => {
+              const sectionText = section.textContent.toLowerCase();
+              const sectionHeader = section
+                .querySelector(".section-header h2")
+                .textContent.toLowerCase();
+
+              if (
+                sectionText.includes(searchTerm) ||
+                sectionHeader.includes(searchTerm)
+              ) {
+                section.style.display = "block";
+
+                // Expand the section if it contains the search term
+                const sectionContent =
+                  section.querySelector(".section-content");
+                const sectionToggle = section.querySelector(
+                  ".section-header .toggle-btn"
+                );
+                sectionContent.classList.add("active");
+                sectionToggle.classList.add("active");
+
+                // Check subsections and endpoints
+                section.querySelectorAll(".endpoint").forEach((endpoint) => {
+                  const endpointText = endpoint.textContent.toLowerCase();
+                  const endpointPath = endpoint
+                    .querySelector(".path")
+                    .textContent.toLowerCase();
+
+                  if (
+                    endpointText.includes(searchTerm) ||
+                    endpointPath.includes(searchTerm)
+                  ) {
+                    // Expand the endpoint
+                    const endpointContent =
+                      endpoint.querySelector(".endpoint-content");
+                    const endpointToggle = endpoint.querySelector(
+                      ".endpoint-header .toggle-btn"
+                    );
+                    endpointContent.classList.add("active");
+                    endpointToggle.classList.add("active");
+
+                    // Expand parent subsection if exists
+                    const subsection = endpoint.closest(".subsection");
+                    if (subsection) {
+                      const subsectionContent = subsection.querySelector(
+                        ".subsection-content"
+                      );
+                      const subsectionToggle = subsection.querySelector(
+                        ".subsection-header .toggle-btn"
+                      );
+                      subsectionContent.classList.add("active");
+                      subsectionToggle.classList.add("active");
+                    }
+                  }
+                });
+              } else {
+                section.style.display = "none";
+              }
+            });
+          });
+      });
+    </script>
+  </body>
+</html>

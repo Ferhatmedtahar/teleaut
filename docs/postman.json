@@ -1,0 +1,1806 @@
+{
+  "info": {
+    "name": "TeleAutism API",
+    "description": "API collection for the TeleAutism application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. User Management",
+      "description": "Endpoints for user authentication and profile management",
+      "item": [
+        {
+          "name": "Authentication",
+          "item": [
+            {
+              "name": "Login",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "login"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password123\"\n}"
+                },
+                "description": "Login with email/password"
+              }
+            },
+            {
+              "name": "Social Login",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "login"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"provider\": \"google\",\n    \"token\": \"your_social_token_here\"\n}"
+                },
+                "description": "Login with Google or Facebook"
+              }
+            },
+            {
+              "name": "Register",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/register",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "register"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"securePassword123\",\n    \"phone\": \"+1234567890\",\n    \"user_type\": \"PATIENT\",\n    \"registration_method\": \"EMAIL\"\n}"
+                },
+                "description": "Register a new user"
+              }
+            },
+            {
+              "name": "Logout",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/logout",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "logout"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"token\": \"{{token}}\"\n}"
+                },
+                "description": "Logout the user"
+              }
+            },
+            {
+              "name": "Reset Password OTP",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/reset-password-otp",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "reset-password-otp"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"user@example.com\"\n}"
+                },
+                "description": "Request a password reset with email"
+              }
+            },
+            {
+              "name": "Reset Password",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/reset-password",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "reset-password"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"password\": \"oldPassword123\",\n    \"new_password\": \"newPassword456\"\n}"
+                },
+                "description": "Reset a password"
+              }
+            },
+            {
+              "name": "Verify Phone",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/verify-phone",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "verify-phone"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"+1234567890\"\n}"
+                },
+                "description": "Verify the user's phone"
+              }
+            }
+          ]
+        },
+        {
+          "name": "User Profile",
+          "item": [
+            {
+              "name": "Get User Profile",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/users/{{user_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "{{user_id}}"]
+                },
+                "description": "Fetch user profile by ID"
+              }
+            },
+            {
+              "name": "Update User Profile",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/users/{{user_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "{{user_id}}"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"first_name\": \"Updated\",\n    \"last_name\": \"Name\",\n    \"phone\": \"+9876543210\",\n    \"profile_picture\": \"https://example.com/profile.jpg\"\n}"
+                },
+                "description": "Update user profile"
+              }
+            },
+            {
+              "name": "Delete User",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/users/{{user_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "{{user_id}}"]
+                },
+                "description": "Delete a user account"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Role-Specific Data",
+          "item": [
+            {
+              "name": "Get Patient Data",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/users/{{user_id}}/patient-data",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "{{user_id}}", "patient-data"]
+                },
+                "description": "Fetch patient-specific data"
+              }
+            },
+            {
+              "name": "Update Patient Data",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/users/{{user_id}}/patient-data",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "{{user_id}}", "patient-data"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"contact_info\": {\n        \"email\": \"patient@example.com\",\n        \"phone\": \"+1234567890\"\n    },\n    \"address\": {\n        \"street\": \"123 Main St\",\n        \"city\": \"Anytown\",\n        \"state\": \"CA\",\n        \"zip\": \"12345\"\n    },\n    \"current_medications\": [\"Medication A\", \"Medication B\"],\n    \"allergies\": [\"Peanuts\", \"Penicillin\"],\n    \"medical_conditions\": [\"Condition A\", \"Condition B\"]\n}"
+                },
+                "description": "Update patient-specific data"
+              }
+            },
+            {
+              "name": "Get Doctor Data",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/users/{{user_id}}/doctor-data",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "{{user_id}}", "doctor-data"]
+                },
+                "description": "Fetch doctor-specific data"
+              }
+            },
+            {
+              "name": "Update Doctor Data",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/users/{{user_id}}/doctor-data",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "{{user_id}}", "doctor-data"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"specialties_id\": [\"specialty-uuid-1\", \"specialty-uuid-2\"],\n    \"hospital\": \"General Hospital\",\n    \"years_experience\": 10,\n    \"certifications\": [\"Board Certified\", \"Specialty Certification\"],\n    \"consultation_fee\": 150.00\n}"
+                },
+                "description": "Update doctor-specific data"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Specialties",
+      "description": "Endpoints for managing specialties",
+      "item": [
+        {
+          "name": "Get All Specialties",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/specialties",
+              "host": ["{{base_url}}"],
+              "path": ["api", "specialties"]
+            },
+            "description": "Fetch all specialties"
+          }
+        },
+        {
+          "name": "Get Specialty",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/specialties/{{specialty_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "specialties", "{{specialty_id}}"]
+            },
+            "description": "Fetch details of a specific specialty"
+          }
+        },
+        {
+          "name": "Create Specialty",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/specialties",
+              "host": ["{{base_url}}"],
+              "path": ["api", "specialties"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Pediatric Neurology\",\n    \"description\": \"Specializes in neurological disorders in children\"\n}"
+            },
+            "description": "Create a new specialty (admin only)"
+          }
+        },
+        {
+          "name": "Update Specialty",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/specialties/{{specialty_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "specialties", "{{specialty_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Specialty Name\",\n    \"description\": \"Updated specialty description\"\n}"
+            },
+            "description": "Update a specialty (admin only)"
+          }
+        },
+        {
+          "name": "Delete Specialty",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/specialties/{{specialty_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "specialties", "{{specialty_id}}"]
+            },
+            "description": "Delete a specialty (admin only)"
+          }
+        },
+        {
+          "name": "Get Doctors by Specialty",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/specialties/{{specialty_id}}/doctors",
+              "host": ["{{base_url}}"],
+              "path": ["api", "specialties", "{{specialty_id}}", "doctors"]
+            },
+            "description": "Fetch all doctors with a specific specialty"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Appointments",
+      "description": "Endpoints for managing appointments",
+      "item": [
+        {
+          "name": "Get All Appointments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/appointments?user_id={{user_id}}&role=patient&status=pending&payment_status=unpaid",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{user_id}}"
+                },
+                {
+                  "key": "role",
+                  "value": "patient"
+                },
+                {
+                  "key": "status",
+                  "value": "pending"
+                },
+                {
+                  "key": "payment_status",
+                  "value": "unpaid"
+                }
+              ]
+            },
+            "description": "Fetch all appointments for a user"
+          }
+        },
+        {
+          "name": "Get Appointment",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/appointments/{{appointment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments", "{{appointment_id}}"]
+            },
+            "description": "Fetch details of a specific appointment"
+          }
+        },
+        {
+          "name": "Create Appointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/appointments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"patient_id\": \"patient-uuid\",\n    \"doctor_id\": \"doctor-uuid\",\n    \"date\": \"2023-06-15\",\n    \"type\": \"initial_consultation\",\n    \"notes\": \"First appointment for evaluation\",\n    \"preferred_time\": \"morning\",\n    \"payment_method_id\": \"payment-method-uuid\"\n}"
+            },
+            "description": "Create a new appointment"
+          }
+        },
+        {
+          "name": "Update Appointment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/appointments/{{appointment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments", "{{appointment_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"confirmed\",\n    \"notes\": \"Updated appointment notes\"\n}"
+            },
+            "description": "Update an appointment"
+          }
+        },
+        {
+          "name": "Cancel Appointment",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/appointments/{{appointment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments", "{{appointment_id}}"]
+            },
+            "description": "Cancel an appointment"
+          }
+        },
+        {
+          "name": "Process Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/appointments/{{appointment_id}}/payment",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments", "{{appointment_id}}", "payment"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"payment_method_id\": \"payment-method-uuid\",\n    \"amount\": 150.00,\n    \"currency\": \"USD\"\n}"
+            },
+            "description": "Process payment for an appointment"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Prescriptions",
+      "description": "Endpoints for managing prescriptions",
+      "item": [
+        {
+          "name": "Get All Prescriptions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/prescriptions?user_id={{user_id}}&role=patient&status=active",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prescriptions"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{user_id}}"
+                },
+                {
+                  "key": "role",
+                  "value": "patient"
+                },
+                {
+                  "key": "status",
+                  "value": "active"
+                }
+              ]
+            },
+            "description": "Fetch all prescriptions for a user"
+          }
+        },
+        {
+          "name": "Get Prescription",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/prescriptions/{{prescription_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prescriptions", "{{prescription_id}}"]
+            },
+            "description": "Fetch details of a specific prescription"
+          }
+        },
+        {
+          "name": "Create Prescription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/prescriptions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prescriptions"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"patient_id\": \"patient-uuid\",\n    \"date\": \"2023-06-15\",\n    \"notes\": \"Take as directed\",\n    \"medications\": [\n        {\n            \"name\": \"Medication A\",\n            \"dosage\": \"10mg\",\n            \"frequency\": \"twice daily\",\n            \"duration\": \"30 days\"\n        }\n    ]\n}"
+            },
+            "description": "Create a new prescription"
+          }
+        },
+        {
+          "name": "Update Prescription",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/prescriptions/{{prescription_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prescriptions", "{{prescription_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"completed\",\n    \"notes\": \"Updated prescription notes\",\n    \"medications\": [\n        {\n            \"name\": \"Medication A\",\n            \"dosage\": \"20mg\",\n            \"frequency\": \"once daily\",\n            \"duration\": \"15 days\"\n        }\n    ]\n}"
+            },
+            "description": "Update a prescription"
+          }
+        },
+        {
+          "name": "Cancel Prescription",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/prescriptions/{{prescription_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prescriptions", "{{prescription_id}}"]
+            },
+            "description": "Cancel a prescription"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Chats and Messages",
+      "description": "Endpoints for managing chats and messages",
+      "item": [
+        {
+          "name": "Get All Chats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/chats?user_id={{user_id}}&type=direct",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chats"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{user_id}}"
+                },
+                {
+                  "key": "type",
+                  "value": "direct"
+                }
+              ]
+            },
+            "description": "Fetch all chats for a user"
+          }
+        },
+        {
+          "name": "Get Chat",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/chats/{{chat_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chats", "{{chat_id}}"]
+            },
+            "description": "Fetch details of a specific chat"
+          }
+        },
+        {
+          "name": "Create Chat",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/chats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chats"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Treatment Discussion\",\n    \"participants\": [\"user-uuid-1\", \"user-uuid-2\"],\n    \"type\": \"direct\"\n}"
+            },
+            "description": "Create a new chat"
+          }
+        },
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/chats/{{chat_id}}/messages",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chats", "{{chat_id}}", "messages"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"sender_id\": \"user-uuid\",\n    \"content\": \"Hello, how are you feeling today?\",\n    \"message_type\": \"text\"\n}"
+            },
+            "description": "Send a message in a chat"
+          }
+        },
+        {
+          "name": "Update Message",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/chats/{{chat_id}}/messages/{{message_id}}",
+              "host": ["{{base_url}}"],
+              "path": [
+                "api",
+                "chats",
+                "{{chat_id}}",
+                "messages",
+                "{{message_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"content\": \"Updated message content\"\n}"
+            },
+            "description": "Update a message"
+          }
+        },
+        {
+          "name": "Delete Message",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/chats/{{chat_id}}/messages/{{message_id}}",
+              "host": ["{{base_url}}"],
+              "path": [
+                "api",
+                "chats",
+                "{{chat_id}}",
+                "messages",
+                "{{message_id}}"
+              ]
+            },
+            "description": "Delete a message"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Groups",
+      "description": "Endpoints for managing groups",
+      "item": [
+        {
+          "name": "Get All Groups",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/groups?user_id={{user_id}}&role=member",
+              "host": {
+                "raw": "{{base_url}}/api/groups?user_id={{user_id}}&role=member",
+                "host": ["{{base_url}}"],
+                "path": ["api", "groups"],
+                "query": [
+                  {
+                    "key": "user_id",
+                    "value": "{{user_id}}"
+                  },
+                  {
+                    "key": "role",
+                    "value": "member"
+                  }
+                ]
+              },
+              "description": "Fetch all groups for a user"
+            }
+          }
+        },
+        {
+          "name": "Get Group",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/groups/{{group_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "groups", "{{group_id}}"]
+            },
+            "description": "Fetch details of a specific group"
+          }
+        },
+        {
+          "name": "Create Group",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/groups",
+              "host": ["{{base_url}}"],
+              "path": ["api", "groups"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Autism Support Group\",\n    \"description\": \"A group for parents of children with autism\",\n    \"created_by\": \"user-uuid\",\n    \"members\": [\"user-uuid-1\", \"user-uuid-2\"]\n}"
+            },
+            "description": "Create a new group"
+          }
+        },
+        {
+          "name": "Update Group",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/groups/{{group_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "groups", "{{group_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Group Name\",\n    \"description\": \"Updated group description\"\n}"
+            },
+            "description": "Update group details"
+          }
+        },
+        {
+          "name": "Delete Group",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/groups/{{group_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "groups", "{{group_id}}"]
+            },
+            "description": "Archive or delete a group"
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Patient Discussions",
+      "description": "Endpoints for managing patient discussions",
+      "item": [
+        {
+          "name": "Get All Discussions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/discussions?patient_id={{patient_id}}&status=active",
+              "host": ["{{base_url}}"],
+              "path": ["api", "discussions"],
+              "query": [
+                {
+                  "key": "patient_id",
+                  "value": "{{patient_id}}"
+                },
+                {
+                  "key": "status",
+                  "value": "active"
+                }
+              ]
+            },
+            "description": "Fetch all discussions for a patient"
+          }
+        },
+        {
+          "name": "Get Discussion",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/discussions/{{discussion_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "discussions", "{{discussion_id}}"]
+            },
+            "description": "Fetch details of a specific discussion"
+          }
+        },
+        {
+          "name": "Create Discussion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/discussions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "discussions"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"group_id\": \"group-uuid\",\n    \"patient_id\": \"patient-uuid\",\n    \"title\": \"Treatment Progress Discussion\"\n}"
+            },
+            "description": "Create a new discussion"
+          }
+        },
+        {
+          "name": "Update Discussion",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/discussions/{{discussion_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "discussions", "{{discussion_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"closed\"\n}"
+            },
+            "description": "Update discussion status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. History",
+      "description": "Endpoints for accessing history data",
+      "item": [
+        {
+          "name": "Get Appointment History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/history/appointments?user_id={{user_id}}&role=patient",
+              "host": ["{{base_url}}"],
+              "path": ["api", "history", "appointments"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{user_id}}"
+                },
+                {
+                  "key": "role",
+                  "value": "patient"
+                }
+              ]
+            },
+            "description": "Fetch appointment history for a user"
+          }
+        },
+        {
+          "name": "Get Prescription History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/history/prescriptions?user_id={{user_id}}&role=patient",
+              "host": ["{{base_url}}"],
+              "path": ["api", "history", "prescriptions"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{user_id}}"
+                },
+                {
+                  "key": "role",
+                  "value": "patient"
+                }
+              ]
+            },
+            "description": "Fetch prescription history for a user"
+          }
+        },
+        {
+          "name": "Get Group History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/history/groups?group_id={{group_id}}&action_type=member_added",
+              "host": ["{{base_url}}"],
+              "path": ["api", "history", "groups"],
+              "query": [
+                {
+                  "key": "group_id",
+                  "value": "{{group_id}}"
+                },
+                {
+                  "key": "action_type",
+                  "value": "member_added"
+                }
+              ]
+            },
+            "description": "Fetch group action history"
+          }
+        },
+        {
+          "name": "Get Payment History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/history/payments?user_id={{user_id}}&type=appointment&status=completed",
+              "host": ["{{base_url}}"],
+              "path": ["api", "history", "payments"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{user_id}}"
+                },
+                {
+                  "key": "type",
+                  "value": "appointment"
+                },
+                {
+                  "key": "status",
+                  "value": "completed"
+                }
+              ]
+            },
+            "description": "Fetch payment history for a user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Admin Endpoints",
+      "description": "Endpoints for admin operations",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users?user_type=PATIENT&status=ACTIVE",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users"],
+              "query": [
+                {
+                  "key": "user_type",
+                  "value": "PATIENT"
+                },
+                {
+                  "key": "status",
+                  "value": "ACTIVE"
+                }
+              ]
+            },
+            "description": "Fetch all users (admin only)"
+          }
+        },
+        {
+          "name": "Update User Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{user_id}}", "status"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"SUSPENDED\"\n}"
+            },
+            "description": "Update user status (admin only)"
+          }
+        },
+        {
+          "name": "Delete User (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{user_id}}"]
+            },
+            "description": "Delete a user (admin only)"
+          }
+        },
+        {
+          "name": "Get All Payments (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/payments?status=completed&type=appointment&date_range=last_month",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "payments"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "completed"
+                },
+                {
+                  "key": "type",
+                  "value": "appointment"
+                },
+                {
+                  "key": "date_range",
+                  "value": "last_month"
+                }
+              ]
+            },
+            "description": "Fetch all payments (admin only)"
+          }
+        },
+        {
+          "name": "Update Payment Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/payments/{{payment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "payments", "{{payment_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"refunded\",\n    \"notes\": \"Customer requested refund\"\n}"
+            },
+            "description": "Update payment status (admin only)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Payment Methods",
+      "description": "Endpoints for managing payment methods",
+      "item": [
+        {
+          "name": "Get All Payment Methods",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payment-methods?user_id={{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payment-methods"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{user_id}}"
+                }
+              ]
+            },
+            "description": "Fetch all payment methods for a user"
+          }
+        },
+        {
+          "name": "Get Payment Method",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payment-methods/{{payment_method_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payment-methods", "{{payment_method_id}}"]
+            },
+            "description": "Fetch details of a specific payment method"
+          }
+        },
+        {
+          "name": "Add Payment Method",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payment-methods",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payment-methods"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": \"user-uuid\",\n    \"type\": \"credit_card\",\n    \"provider\": \"visa\",\n    \"card_number\": \"4111111111111111\",\n    \"expiry_date\": \"12/25\",\n    \"billing_address\": {\n        \"street\": \"123 Main St\",\n        \"city\": \"Anytown\",\n        \"state\": \"CA\",\n        \"zip\": \"12345\"\n    },\n    \"is_default\": true\n}"
+            },
+            "description": "Add a new payment method"
+          }
+        },
+        {
+          "name": "Update Payment Method",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payment-methods/{{payment_method_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payment-methods", "{{payment_method_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"expiry_date\": \"12/26\",\n    \"billing_address\": {\n        \"street\": \"456 New St\",\n        \"city\": \"Newtown\",\n        \"state\": \"NY\",\n        \"zip\": \"54321\"\n    },\n    \"is_default\": true\n}"
+            },
+            "description": "Update a payment method"
+          }
+        },
+        {
+          "name": "Remove Payment Method",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payment-methods/{{payment_method_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payment-methods", "{{payment_method_id}}"]
+            },
+            "description": "Remove a payment method"
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Payments",
+      "description": "Endpoints for managing payments",
+      "item": [
+        {
+          "name": "Get All Payments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments?user_id={{user_id}}&type=appointment&status=completed",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{user_id}}"
+                },
+                {
+                  "key": "type",
+                  "value": "appointment"
+                },
+                {
+                  "key": "status",
+                  "value": "completed"
+                }
+              ]
+            },
+            "description": "Fetch all payments for a user"
+          }
+        },
+        {
+          "name": "Get Payment",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments/{{payment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "{{payment_id}}"]
+            },
+            "description": "Fetch details of a specific payment"
+          }
+        },
+        {
+          "name": "Process Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": \"user-uuid\",\n    \"recipient_id\": \"doctor-uuid\",\n    \"payment_method_id\": \"payment-method-uuid\",\n    \"type\": \"appointment\",\n    \"related_entity_id\": \"appointment-uuid\",\n    \"amount\": 150.00,\n    \"currency\": \"USD\"\n}"
+            },
+            "description": "Process a new payment"
+          }
+        },
+        {
+          "name": "Process Refund",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments/{{payment_id}}/refund",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "{{payment_id}}", "refund"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reason\": \"Appointment cancelled\",\n    \"amount\": 150.00\n}"
+            },
+            "description": "Process a refund for a payment"
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Subscriptions",
+      "description": "Endpoints for managing subscriptions",
+      "item": [
+        {
+          "name": "Get All Subscription Plans",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/subscription-plans",
+              "host": ["{{base_url}}"],
+              "path": ["api", "subscription-plans"]
+            },
+            "description": "Fetch all available subscription plans"
+          }
+        },
+        {
+          "name": "Get Subscription",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subscriptions?doctor_id={{doctor_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "subscriptions"],
+              "query": [
+                {
+                  "key": "doctor_id",
+                  "value": "{{doctor_id}}"
+                }
+              ]
+            },
+            "description": "Fetch subscription details for a doctor"
+          }
+        },
+        {
+          "name": "Subscribe to Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subscriptions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "subscriptions"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"doctor_id\": \"doctor-uuid\",\n    \"plan_id\": \"plan-uuid\",\n    \"payment_method_id\": \"payment-method-uuid\",\n    \"auto_renew\": true\n}"
+            },
+            "description": "Subscribe to a plan"
+          }
+        },
+        {
+          "name": "Update Subscription",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subscriptions/{{subscription_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "subscriptions", "{{subscription_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"plan_id\": \"new-plan-uuid\",\n    \"payment_method_id\": \"new-payment-method-uuid\",\n    \"auto_renew\": false\n}"
+            },
+            "description": "Update subscription"
+          }
+        },
+        {
+          "name": "Cancel Subscription",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subscriptions/{{subscription_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "subscriptions", "{{subscription_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reason\": \"No longer needed\"\n}"
+            },
+            "description": "Cancel a subscription"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "your_jwt_token_here",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "user-uuid",
+      "type": "string"
+    },
+    {
+      "key": "patient_id",
+      "value": "patient-uuid",
+      "type": "string"
+    },
+    {
+      "key": "doctor_id",
+      "value": "doctor-uuid",
+      "type": "string"
+    },
+    {
+      "key": "specialty_id",
+      "value": "specialty-uuid",
+      "type": "string"
+    },
+    {
+      "key": "appointment_id",
+      "value": "appointment-uuid",
+      "type": "string"
+    },
+    {
+      "key": "prescription_id",
+      "value": "prescription-uuid",
+      "type": "string"
+    },
+    {
+      "key": "chat_id",
+      "value": "chat-uuid",
+      "type": "string"
+    },
+    {
+      "key": "message_id",
+      "value": "message-uuid",
+      "type": "string"
+    },
+    {
+      "key": "group_id",
+      "value": "group-uuid",
+      "type": "string"
+    },
+    {
+      "key": "discussion_id",
+      "value": "discussion-uuid",
+      "type": "string"
+    },
+    {
+      "key": "payment_method_id",
+      "value": "payment-method-uuid",
+      "type": "string"
+    },
+    {
+      "key": "payment_id",
+      "value": "payment-uuid",
+      "type": "string"
+    },
+    {
+      "key": "subscription_id",
+      "value": "subscription-uuid",
+      "type": "string"
+    }
+  ]
+}

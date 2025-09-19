@@ -155,8 +155,13 @@ async function storeFileReference(
     file_path,
     created_at: new Date().toISOString(),
   });
-  if (error) {
-    console.error("Failed to store file reference:", error);
-    throw new Error("Failed to store file reference in database");
+  if (error:unknown) {
+    if(error instanceof Error){
+      console.error("Failed to store file reference:", `${error}`);
+      throw error
+    }else{
+  console.error("Failed to store file reference:", `${error}`);
+  throw new Error("Failed to store file reference in database");
+    }
   }
 }
