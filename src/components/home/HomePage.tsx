@@ -1,7 +1,7 @@
-import {
-  getBranchAndClass,
-  getHomePageVideos,
-} from "@/actions/home/homeVideos.action";
+// import {
+//   getBranchAndClass,
+//   getHomePageVideos,
+// } from "@/actions/home/homeVideos.action";
 import ExplorerVideo from "@/app/(root)/(videos)/_components/videos/ExplorerVideo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { educationMapping } from "@/lib/constants/EducationsMapping";
@@ -40,10 +40,28 @@ function getSubjectsForClassAndBranch(
 }
 
 export default async function HomePage() {
-  const { success, featuredVideo, explorerVideos } = await getHomePageVideos();
+  const { success, featuredVideo, explorerVideos } = {
+    success: true,
+    featuredVideo: {},
+    explorerVideos: [
+      {
+        id: "",
+        title: "",
+        thumbnail: "",
+        subject: "",
+      },
+    ],
+  };
+  //  await getHomePageVideos();
   console.log({ featuredVideo, explorerVideos });
-  const { success: branchAndClassSuccess, branchAndClass } =
-    await getBranchAndClass();
+  const { success: branchAndClassSuccess, branchAndClass } = {
+    success: true,
+    branchAndClass: {
+      branch: "",
+      class: "",
+    },
+  };
+  // await getBranchAndClass();
 
   if (!success) {
     return (

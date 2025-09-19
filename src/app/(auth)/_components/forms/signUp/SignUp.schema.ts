@@ -1,3 +1,4 @@
+import { roles } from "@/types/roles.enum";
 import { z } from "zod";
 const ACCEPTED_MIME_TYPES = ["application/pdf", "image/jpeg", "image/png"];
 //!the entire SignUpSchema
@@ -12,16 +13,12 @@ export const SignUpSchema = z.object({
   phoneNumber: z
     .string()
     .refine(
-      (value) => /^(\+216)\d{8}$/.test(value ?? ""),
+      (value) => /^(\+213)\d{9}$/.test(value ?? ""),
       "Le numéro de téléphone doit être au format +216 suivi de 8 chiffres (ex: +21612345678)"
     ),
-  role: z.enum(["teacher", "student"], {
+  //review use constant
+  role: z.enum([roles.student, roles.teacher], {
     message: "Veuillez sélectionner un rôle",
-  }),
-
-  branch: z.string().optional(),
-  class: z.string({
-    message: "Veuillez sélectionner une classe",
   }),
   password: z
     .string()
@@ -64,4 +61,4 @@ export const SignUpSchema = z.object({
 
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
 
-export type Roles = "teacher" | "student";
+export type Roles = "patient" | "doctor" | "admin";

@@ -12,9 +12,7 @@ const StudentSchema = SignUpSchema.pick({
   lastName: true,
   email: true,
   phoneNumber: true,
-  role: true,
-  branch: true,
-  class: true,
+  role: true, //patient , doctor, admin
   password: true,
   confirmPassword: true,
 });
@@ -22,19 +20,10 @@ const StudentSchema = SignUpSchema.pick({
 export async function signUpStudent(formData: FormData) {
   const data = Object.fromEntries(formData.entries());
   try {
-    const {
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      role,
-      branch,
-      class: studentClass,
-      password,
-    } = await StudentSchema.parseAsync(data);
+    const { firstName, lastName, email, phoneNumber, role, password } =
+      await StudentSchema.parseAsync(data);
 
-    // Check if user exists
-
+    //!Check if user exists
     const supabase = await createClient();
     const { data: existingUser } = await supabase
       .from("users")
@@ -58,8 +47,6 @@ export async function signUpStudent(formData: FormData) {
         password: hashedPassword,
         phone_number: phoneNumber,
         role,
-        class: studentClass,
-        branch,
         verification_status: VERIFICATION_STATUS.PENDING,
         created_at: new Date().toISOString(),
       })
@@ -75,6 +62,7 @@ export async function signUpStudent(formData: FormData) {
     }
 
     //!generate token and send email server action call
+    //review role here constant
     const token = await generateToken({ id: newUser.id, role: "student" });
 
     const { emailSent, message } = await sendVerificationEmail(

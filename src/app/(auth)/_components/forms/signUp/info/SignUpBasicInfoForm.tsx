@@ -12,6 +12,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { SignUpSchema } from "../SignUp.schema";
+import { roles } from "@/types/roles.enum";
 
 const SignUpBasicInfoFormSchema = SignUpSchema.pick({
   firstName: true,
@@ -29,10 +30,11 @@ export default function SignUpBasicInfoForm() {
     if (!useSignUpStore.persist?.hasHydrated) return;
     const signedUp = localStorage.getItem("signedUp");
     const roleLocalStorage = localStorage.getItem("role");
-    if (signedUp && signedUp == "true" && roleLocalStorage === "teacher") {
+    //REVIEW change the roles here and use constants and same them in a constant file
+    if (signedUp && signedUp == "true" && roleLocalStorage === roles.teacher) {
       router.replace("/sign-up/waitlist");
     }
-    if (signedUp && signedUp == "true" && roleLocalStorage === "student") {
+    if (signedUp && signedUp == "true" && roleLocalStorage === roles.student) {
       router.replace("/sign-up/verify-email");
     }
   }, [router, useSignUpStore.persist?.hasHydrated]);

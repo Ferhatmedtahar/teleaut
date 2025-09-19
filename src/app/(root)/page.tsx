@@ -49,11 +49,10 @@
 // }
 
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
-import { getSearchResults } from "@/actions/home/homeVideos.action";
+// import { getSearchResults } from "@/actions/home/homeVideos.action";
 import { Button } from "@/components/common/buttons/Button";
 import GuestHomePage from "@/components/home/GuestHomePage";
 import HomePage from "@/components/home/HomePage";
-import { SearchResultsClient } from "@/components/home/SearchResults";
 import Link from "next/link";
 
 interface SearchPageProps {
@@ -105,34 +104,24 @@ export default async function Page({ searchParams }: SearchPageProps) {
     return <HomePage />;
   }
 
-  const {
-    success,
-    videos: searchVideos,
-    teachers: searchTeachers,
-    // students: searchStudents,
-  } = await getSearchResults(query);
+  // const {
+  //   success,
+  //   videos: searchVideos,
+  //   teachers: searchTeachers,
+  //   // students: searchStudents,
+  // } = await getSearchResults(query);
 
-  if (!success) {
-    return (
-      <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg min-h-screen">
-        <div className="text-center py-12">
-          <h3 className="text-lg font-medium mb-2">Erreur de recherche</h3>
-          <p className="text-muted-foreground">
-            Impossible d&apos;effectuer la recherche. Veuillez réessayer plus
-            tard.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <SearchResultsClient
-      query={query}
-      activeFilter={activeFilter}
-      initialVideos={searchVideos}
-      searchTeachers={searchTeachers}
-      // searchStudents={searchStudents}
-    />
-  );
+  // if (!success) {
+  //   return (
+  //     <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg min-h-screen">
+  //       <div className="text-center py-12">
+  //         <h3 className="text-lg font-medium mb-2">Erreur de recherche</h3>
+  //         <p className="text-muted-foreground">
+  //           Impossible d&apos;effectuer la recherche. Veuillez réessayer plus
+  //           tard.
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 }
