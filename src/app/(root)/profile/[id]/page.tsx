@@ -22,7 +22,7 @@ export async function generateMetadata({
     description: user?.bio,
     authors: [
       {
-        name: user.first_name ?? "Teacher",
+        name: user.first_name ?? "Doctor",
       },
     ],
     openGraph: {
@@ -67,8 +67,8 @@ export default async function Profile({
       <VisitorsProfile
         currentUserId={currentUser.id}
         currentUserRole={currentUser.role}
-        isTeacher={currentUser.role == roles.teacher}
-        isStudent={currentUser.role == roles.student}
+        isDoctor={currentUser.role == roles.doctor}
+        isPatient={currentUser.role == roles.patient}
         visitedUser={visitedUser}
       />
     </div>

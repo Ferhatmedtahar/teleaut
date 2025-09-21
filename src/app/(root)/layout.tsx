@@ -99,7 +99,7 @@ export default async function RootLayout({
     .select("first_name ,profile_url,verification_status")
     .eq("id", user?.id)
     .single();
-
+  console.log(userInfo);
   if (!userInfo) {
     return redirect(`${baseurl}/api/auth/signout`);
   }

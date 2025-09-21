@@ -16,13 +16,27 @@ const StudentSchema = SignUpSchema.pick({
   role: true,
   password: true,
   confirmPassword: true,
+  address: true,
+  medicalConditions: true,
+  emergencyContact: true,
+  preferredTime: true,
 });
 
-export async function signUpStudent(formData: FormData) {
+export async function signUpPatient(formData: FormData) {
   const data = Object.fromEntries(formData.entries());
   try {
-    const { firstName, lastName, email, phoneNumber, role, password } =
-      await StudentSchema.parseAsync(data);
+    const {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      role,
+      password,
+      address,
+      medicalConditions,
+      emergencyContact,
+      preferredTime,
+    } = await StudentSchema.parseAsync(data);
 
     //!Check if user exists
     const supabase = await createClient();
@@ -50,6 +64,10 @@ export async function signUpStudent(formData: FormData) {
         role,
         verification_status: VERIFICATION_STATUS.PENDING,
         created_at: new Date().toISOString(),
+        address: address || null,
+        medical_conditions: medicalConditions || null,
+        emergency_contact: emergencyContact || null,
+        preferred_consultation_time: preferredTime || null,
       })
       .select()
       .single();
@@ -63,7 +81,6 @@ export async function signUpStudent(formData: FormData) {
     }
 
     //!generate token and send email server action call
-    //review role here constant
     const token = await generateToken({ id: newUser.id, role: roles.patient });
 
     const { emailSent, message } = await sendVerificationEmail(

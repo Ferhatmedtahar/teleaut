@@ -7,7 +7,7 @@ interface LogoProps {
   readonly textColor?: string;
 }
 
-export default function CognaciaLogo({
+export default function TeleaustismLogo({
   className = "",
   textColor = "text-primary dark:text-primary-50",
 }: LogoProps) {
@@ -197,7 +197,7 @@ export default function CognaciaLogo({
           letterSpacing: "-0.02em",
         }}
       >
-        Cognacia
+        TeleAutism
       </span>
     </div>
   );

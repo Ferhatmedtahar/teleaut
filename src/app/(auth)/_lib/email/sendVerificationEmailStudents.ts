@@ -8,6 +8,8 @@ export async function sendVerificationEmail(
   token: string
 ): Promise<{ emailSent: boolean; message: string }> {
   try {
+    console.log("Starting email send process for:", email);
+
     const supabase = await createClient();
 
     const { data: emailsLastHour, error } = await supabase
@@ -17,10 +19,13 @@ export async function sendVerificationEmail(
       .eq("type", "verification")
       .gte("sent_at", new Date(Date.now() - 60 * 60 * 1000).toISOString());
 
+    console.log("Email logs check:", emailsLastHour, error);
+
     if (error) {
       console.error("Failed to check email logs:", error);
       return { message: "Internal error.", emailSent: false };
     }
+
     if ((emailsLastHour?.length ?? 0) >= 3) {
       return {
         message:
@@ -29,17 +34,61 @@ export async function sendVerificationEmail(
       };
     }
 
-    const transporter = nodemailer.createTransport({
+    // Parse port and secure settings properly
+    const port = parseInt(process.env.EMAIL_SERVER_PORT ?? "587", 10);
+
+    // Force secure to false for Mailtrap and most development SMTP servers
+    const transportConfig = {
       host: process.env.EMAIL_SERVER_HOST,
-      port: parseInt(process.env.EMAIL_SERVER_PORT ?? "465", 10),
-      secure: process.env.EMAIL_SERVER_SECURE === "true",
+      port: port,
+      secure: false, // Always false - let the server handle STARTTLS if available
       auth: {
         user: process.env.EMAIL_SERVER_USER,
         pass: process.env.EMAIL_SERVER_PASSWORD,
       },
+      // Add these for better compatibility
+      tls: {
+        // Don't fail on invalid certs for development
+        rejectUnauthorized: false, // More permissive for development
+        ciphers: "SSLv3", // Sometimes helps with compatibility
+      },
+      debug: true, // Enable debug logs
+      logger: true, // Enable logger
+      // Disable STARTTLS completely if still having issues
+      ignoreTLS: false,
+      requireTLS: false,
+    };
+
+    console.log("Transport config:", {
+      ...transportConfig,
+      auth: {
+        user: transportConfig.auth.user,
+        pass: "***hidden***",
+      },
     });
 
+    const transporter = nodemailer.createTransport(transportConfig);
+
+    // Test the connection first
+    try {
+      await transporter.verify();
+      console.log("SMTP connection verified successfully");
+    } catch (verifyError: unknown) {
+      console.error("SMTP verification failed:", verifyError);
+      if (verifyError instanceof Error) {
+        return {
+          message: `SMTP connection failed: ${verifyError.message}`,
+          emailSent: false,
+        };
+      }
+      return {
+        message: "SMTP connection failed",
+        emailSent: false,
+      };
+    }
+
     const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/sign-up/verify?token=${token}`;
+    console.log("Verification URL:", verificationUrl);
 
     const mailOptions = {
       from: process.env.EMAIL_FROM,
@@ -191,13 +240,11 @@ export async function sendVerificationEmail(
 </head>
 <body>
     <div class="email-container">
-     
         <div class="header">
             <div class="logo">Cognacia</div>
             <div class="tagline">Votre Parcours d'Apprentissage Commence Ici</div>
         </div>
         
-     
         <div class="content">
             <h1 class="welcome-title">Bienvenue chez Cognacia ! 🎉</h1>
             
@@ -209,7 +256,6 @@ export async function sendVerificationEmail(
                 Vous êtes sur le point de vous lancer dans un parcours éducatif passionnant, et nous sommes impatients d'en faire partie avec vous !
             </p>
             
-       
             <div class="verification-section">
                 <h2 class="verification-title">📧 Vérification d'Email Requise</h2>
                 <p class="verification-text">
@@ -221,7 +267,6 @@ export async function sendVerificationEmail(
                 </a>
             </div>
             
-           
             <p class="footer-text">
                 Des questions ? Nous sommes là pour vous aider ! N'hésitez pas à nous contacter à tout moment. 
                 Nous sommes toujours heureux de vous accompagner dans votre parcours d'apprentissage.
@@ -232,24 +277,54 @@ export async function sendVerificationEmail(
 </html>`,
     };
 
+    console.log("Attempting to send email to:", email);
     const info = await transporter.sendMail(mailOptions);
+    console.log("Email send result:", info);
 
     if (info.messageId) {
-      await supabase
+      console.log("Email sent successfully, updating database...");
+
+      const { error: updateError } = await supabase
         .from("users")
         .update({ verification_status: VERIFICATION_STATUS.EMAIL_SENT })
         .eq("id", userId);
 
-      await supabase.from("email_logs").insert({
+      if (updateError) {
+        console.error(
+          "Failed to update user verification status:",
+          updateError
+        );
+      }
+
+      const { error: logError } = await supabase.from("email_logs").insert({
         user_id: userId,
         type: "verification",
         sent_at: new Date(),
       });
-    }
 
-    return { message: "Email sent successfully.", emailSent: true };
-  } catch (error) {
+      if (logError) {
+        console.error("Failed to log email:", logError);
+      }
+
+      return { message: "Email sent successfully.", emailSent: true };
+    } else {
+      console.error("No messageId returned from email send");
+      return {
+        message: "Failed to send email - no message ID",
+        emailSent: false,
+      };
+    }
+  } catch (error: unknown) {
     console.error("Failed to send email:", error);
-    return { message: "Internal error.", emailSent: false };
+    if (error instanceof Error) {
+      return {
+        message: `Email sending failed: ${error.message}`,
+        emailSent: false,
+      };
+    }
+    return {
+      message: "Email sending failed",
+      emailSent: false,
+    };
   }
 }

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/common/buttons/Button";
 import { Badge } from "@/components/ui/badge";
-import { extractSubjectFromSpecialty } from "@/lib/helpers/extractSubject";
+
 import { GraduationCap } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,10 +20,6 @@ interface TeacherCardProps {
 }
 
 export default function TeacherCard({ teacher }: TeacherCardProps) {
-  const subjects = teacher.specialties
-    .map((specialty) => extractSubjectFromSpecialty(specialty))
-    .filter((subject, index, self) => self.indexOf(subject) === index);
-
   return (
     <div className="flex flex-col   border border-border/20 dark:border-border/70 rounded-xl p-4 hover:shadow-sm hover:shadow-border/15 transition-all duration-200">
       <div className="relative flex items-center  gap-4 mb-4">
@@ -63,23 +59,7 @@ export default function TeacherCard({ teacher }: TeacherCardProps) {
           <GraduationCap className="w-4 h-4 mr-1 text-primary" />
           <span className="dark:text-white/95">Spécialités:</span>
         </div>
-        <div className="flex flex-wrap gap-2 mb-4">
-          {subjects.slice(0, 4).map((subject, index) => (
-            <div
-              key={subject + index}
-              // variant="outline"
-              className="text-xs border rounded-sm lowercase  border-border/20  dark:border-border/70 px-1 py-0.5  "
-              title={subject}
-            >
-              {subject}
-            </div>
-          ))}
-          {subjects.length > 4 && (
-            <Badge variant="outline" className="text-xs border-border/20 ">
-              +{subjects.length - 4}
-            </Badge>
-          )}
-        </div>
+        <div className="flex flex-wrap gap-2 mb-4"></div>
 
         {/* Approcher button */}
         <Link href={`/profile/${teacher.id}`} className="text-sm w-full">

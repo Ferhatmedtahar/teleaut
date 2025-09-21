@@ -28,7 +28,7 @@ async function ProfileContent() {
   }
 
   //teacher profile
-  if (user?.role == roles.teacher) {
+  if (user?.role == roles.doctor) {
     return (
       <>
         <ProfileContentTeacher user={user} currentUserId={currentUser.id} />
@@ -38,7 +38,7 @@ async function ProfileContent() {
   }
 
   //student profile
-  if (user?.role == roles.student) {
+  if (user?.role == roles.patient) {
     return (
       <>
         <ProfileContentStudent user={user} currentUserId={currentUser.id} />

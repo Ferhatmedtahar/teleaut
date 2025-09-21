@@ -4,8 +4,6 @@ import type React from "react";
 
 import { updateUserProfile } from "@/actions/profile/updateUserProfile.action";
 import { Button } from "@/components/common/buttons/Button";
-import BranchSelector from "@/components/common/select/BranchSelector";
-import ClassSelector from "@/components/common/select/ClassSelector";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
@@ -17,8 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
-import type { roles } from "@/types/roles.enum";
+
+import { roles } from "@/types/roles.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Camera, Upload, X } from "lucide-react";
 import Image from "next/image";
@@ -33,7 +31,7 @@ const ACCEPTED_MIME_TYPES = ["application/pdf", "image/jpeg", "image/png"];
 interface EditProfileModalProps {
   readonly isOpen: boolean;
   readonly onClose: () => void;
-  readonly userRole: roles.admin | roles.student | roles.teacher;
+  readonly userRole: roles.admin | roles.patient | roles.doctor;
   readonly userId: string;
   readonly userData: {
     first_name: string;
@@ -156,20 +154,6 @@ export default function EditProfileModal({
     }
   };
 
-  // Handle class change for students
-  const handleClassChange = (value: keyof typeof studentClassesAndBranches) => {
-    setSelectedClass(value);
-    setAvailableBranches(studentClassesAndBranches[value] ?? []);
-    setValue("class", value);
-    setValue("branch", "");
-  };
-
-  // Handle branch change for students
-  const handleBranchChange = (value: string) => {
-    setSelectedBranch(value);
-    setValue("branch", value);
-  };
-
   // Handle drag and drop for background image
   const handleBackgroundDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -214,12 +198,7 @@ export default function EditProfileModal({
         removeBackgroundImage.toString()
       );
 
-      if (userRole === "student") {
-        if (!selectedClass) {
-          toast.error("Veuillez sélectionner une classe");
-          return;
-        }
-
+      if (userRole === roles.patient) {
         if (
           !data.branch &&
           availableBranches.length > 1 &&
@@ -272,7 +251,7 @@ export default function EditProfileModal({
       backgroundImage !== null ||
       removeProfileImage ||
       removeBackgroundImage ||
-      (userRole === "student" &&
+      (userRole === roles.patient &&
         (watchedClass !== userData.class || watchedBranch !== userData.branch));
 
     setHasChanged(isChanged);
@@ -327,14 +306,11 @@ export default function EditProfileModal({
                 )}
               </div>
 
-              {userRole === "student" && (
+              {userRole === roles.patient && (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Classe</Label>
-                    <ClassSelector
-                      handleClassChange={handleClassChange}
-                      currentClass={selectedClass}
-                    />
+
                     <Input
                       type="hidden"
                       {...register("class")}
@@ -349,14 +325,7 @@ export default function EditProfileModal({
 
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Filière</Label>
-                    <BranchSelector
-                      currentBranch={selectedBranch}
-                      selectedClass={
-                        selectedClass as keyof typeof studentClassesAndBranches
-                      }
-                      availableBranches={availableBranches}
-                      handleBranchChange={handleBranchChange}
-                    />
+
                     <Input
                       type="hidden"
                       {...register("branch")}

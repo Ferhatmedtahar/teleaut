@@ -1,4 +1,3 @@
-import { getSuggestedTeachers } from "@/actions/profile/getSugguestionsStudentAll.action";
 import TeacherCard from "./TeacherCard";
 
 export default async function TeachersListSugguestion({
@@ -14,7 +13,11 @@ export default async function TeachersListSugguestion({
     success,
     teachers: suggestedTeachersResponse,
     message,
-  } = await getSuggestedTeachers(userId, userClass, userBranch);
+  } = {
+    success: true,
+    teachers: [],
+    message: "Teachers fetched successfully",
+  };
 
   if (suggestedTeachersResponse?.length === 0) return null;
   return (

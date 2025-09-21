@@ -6,20 +6,20 @@ import VideoListVisitor from "./VideoListVisitor";
 export default async function VisitorsProfile({
   currentUserId,
   currentUserRole,
-  isTeacher,
-  isStudent,
+  isDoctor,
+  isPatient,
   visitedUser,
 }: {
   readonly currentUserId: string;
   readonly currentUserRole: string;
-  readonly isTeacher: boolean;
-  readonly isStudent: boolean;
+  readonly isDoctor: boolean;
+  readonly isPatient: boolean;
   readonly visitedUser: SuggestionList;
 }) {
-  const isVisitedUserTeacher = visitedUser.role === "teacher";
-  const isVisitedUserStudent = visitedUser.role === "student";
+  const isVisitedUserDoctor = visitedUser.role === roles.doctor;
+  const isVisitedUserPatient = visitedUser.role === roles.patient;
   // CASE 1 , 2: If teacher , student : visits another teacher
-  if (isVisitedUserTeacher) {
+  if (isVisitedUserDoctor) {
     return (
       <div className="px-6 ">
         <h2 className="text-xl lg:text-2xl font-semibold ">
@@ -31,7 +31,7 @@ export default async function VisitorsProfile({
   }
 
   // CASE 3: If student visits another student, show suggestions
-  if (isStudent && isVisitedUserStudent) {
+  if (isPatient && isVisitedUserPatient) {
     return (
       <div className="p-6">
         <SuggestionProfileStudentList user={visitedUser} />

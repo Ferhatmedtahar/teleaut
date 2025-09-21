@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
+
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
@@ -37,24 +37,6 @@ export default function FilterBar({
   const currentBranch = searchParams.get("branch") ?? "";
   const currentSubject = searchParams.get("subject") ?? "";
 
-  const availableBranches = useMemo(() => {
-    if (
-      !currentClass ||
-      !studentClassesAndBranches[
-        currentClass as keyof typeof studentClassesAndBranches
-      ]
-    ) {
-      return flatBranches;
-    }
-
-    const classBranches =
-      studentClassesAndBranches[
-        currentClass as keyof typeof studentClassesAndBranches
-      ];
-
-    return classBranches.filter((branch) => flatBranches.includes(branch));
-  }, [currentClass, flatBranches]);
-
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -63,18 +45,6 @@ export default function FilterBar({
         params.set(name, value);
       } else {
         params.delete(name);
-      }
-
-      if (name === "class") {
-        const newAvailableBranches = value
-          ? studentClassesAndBranches[
-              value as keyof typeof studentClassesAndBranches
-            ]?.filter((branch) => flatBranches.includes(branch)) || []
-          : flatBranches;
-
-        if (currentBranch && !newAvailableBranches.includes(currentBranch)) {
-          params.delete("branch");
-        }
       }
 
       return params.toString();
@@ -144,21 +114,12 @@ export default function FilterBar({
         {flatBranches.length > 2 && (
           <div className="flex flex-col gap-1">
             <Label htmlFor="branch-filter">Branch</Label>
-            <Select
-              value={currentBranch}
-              onValueChange={handleBranchChange}
-              disabled={!availableBranches.length}
-            >
+            <Select value={currentBranch} onValueChange={handleBranchChange}>
               <SelectTrigger className="min-w-[200px] border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary rounded-md">
                 <SelectValue placeholder="Toutes les filières" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="tout">Toutes les filières</SelectItem>
-                {availableBranches.map((branch, index) => (
-                  <SelectItem key={`${branch}-${index}`} value={branch}>
-                    {branch}
-                  </SelectItem>
-                ))}
               </SelectContent>
             </Select>
           </div>

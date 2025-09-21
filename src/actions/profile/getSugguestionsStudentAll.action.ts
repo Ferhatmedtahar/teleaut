@@ -1,8 +1,5 @@
 "use server";
-import {
-  getApplicableSpecialties,
-  getApplicableSubjects,
-} from "@/lib/helpers/Profilehelper";
+
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -24,19 +21,20 @@ export async function getSuggestedVideos(
   const supabase = await createClient();
 
   // Get applicable subjects for this student
-  const applicableSubjects = getApplicableSubjects(studentClass, studentBranch);
-  const applicableSubjectsLower = applicableSubjects.map((subject) => {
-    return subject.toLowerCase();
-  });
+  // const applicableSubjects = getApplicableSubjects(studentClass, studentBranch);
+  // const applicableSubjectsLower = applicableSubjects.map((subject) => {
+  // return subject.toLowerCase();
+  // });
 
   const studentClassLower = studentClass.toLowerCase();
+  // /* The commented out code block within the `getSuggestedVideos` function is checking if there are no applicable subjects found for the student's class and branch. If `applicableSubjects` array has a length of 0 (meaning no subjects were found), it would return an object with `success` set to `false` and a message stating that no applicable subjects were found for the student's class and branch. This code block is currently disabled as it is commented out, so it does not affect the functionality of the function. */
   if (applicableSubjects.length === 0) {
-    return {
-      success: false,
-      message:
-        "No applicable subjects found for this student's class and branch",
-    };
-  }
+  //   return {
+  //     success: false,
+  //     message:
+  //       "No applicable subjects found for this student's class and branch",
+  //   };
+  // }
 
   const videoQuery = supabase
     .from("videos")

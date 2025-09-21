@@ -1,10 +1,12 @@
 "use client";
 import { cn } from "@/lib/utils";
 import {
+  BriefcaseMedicalIcon,
   HelpCircle,
   History,
   Home,
   Info,
+  MessageSquare,
   MoonIcon,
   Sun,
   X,
@@ -28,16 +30,17 @@ const navItems: NavItem[] = [
     href: "/",
     icon: Home,
   },
-  // {
-  //   title: "Etude",
-  //   href: "/etude",
-  //   icon: BookOpen,
-  // },
-  // {
-  //   title: "Chat",
-  //   href: "/chats",
-  //   icon: MessageSquare,
-  // },
+  ,
+  {
+    title: "Appointments",
+    href: "/appointments",
+    icon: BriefcaseMedicalIcon,
+  },
+  {
+    title: "Chat",
+    href: "/chats",
+    icon: MessageSquare,
+  },
   {
     title: "Historique",
     href: "/historique",
@@ -144,8 +147,8 @@ const AppSidebar: React.FC<SidebarProps> = ({
               onClick={handleLinkClick}
               className={cn(
                 "flex items-center rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200 ease-in-out",
-                "hover:bg-primary-200/50 dark:hover:bg-primary-50/20 hover:scale-[1.02]",
-                "active:scale-95 transform",
+                "hover:bg-primary-200/50 dark:hover:bg-primary-50/20 hover:scale-[1.01]",
+                "active:scale-[0.99] transform",
                 isActive
                   ? "gradient-sidebar-light text-foreground shadow-sm"
                   : "text-muted-foreground dark:text-primary-100/85 hover:text-foreground"
@@ -156,15 +159,6 @@ const AppSidebar: React.FC<SidebarProps> = ({
             </Link>
           );
         })}
-        {/* <div className="flex items-center justify-center gap-3 mt-5 ">
-          <Sun className="h-5 w-5 text-primary-700 dark:text-primary-100" />
-          <Switch
-            className="gradient-bg-light data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted"
-            checked={theme === "dark"}
-            onCheckedChange={toggleTheme}
-          />
-          <MoonIcon className="h-5 w-5 text-primary-700 dark:text-primary-100" />
-        </div> */}
       </nav>
 
       {/* Theme Toggle */}

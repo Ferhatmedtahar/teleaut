@@ -1,4 +1,5 @@
 "use client";
+import { roles } from "@/types/roles.enum";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
@@ -12,7 +13,7 @@ export default function EmailConfirmationPage() {
       return;
     }
 
-    if (role !== "student" && !toastShown.current) {
+    if (role !== roles.patient && !toastShown.current) {
       toastShown.current = true;
       toast.error(
         "Vous n'êtes pas autorisé à accéder à cette page. Veuillez vous inscrire en tant qu'étudiant si vous souhaitez demander une fonctionnalité."
@@ -20,7 +21,7 @@ export default function EmailConfirmationPage() {
       router.push("/sign-up/info");
       return;
     }
-    if (role === "student" && !toastShown.current) {
+    if (role === roles.patient && !toastShown.current) {
       toast.success(
         "Nous avons envoyé un e-mail de confirmation dans votre boîte de réception.",
         {

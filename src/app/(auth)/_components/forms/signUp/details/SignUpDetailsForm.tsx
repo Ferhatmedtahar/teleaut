@@ -1,19 +1,17 @@
 "use client";
+import { signUpPatient } from "@/actions/auth/sign-up/signUpStudent.action";
+import { signUpTeacher } from "@/actions/auth/sign-up/signUpTeacher.action";
 import { useSignUpStore } from "@/app/(auth)/sign-up/store";
 import { Button } from "@/components/common/buttons/Button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { roles } from "@/types/roles.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { signUpStudent } from "@/actions/auth/sign-up/signUpStudent.action";
-import { signUpTeacher } from "@/actions/auth/sign-up/signUpTeacher.action";
-// import BranchSelector from "@/components/common/select/BranchSelector";
-import { roles } from "@/types/roles.enum";
 import { toast } from "sonner";
+import { z } from "zod";
 import { SelectPreferredTime } from "../../../SelectPreferredTime";
 import { SignUpSchema } from "../SignUp.schema";
 
@@ -120,12 +118,10 @@ export default function SignUpDetailsForm() {
 
   //$ the actual form handler
   async function onSubmit(data: SignUpDetailsSchemaType) {
-    // review
     if (data.role === roles.doctor) {
       await handleTeacherSubmit(data);
       localStorage.setItem("signedUp", "true");
     }
-    // review
     if (data.role === roles.patient) {
       if (data.password !== data.confirmPassword) {
         toast.error("Les mots de passe ne correspondent pas");
@@ -141,7 +137,8 @@ export default function SignUpDetailsForm() {
 
         //!call the server action
         const result: { success: boolean; message?: string; token?: string } =
-          await signUpStudent(formData);
+          await signUpPatient(formData);
+        console.log(result);
         if (!result.success) {
           toast.error(result.message);
           router.push("/sign-up/fail-auth");

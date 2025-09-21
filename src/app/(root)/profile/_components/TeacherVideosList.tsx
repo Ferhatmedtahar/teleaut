@@ -2,14 +2,11 @@
 
 import { getTeacherVideos } from "@/actions/profile/getTeacherVideos.action";
 import { Button } from "@/components/common/buttons/Button";
-import { specialtyToSubject } from "@/lib/constants/specialties";
-import { studentClassesAndBranches } from "@/lib/constants/studentClassesAndBranches";
 import { RelatedVideo } from "@/types/RelatedVideos.interface";
 import { UserProps } from "@/types/UserProps";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import ExplorerVideo from "../../(videos)/_components/videos/ExplorerVideo";
-import FilterBar from "./profileByid/FilterBar";
 
 const LIMIT = 6;
 
@@ -54,22 +51,10 @@ export default function TeacherVideosList({
     loadVideos();
   }, []);
 
-  const subjects = useMemo(
-    () => [
-      ...new Set(user?.specialties?.map((s) => specialtyToSubject[s]) || []),
-    ],
-    [user?.specialties]
-  );
-
   const classes = useMemo(
     () => [...new Set(videos.map((video) => video.class).filter(Boolean))],
     [videos]
   );
-
-  const branches =
-    studentClassesAndBranches[
-      selectedClass as keyof typeof studentClassesAndBranches
-    ] || [];
 
   const filteredVideos = useMemo(() => {
     return videos.filter((video: RelatedVideo) => {
@@ -81,11 +66,7 @@ export default function TeacherVideosList({
     });
   }, [videos, selectedBranch, selectedClass, selectedSubject]);
 
-  if (
-    !Array.isArray(classes) ||
-    !classes.every((item) => typeof item === "string") ||
-    !branches.every((item) => typeof item === "string")
-  ) {
+  if (!Array.isArray(classes)) {
     return (
       <div className="p-8 flex flex-col gap-4">
         <h2 className="text-2xl lg:text-3xl font-semibold">Vos vidéos</h2>
@@ -96,20 +77,20 @@ export default function TeacherVideosList({
   return (
     <div className="p-8 flex flex-col gap-4">
       <h2 className="text-2xl lg:text-3xl font-semibold">Vos vidéos</h2>
-
+      {/* 
       {videos.length > 0 && (
-        <FilterBar
-          subjects={subjects}
-          classes={classes}
-          branches={[
-            studentClassesAndBranches[
-              selectedClass as keyof typeof studentClassesAndBranches
-            ] || [],
-          ]}
-          userIsTeacher={user.role === "teacher"}
-          setLoading={setLoading}
-        />
-      )}
+        // <FilterBar
+        //   subjects={subjects}
+        //   classes={classes}
+        //   branches={[
+        //     studentClassesAndBranches[
+        //       selectedClass as keyof typeof studentClassesAndBranches
+        //     ] || [],
+        //   ]}
+        //   userIsTeacher={user.role === "teacher"}
+        //   setLoading={setLoading}
+        // />
+      )} */}
 
       {/* Loading skeleton */}
       {initialLoading ? (

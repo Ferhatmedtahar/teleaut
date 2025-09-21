@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import SearchFormReset from "../forms/SearchFormReset";
-import CognaciaLogo from "../home/Logo";
+import TeleaustismLogo from "../home/Logo";
 import UserDropDownMenu from "./UserDropDownMenu";
 
 interface NavbarProps {
@@ -87,7 +87,7 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
           </Button>
 
           <Link href="/" className="flex items-center">
-            <CognaciaLogo />
+            <TeleaustismLogo />
           </Link>
         </div>
 
