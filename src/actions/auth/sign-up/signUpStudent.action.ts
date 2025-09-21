@@ -6,13 +6,14 @@ import { generateToken } from "@/app/(auth)/_lib/generateToken";
 import { hashPassword } from "@/app/(auth)/_lib/hashComparePassword";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server"; // adjust the path to your client
+import { roles } from "@/types/roles.enum";
 import { z } from "zod";
 const StudentSchema = SignUpSchema.pick({
   firstName: true,
   lastName: true,
   email: true,
   phoneNumber: true,
-  role: true, //patient , doctor, admin
+  role: true,
   password: true,
   confirmPassword: true,
 });
@@ -63,7 +64,7 @@ export async function signUpStudent(formData: FormData) {
 
     //!generate token and send email server action call
     //review role here constant
-    const token = await generateToken({ id: newUser.id, role: "student" });
+    const token = await generateToken({ id: newUser.id, role: roles.patient });
 
     const { emailSent, message } = await sendVerificationEmail(
       newUser.id,

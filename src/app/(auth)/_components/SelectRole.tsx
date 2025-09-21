@@ -18,12 +18,12 @@ export function SelectRole({
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-full py-5">
-        <SelectValue placeholder="Etudiant ou Professeur" />
+        <SelectValue placeholder="Doctor or Patient" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value="teacher">Professeur</SelectItem>
-          <SelectItem value="student">Etudiant</SelectItem>
+          <SelectItem value="doctor">Doctor</SelectItem>
+          <SelectItem value="patient">Patient</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>

@@ -5,6 +5,7 @@ import { useSignUpStore } from "@/app/(auth)/sign-up/store";
 import { Button } from "@/components/common/buttons/Button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { roles } from "@/types/roles.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -12,7 +13,6 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { SignUpSchema } from "../SignUp.schema";
-import { roles } from "@/types/roles.enum";
 
 const SignUpBasicInfoFormSchema = SignUpSchema.pick({
   firstName: true,
@@ -31,10 +31,10 @@ export default function SignUpBasicInfoForm() {
     const signedUp = localStorage.getItem("signedUp");
     const roleLocalStorage = localStorage.getItem("role");
     //REVIEW change the roles here and use constants and same them in a constant file
-    if (signedUp && signedUp == "true" && roleLocalStorage === roles.teacher) {
+    if (signedUp && signedUp == "true" && roleLocalStorage === roles.doctor) {
       router.replace("/sign-up/waitlist");
     }
-    if (signedUp && signedUp == "true" && roleLocalStorage === roles.student) {
+    if (signedUp && signedUp == "true" && roleLocalStorage === roles.patient) {
       router.replace("/sign-up/verify-email");
     }
   }, [router, useSignUpStore.persist?.hasHydrated]);
