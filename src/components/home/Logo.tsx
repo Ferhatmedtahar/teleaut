@@ -197,7 +197,7 @@ export default function TeleaustismLogo({
           letterSpacing: "-0.02em",
         }}
       >
-        TeleAutism
+        TeleAustism
       </span>
     </div>
   );

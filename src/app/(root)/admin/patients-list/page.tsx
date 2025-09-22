@@ -6,7 +6,7 @@ export default async function StudentsListPage() {
   if (!students) {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">No Students Found</h2>
+        <h2 className="text-2xl font-bold">No Patients Found</h2>
       </div>
     );
   }

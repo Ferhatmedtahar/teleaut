@@ -7,9 +7,8 @@ import { redirect, usePathname } from "next/navigation";
 import type React from "react";
 
 function getTabFromPath(path: string): string {
-  if (path.includes("/admin/videos")) return "videos";
-  if (path.includes("/admin/students-list")) return "students-list";
-  if (path.includes("/admin/teachers-list")) return "teachers-list";
+  if (path.includes("/admin/patients-list")) return "patients-list";
+  if (path.includes("/admin/doctors-list")) return "doctors-list";
   return "dashboard";
 }
 
@@ -20,8 +19,6 @@ export default function AdminLayout({
 }) {
   const pathName = usePathname();
   const user = useUser();
-  const { theme } = useTheme();
-
   // Check if user is authenticated and is an admin
   if (!user || user.role !== "admin") {
     redirect("/");
@@ -56,11 +53,11 @@ export default function AdminLayout({
 
           <TabsTrigger
             value="students-list"
-            key={"/admin/list-students"}
+            key={"/admin/patients-list"}
             className="flex-1 bg-primary-800 hover:bg-primary-600  dark:text-white text-white dark:bg-primary-600 dark:hover:bg-primary-500 transition-colors duration-200"
             asChild
           >
-            <Link href="/admin/students-list">Students List</Link>
+            <Link href="/admin/patients-list">Patients List</Link>
           </TabsTrigger>
           <TabsTrigger
             value="teachers-list"
@@ -68,16 +65,7 @@ export default function AdminLayout({
             className="flex-1 bg-primary-800 hover:bg-primary-600  dark:text-white text-white dark:bg-primary-600 dark:hover:bg-primary-500 transition-colors duration-200"
             asChild
           >
-            <Link href="/admin/teachers-list">Teachers List</Link>
-          </TabsTrigger>
-
-          <TabsTrigger
-            value="videos"
-            key={"/admin/videos"}
-            className="flex-1 bg-primary-800 hover:bg-primary-600  dark:text-white text-white dark:bg-primary-600 dark:hover:bg-primary-500 transition-colors duration-200"
-            asChild
-          >
-            <Link href="/admin/videos">Videos</Link>
+            <Link href="/admin/doctors-list">Doctors List</Link>
           </TabsTrigger>
         </TabsList>
       </Tabs>

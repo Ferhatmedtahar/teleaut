@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 
 export default function FailAuthPage() {
+  localStorage.removeItem("signedUp");
   useEffect(() => {
     toast.error(
       "Échec de l'inscription ! Veuillez contacter l'administrateur pour plus d'informations.",

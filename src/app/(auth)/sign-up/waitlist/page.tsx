@@ -1,5 +1,6 @@
 "use client";
 
+import { roles } from "@/types/roles.enum";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
@@ -16,7 +17,7 @@ export default function WaitlistPage() {
       return;
     }
 
-    if (role !== "teacher" && !toastShown.current) {
+    if (role !== roles.doctor && !toastShown.current) {
       toastShown.current = true;
       toast.error(
         "Vous n'êtes pas autorisé à accéder à cette page. Veuillez vous inscrire en tant qu'enseignant si vous souhaitez demander une fonctionnalité."
@@ -25,7 +26,7 @@ export default function WaitlistPage() {
       return;
     }
 
-    if (role === "teacher" && !toastShown.current) {
+    if (role === roles.doctor && !toastShown.current) {
       toastShown.current = true;
       toast.success("Votre demande a été soumise avec succès !", {
         description:
@@ -42,8 +43,8 @@ export default function WaitlistPage() {
           <div className="max-w-2xl text-center space-y-6">
             <h1 className="text-4xl font-bold text-gray-800">Thank You!</h1>
             <p className="text-lg text-gray-600">
-              Your request has been successfully submitted. The Cognacia team is
-              now reviewing it and will contact you once it&apos;s been
+              Your request has been successfully submitted. The TeleAustism team
+              is now reviewing it and will contact you once it&apos;s been
               processed.
             </p>
           </div>

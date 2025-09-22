@@ -3,8 +3,8 @@ import { z } from "zod";
 
 const ACCEPTED_MIME_TYPES = ["application/pdf", "image/jpeg", "image/png"];
 
-//!the entire SignUpSchema
-export const SignUpSchema = z.object({
+// Base schema with common fields
+const BaseSignUpSchema = z.object({
   firstName: z
     .string()
     .min(3, "Le prénom doit comporter au moins 3 caractères"),
@@ -18,7 +18,6 @@ export const SignUpSchema = z.object({
       (value) => /^(\+213)\d{9}$/.test(value ?? ""),
       "Le numéro de téléphone doit être au format +213 suivi de 9 chiffres (ex: +213123456789)"
     ),
-  //review use constant
   role: z.enum([roles.patient, roles.doctor], {
     message: "Veuillez sélectionner un rôle",
   }),
@@ -30,115 +29,118 @@ export const SignUpSchema = z.object({
     .string()
     .min(6, "Le mot de passe doit comporter au moins 6 caractères")
     .max(25),
+});
 
-  // Teacher/Doctor specific fields
-  location: z.string().optional(),
-  yearsOfExperience: z
-    .string()
-    .refine((val) => !val || !isNaN(Number(val)), "Doit être un nombre valide")
-    .optional(),
+// Doctor-specific fields - all required
+const DoctorFields = z.object({
+  location: z.string().min(1, "La localisation est requise"),
+  yearsOfExperience: z.preprocess(
+    (val) => {
+      if (val === "" || val === null || val === undefined) return undefined;
+      const num = Number(val);
+      return isNaN(num) ? undefined : num;
+    },
+    z
+      .number({
+        required_error: "Les années d'expérience sont requises",
+        invalid_type_error:
+          "Les années d'expérience doivent être un nombre valide",
+      })
+      .min(0, "Les années d'expérience ne peuvent pas être négatives")
+  ),
   nationalIdCard: z
-    .string()
-    .refine(
-      (val) => !val || /^\d{18}$/.test(val),
-      "La carte d'identité doit contenir 18 chiffres"
+    .string({ required_error: "La carte d'identité est requise" })
+    .min(1, "La carte d'identité est requise")
+    .regex(
+      /^\d{18}$/,
+      "La carte d'identité doit contenir exactement 18 chiffres"
     ),
   licenseFileUrl: z
-    .string()
-    .url("Veuillez entrer une URL valide")
-    .optional()
-    .or(z.literal("")),
-
+    .string({ required_error: "L'URL de la licence est requise" })
+    .min(1, "L'URL de la licence est requise")
+    .url("Veuillez entrer une URL valide pour la licence"),
   availabilityTimes: z
-    .string()
+    .string({ required_error: "Les heures de disponibilité sont requises" })
+    .min(1, "Les heures de disponibilité sont requises")
     .regex(
       /^([01]\d|2[0-3]):([0-5]\d)\s*-\s*([01]\d|2[0-3]):([0-5]\d)$/,
-      "Time must be in the format HH:MM - HH:MM (e.g., 08:00 - 17:30)"
-    )
-    .optional(),
-  consultationFee: z
-    .string()
-    .refine((val) => !val || !isNaN(Number(val)), "Doit être un montant valide")
-    .optional(),
+      "Les heures doivent être au format HH:MM - HH:MM (ex: 08:00 - 17:30)"
+    ),
+  consultationFee: z.preprocess(
+    (val) => {
+      if (val === "" || val === null || val === undefined) return undefined;
+      const num = Number(val);
+      return isNaN(num) ? undefined : num;
+    },
+    z
+      .number({
+        required_error: "Les frais de consultation sont requis",
+        invalid_type_error:
+          "Les frais de consultation doivent être un nombre valide",
+      })
+      .min(0, "Les frais de consultation ne peuvent pas être négatifs")
+  ),
+  education: z
+    .string({ required_error: "L'éducation est requise" })
+    .min(1, "L'éducation est requise"),
+});
+
+// Patient-specific fields - all required
+const PatientFields = z.object({
+  address: z
+    .string({ required_error: "L'adresse est requise" })
+    .min(1, "L'adresse est requise"),
+  preferredTime: z.enum(["morning", "afternoon", "evening", "night"], {
+    required_error: "L'heure préférée est requise",
+    invalid_type_error: "Veuillez sélectionner une heure préférée valide",
+  }),
+  emergencyContact: z
+    .string({ required_error: "Le contact d'urgence est requis" })
+    .min(1, "Le contact d'urgence est requis")
+    .refine(
+      (value) => /^(\+213)\d{9}$/.test(value ?? ""),
+      "Le contact d'urgence doit être au format +213 suivi de 9 chiffres"
+    ),
+  medicalConditions: z
+    .string({ required_error: "Les conditions médicales sont requises" })
+    .min(
+      1,
+      "Les conditions médicales sont requises (écrivez 'Aucune' si vous n'en avez pas)"
+    ),
+});
+
+// Complete schema that includes all fields (for server-side use)
+export const SignUpSchema = BaseSignUpSchema.extend({
+  // Doctor fields (optional in complete schema for flexibility)
+  location: z.string().optional(),
+  yearsOfExperience: z.preprocess(
+    (val) => (val === "" ? undefined : Number(val)),
+    z.number().optional()
+  ),
+  nationalIdCard: z.string().optional(),
+  licenseFileUrl: z.string().url().optional().or(z.literal("")),
+  availabilityTimes: z.string().optional(),
+  consultationFee: z.preprocess(
+    (val) => (val === "" ? undefined : Number(val)),
+    z.number().optional()
+  ),
   education: z.string().optional(),
 
+  // Patient fields (optional in complete schema for flexibility)
   address: z.string().optional(),
   preferredTime: z
     .enum(["morning", "afternoon", "evening", "night"])
     .optional(),
-  emergencyContact: z
-    .string()
-    .refine(
-      (value) => /^(\+213)\d{9}$/.test(value ?? ""),
-      "Le numéro de téléphone doit être au format +213 suivi de 9 chiffres (ex: +213123456789)"
-    ),
+  emergencyContact: z.string().optional(),
   medicalConditions: z.string().optional(),
 });
 
+// Form-specific schemas with required fields
+export const DoctorFormSchema = BaseSignUpSchema.extend(DoctorFields.shape);
+export const PatientFormSchema = BaseSignUpSchema.extend(PatientFields.shape);
+
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
+export type DoctorFormSchemaType = z.infer<typeof DoctorFormSchema>;
+export type PatientFormSchemaType = z.infer<typeof PatientFormSchema>;
 
 export type Roles = "patient" | "doctor" | "admin";
-// import { roles } from "@/types/roles.enum";
-// import { z } from "zod";
-// const ACCEPTED_MIME_TYPES = ["application/pdf", "image/jpeg", "image/png"];
-// //!the entire SignUpSchema
-// export const SignUpSchema = z.object({
-//   firstName: z
-//     .string()
-//     .min(3, "Le prénom doit comporter au moins 3 caractères"),
-//   lastName: z
-//     .string()
-//     .min(3, "Le nom de famille doit comporter au moins 3 caractères"),
-//   email: z.string().email(),
-//   phoneNumber: z
-//     .string()
-//     .refine(
-//       (value) => /^(\+213)\d{9}$/.test(value ?? ""),
-//       "Le numéro de téléphone doit être au format +216 suivi de 8 chiffres (ex: +21612345678)"
-//     ),
-//   //review use constant
-//   role: z.enum([roles.student, roles.teacher], {
-//     message: "Veuillez sélectionner un rôle",
-//   }),
-//   password: z
-//     .string()
-//     .min(6, "Le mot de passe doit comporter au moins 6 caractères")
-//     .max(25),
-//   confirmPassword: z
-//     .string()
-//     .min(6, "Le mot de passe doit comporter au moins 6 caractères")
-//     .max(25),
-
-//   diplomeFile: z
-//     .any()
-//     .refine((file) => {
-//       return (
-//         file[0] instanceof File && ACCEPTED_MIME_TYPES.includes(file[0].type),
-//         "Le diplôme doit être un fichier PDF, JPG ou PNG"
-//       );
-//     })
-//     .optional(),
-
-//   identityFileFront: z
-//     .any()
-//     .refine(
-//       (file) =>
-//         file[0] instanceof File && ACCEPTED_MIME_TYPES.includes(file[0].type),
-//       "La carte d'identité doit être un fichier PDF"
-//     )
-//     .optional(),
-//   identityFileBack: z
-//     .any()
-//     .refine(
-//       (file) =>
-//         file[0] instanceof File && ACCEPTED_MIME_TYPES.includes(file[0].type),
-//       "La carte d'identité doit être un fichier PDF"
-//     )
-//     .optional(),
-
-//   specialties: z.array(z.string()).optional(),
-// });
-
-// export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
-
-// export type Roles = "patient" | "doctor" | "admin";
