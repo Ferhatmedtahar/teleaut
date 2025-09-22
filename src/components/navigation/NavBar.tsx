@@ -3,7 +3,7 @@
 import { Button } from "@/components/common/buttons/Button";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@/providers/UserProvider";
-import { Menu, Plus, Search, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import Form from "next/form";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -132,33 +132,6 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
           >
             <Search className="h-5 w-5" />
           </Button>
-
-          {/* Right side with buttons and profile */}
-          {(role === "teacher" || role === "admin") && (
-            <>
-              <Link href="/create-video" passHref>
-                <Button
-                  variant="default"
-                  size="lg"
-                  className="gap-1 hidden sm:flex"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>Publier</span>
-                </Button>
-              </Link>
-
-              {/* Mobile-only publish button */}
-              <Link href="/create-video" passHref>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-9 w-9 sm:hidden"
-                >
-                  <Plus className="h-5 w-5 dark:text-white " />
-                </Button>
-              </Link>
-            </>
-          )}
 
           {user.id ? <UserDropDownMenu userInfo={userInfo} /> : <p>Guest</p>}
         </div>

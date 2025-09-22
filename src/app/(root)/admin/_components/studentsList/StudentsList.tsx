@@ -27,21 +27,21 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { deleteStudent } from "../../_lib/admin";
 
-interface Student {
+interface Patient {
   id: string;
   first_name: string;
   last_name: string;
   email: string;
-  class: string;
-  branch: string;
+  emergency_contact: string;
+  address: string;
   created_at: string;
 }
 
 interface StudentsListClientProps {
-  readonly students: Student[];
+  readonly patients: Patient[];
 }
 
-export default function StudentsList({ students }: StudentsListClientProps) {
+export default function PatientList({ patients }: StudentsListClientProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const onDelete = async (id: string) => {
@@ -64,7 +64,7 @@ export default function StudentsList({ students }: StudentsListClientProps) {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Students List</h2>
+        <h2 className="text-2xl font-bold">Patients List</h2>
       </div>
 
       <div className="rounded-md border border-border/50 dark:border-border/80">
@@ -74,24 +74,24 @@ export default function StudentsList({ students }: StudentsListClientProps) {
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Joined</TableHead>
-              <TableHead>Class</TableHead>
-              <TableHead>Branch</TableHead>
+              <TableHead>Address</TableHead>
+              <TableHead>Emergency Contact</TableHead>
               <TableHead>Profile</TableHead>
               <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {students.map((student) => (
-              <TableRow key={student.id} className="hover:bg-primary-200/40 ">
+            {patients.map((patient: Patient) => (
+              <TableRow key={patient.id} className="hover:bg-primary-200/40 ">
                 <TableCell className="font-medium">
-                  {student.first_name} {student.last_name}
+                  {patient.first_name} {patient.last_name}
                 </TableCell>
-                <TableCell>{student.email}</TableCell>
-                <TableCell>{formatDate(student.created_at)}</TableCell>
-                <TableCell>{student.class}</TableCell>
-                <TableCell>{student.branch}</TableCell>
+                <TableCell>{patient.email}</TableCell>
+                <TableCell>{formatDate(patient.created_at)}</TableCell>
+                <TableCell>{patient.address}</TableCell>
+                <TableCell>{patient.emergency_contact}</TableCell>
                 <TableCell>
-                  <Link href={`/profile/${student.id}`}>
+                  <Link href={`/profile/${patient.id}`}>
                     <User className="h-4 w-4" />
                   </Link>
                 </TableCell>
@@ -124,7 +124,7 @@ export default function StudentsList({ students }: StudentsListClientProps) {
                         </AlertDialogCancel>
                         <AlertDialogAction
                           className="bg-red-500 hover:bg-red-600"
-                          onClick={() => onDelete(student.id)}
+                          onClick={() => onDelete(patient.id)}
                           disabled={isDeleting}
                         >
                           {isDeleting ? "Deleting..." : "Delete"}

@@ -106,14 +106,14 @@ export async function getTeacherFiles(
 }
 
 //!Get all students
-export async function getStudentsList() {
+export async function getPatientsList() {
   "use server";
   const supabase = await createClient();
   try {
     const { data, error } = await supabase
       .from("users")
       .select("*")
-      .eq("role", "student")
+      .eq("role", roles.patient)
       .order("created_at", { ascending: false });
 
     if (error) {
