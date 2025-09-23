@@ -3,7 +3,6 @@ import { getCurrentUserById } from "@/actions/profile/getCurrentUserById.action"
 import { roles } from "@/types/roles.enum";
 // import FeaturedVideoUploadForm from "../_components/forms/AdminVideoUploadForm";
 // import VideoUploadForm from "../_components/forms/VideoUploadForm";
-import AppointmentForm from "./_components/forms/AppointmentFormPatient";
 
 export const metadata = {
   title: "Ajouter une video",
@@ -24,18 +23,5 @@ export default async function UploadVideoPage() {
     );
   }
 
-  return (
-    <div className=" mx-auto p-8">
-      {/* <VideoUploadForm
-        userId={currentUser.id}
-        userSpecialties={currentUser.specialties}
-      /> */}
-      <AppointmentForm
-        patientId={currentUser.id}
-        doctorId="DOCTOR"
-        doctorName="fer"
-        doctorSpecialty="specialty"
-      />
-    </div>
-  );
+  return <div className=" mx-auto p-8"></div>;
 }

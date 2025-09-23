@@ -1,6 +1,7 @@
 "use server";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
+import { Doctor } from "@/types/entities/Doctor.interface";
 import { roles } from "@/types/roles.enum";
 import { TeacherFile } from "@/types/TeacherFile";
 import { revalidatePath } from "next/cache";
@@ -78,11 +79,11 @@ export async function getDoctorById(id: string) {
     .single();
 
   if (error) {
-    console.error("Error fetching teacher:", error);
+    console.error("Error fetching doctor:", error);
     return null;
   }
 
-  return data;
+  return { success: true, doctor: data };
 }
 
 //! Teacher Files from user_files table
@@ -152,19 +153,6 @@ export async function deleteStudent(id: string) {
     return { success: false, message: "Échec de la suppression de l'étudiant" };
   }
 }
-interface Doctor {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  verification_status: string;
-  // specialties: string[];
-  location: string;
-  education: string;
-  license_file_url: string;
-  created_at: string;
-}
-
 //!Get all teachers
 export async function getDoctorsList(): Promise<{
   data?: Doctor[];

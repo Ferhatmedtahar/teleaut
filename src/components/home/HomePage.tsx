@@ -1,10 +1,11 @@
+import { getDoctorsList } from "@/actions/home/getDoctors.action";
+import DoctorCard from "./DoctorCard";
+
 export default async function HomePage() {
   //fetch the doctors and appointments made by the user
   //  await getHomePageVideos();
   // await getBranchAndClass();
-  const { success } = {
-    success: true,
-  };
+  const { success, doctors } = await getDoctorsList();
 
   if (!success) {
     return (
@@ -23,7 +24,15 @@ export default async function HomePage() {
     <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg ">
       <div>banner</div>
       <div>appointment</div>
-      <div>doctors</div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {doctors && doctors?.length > 0 ? (
+          [...doctors, ...doctors].map((doctor) => {
+            return <DoctorCard key={doctor.id} doctor={doctor} />;
+          })
+        ) : (
+          <div>no doctors</div>
+        )}
+      </div>
     </div>
   );
 }

@@ -23,24 +23,12 @@ import {
 } from "@/components/ui/table";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { formatDate } from "@/lib/helpers/formatDate";
+import { Doctor } from "@/types/entities/Doctor.interface";
 import { CheckCircle, Clock, Eye, Mail, Trash2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { deleteTeacher } from "../../_lib/admin";
-
-interface Doctor {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  verification_status: string;
-
-  location: string;
-  education: string;
-  license_file_url: string;
-  created_at: string;
-}
 
 interface DoctorsListClientProps {
   readonly doctors: Doctor[];

@@ -1,5 +1,6 @@
 "use server";
 
+import { APPOINTMENT_STATUS } from "@/lib/constants/AppointmentsStatus";
 import { createClient } from "@/lib/supabase/server";
 
 type CreateAppointmentParams = {
@@ -69,7 +70,7 @@ export async function createAppointment({
       .eq("patient_id", patient_id)
       .eq("doctor_id", doctor_id)
       .eq("appointment_date", appointment_date)
-      .eq("status", "pending")
+      .eq("status", APPOINTMENT_STATUS.PENDING)
       .single();
 
     if (existingAppointment) {
@@ -86,7 +87,7 @@ export async function createAppointment({
       doctor_id,
       appointment_date,
       note: note || null,
-      status: "pending",
+      status: APPOINTMENT_STATUS.PENDING,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
