@@ -155,7 +155,7 @@ export default function DoctorsList({ doctors = [] }: DoctorsListClientProps) {
                           className="text-gray-500 hover:text-gray-700 hover:bg-gray-50"
                           asChild
                         >
-                          <Link href={`/admin/teachers/${doctor.id}`}>
+                          <Link href={`/admin/doctors/${doctor.id}`}>
                             <Eye className="h-4 w-4" />
                             <span className="sr-only">View</span>
                           </Link>

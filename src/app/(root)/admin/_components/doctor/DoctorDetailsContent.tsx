@@ -1,0 +1,26 @@
+import { notFound } from "next/navigation";
+import { getDoctorById } from "../../_lib/admin";
+
+import DoctorProfile from "./DoctorProfile";
+import DoctorVerificationActions from "./DoctorVerificationSection";
+
+export default async function DoctorDetailsContent({
+  doctorId,
+}: {
+  readonly doctorId: string;
+}) {
+  const doctor = await getDoctorById(doctorId);
+
+  if (!doctor) {
+    notFound();
+  }
+
+  return (
+    <div className="grid gap-6 md:grid-cols-2">
+      <div className="space-y-6">
+        <DoctorProfile doctor={doctor} />
+        <DoctorVerificationActions doctor={doctor} />
+      </div>
+    </div>
+  );
+}

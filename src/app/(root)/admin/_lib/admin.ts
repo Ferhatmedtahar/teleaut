@@ -67,14 +67,14 @@ export async function getUnverifiedTeachers() {
 }
 
 //! Teacher details by id for approval
-export async function getTeacherById(id: string) {
+export async function getDoctorById(id: string) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("users")
     .select("*")
     .eq("id", id)
-    .eq("role", "teacher")
+    .eq("role", roles.doctor)
     .single();
 
   if (error) {

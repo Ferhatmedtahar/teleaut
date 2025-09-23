@@ -11,11 +11,11 @@ export async function resendVerificationEmail(formData: FormData) {
       message: "Vous n'êtes pas autorisé à effectuer cette action",
     };
   }
-  const teacherId = formData.get("teacherId") as string;
+  const doctorId = formData.get("doctorId") as string;
   const email = formData.get("email") as string;
   const verify = formData.get("verify") === "true";
 
-  return handleVerificationEmail(teacherId, email, verify, {
+  return handleVerificationEmail(doctorId, email, verify, {
     updateUser: false,
   });
 }

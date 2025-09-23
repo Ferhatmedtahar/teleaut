@@ -3,6 +3,7 @@
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
+import { roles } from "@/types/roles.enum";
 import { revalidatePath } from "next/cache";
 
 export async function rejectTeacher(formData: FormData) {
@@ -15,9 +16,9 @@ export async function rejectTeacher(formData: FormData) {
     };
   }
 
-  const teacherId = formData.get("teacherId") as string;
+  const doctorId = formData.get("doctorId") as string;
 
-  if (!teacherId) {
+  if (!doctorId) {
     return {
       success: false,
       message: "L'identifiant de l'enseignant est requis",
@@ -28,15 +29,15 @@ export async function rejectTeacher(formData: FormData) {
   const { error } = await supabase
     .from("users")
     .update({ verification_status: VERIFICATION_STATUS.REJECTED })
-    .eq("id", teacherId)
-    .eq("role", "teacher");
+    .eq("id", doctorId)
+    .eq("role", roles.doctor);
 
   if (error) {
     console.error("Error rejecting teacher:", error);
     return { success: false, message: "Impossible de rejeter l'enseignant" };
   }
 
-  revalidatePath(`/admin/teachers/${teacherId}`);
+  revalidatePath(`/admin/doctors/${doctorId}`);
   revalidatePath("/admin/unverified");
   revalidatePath("/admin");
 

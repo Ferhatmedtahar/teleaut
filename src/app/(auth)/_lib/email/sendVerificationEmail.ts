@@ -4,6 +4,7 @@ import { sendVerificationEmailTeacher } from "@/app/(auth)/_lib/email/sendApprov
 import { generateToken } from "@/app/(auth)/_lib/generateToken";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
+import { roles } from "@/types/roles.enum";
 import { revalidatePath } from "next/cache";
 
 interface HandleVerificationEmailOptions {
@@ -11,12 +12,12 @@ interface HandleVerificationEmailOptions {
 }
 
 export async function handleVerificationEmail(
-  teacherId: string,
+  doctorId: string,
   email: string,
   verify: boolean,
   options: HandleVerificationEmailOptions = {}
 ) {
-  if (!teacherId) {
+  if (!doctorId) {
     return {
       success: false,
       message: "L'identifiant de l'enseignant est requis",
@@ -26,7 +27,7 @@ export async function handleVerificationEmail(
   const { data } = await supabase
     .from("users")
     .select("id,verification_status")
-    .eq("id", teacherId)
+    .eq("id", doctorId)
     .single();
 
   if (
@@ -45,10 +46,10 @@ export async function handleVerificationEmail(
     return { success: false, message: "Enseignant déjà vérifié" };
   }
 
-  const token = await generateToken({ id: teacherId, role: "teacher" });
+  const token = await generateToken({ id: doctorId, role: roles.doctor });
 
   const { emailSent, message } = await sendVerificationEmailTeacher(
-    teacherId,
+    doctorId,
     email,
     token
   );
@@ -64,8 +65,8 @@ export async function handleVerificationEmail(
       .update({
         verification_status: verify && VERIFICATION_STATUS.EMAIL_SENT,
       })
-      .eq("id", teacherId)
-      .eq("role", "teacher");
+      .eq("id", doctorId)
+      .eq("role", roles.doctor);
 
     if (error) {
       console.error("Error updating teacher verification status:", error);
@@ -76,7 +77,7 @@ export async function handleVerificationEmail(
     }
   }
 
-  revalidatePath(`/admin/teachers/${teacherId}`);
+  revalidatePath(`/admin/doctors/${doctorId}`);
   revalidatePath("/admin/unverified");
   revalidatePath("/admin");
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { approveTeacher } from "@/actions/admin/approveTeacher.action";
+import { approveDoctor } from "@/actions/admin/approveTeacher.action";
 import { rejectTeacher } from "@/actions/admin/rejectTeacher.action";
 import { resendVerificationEmail } from "@/actions/admin/resendVerificationEmail.action";
 import { Button } from "@/components/common/buttons/Button";
@@ -12,14 +12,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 interface VerifyTeacherButtonProps {
-  readonly teacherId: string;
-  readonly teacherEmail: string;
+  readonly doctorId: string;
+  readonly doctorEmail: string;
   readonly verificationStatus: UserVerificationStatus;
 }
 
-export default function VerifyTeacherButton({
-  teacherId,
-  teacherEmail,
+export default function VerifyDoctorButton({
+  doctorId,
+  doctorEmail,
   verificationStatus,
 }: VerifyTeacherButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,10 +31,10 @@ export default function VerifyTeacherButton({
     setIsLoading(true);
     try {
       const formData = new FormData();
-      formData.append("teacherId", teacherId);
-      formData.append("email", teacherEmail);
+      formData.append("doctorId", doctorId);
+      formData.append("email", doctorEmail);
       formData.append("verify", "true");
-      const result = await approveTeacher(formData);
+      const result = await approveDoctor(formData);
       if (!result.success) {
         toast.error(result.message);
       }
@@ -56,7 +56,7 @@ export default function VerifyTeacherButton({
     setIsLoading(true);
     try {
       const formData = new FormData();
-      formData.append("teacherId", teacherId);
+      formData.append("doctorId", doctorId);
       const result = await rejectTeacher(formData);
 
       if (!result.success) {
@@ -79,8 +79,8 @@ export default function VerifyTeacherButton({
     setIsLoading(true);
     try {
       const formData = new FormData();
-      formData.append("teacherId", teacherId);
-      formData.append("email", teacherEmail);
+      formData.append("doctorId", doctorId);
+      formData.append("email", doctorEmail);
       formData.append("verificationStatus", verificationStatus);
       const result = await resendVerificationEmail(formData);
 

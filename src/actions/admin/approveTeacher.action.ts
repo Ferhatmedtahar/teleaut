@@ -3,7 +3,7 @@
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { handleVerificationEmail } from "@/app/(auth)/_lib/email/sendVerificationEmail";
 
-export async function approveTeacher(formData: FormData) {
+export async function approveDoctor(formData: FormData) {
   const { user } = await getCurrentUser();
 
   if (!user || user.role !== "admin") {
@@ -13,11 +13,11 @@ export async function approveTeacher(formData: FormData) {
     };
   }
 
-  const teacherId = formData.get("teacherId") as string;
+  const doctorId = formData.get("doctorId") as string;
   const email = formData.get("email") as string;
   const verify = formData.get("verify") === "true";
 
-  return handleVerificationEmail(teacherId, email, verify, {
+  return handleVerificationEmail(doctorId, email, verify, {
     updateUser: true,
   });
 }
