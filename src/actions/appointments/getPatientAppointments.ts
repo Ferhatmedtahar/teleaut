@@ -1,5 +1,4 @@
 "use server";
-"use server";
 
 import { createClient } from "@/lib/supabase/server";
 
@@ -7,7 +6,22 @@ export async function getPatientAppointments(patientId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("appointments")
-    .select("*")
+    .select(
+      `
+      id,
+      appointment_date,
+      status,
+      note,
+      doctor:doctor_id (
+        id,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        profile_url
+      )
+    `
+    )
     .eq("patient_id", patientId)
     .order("appointment_date", { ascending: true });
 
@@ -26,7 +40,30 @@ export async function getDoctorAppointments(doctorId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("appointments")
-    .select("*")
+    .select(
+      `
+      id,
+      patient_id,
+      doctor_id,
+      appointment_date,
+      status,
+      note,
+      created_at,
+      updated_at,
+      patient:patient_id (
+        id,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        profile_url,
+        address,
+        medical_conditions,
+        emergency_contact,
+        preferred_consultation_time
+      )
+    `
+    )
     .eq("doctor_id", doctorId)
     .order("appointment_date", { ascending: true });
 
