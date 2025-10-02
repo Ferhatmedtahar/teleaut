@@ -1,6 +1,26 @@
 "use client";
 
 import { updateDoctorAppointment } from "@/actions/appointments/doctor/doctor.actions";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   AlertCircle,
   Calendar,
@@ -18,26 +38,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 
 type AppointmentStatus =
   | "pending"
@@ -206,9 +206,9 @@ function DoctorAppointmentCard({
 
   return (
     <>
-      <Card className="p-6 hover:shadow-md transition-shadow">
-        <div className="flex justify-between items-start">
-          <div className="flex-1">
+      <Card className="p-6 hover:shadow-md transition-shadow h-full flex flex-col">
+        <div className="flex justify-between items-start h-full">
+          <div className="flex-1 flex flex-col">
             {/* Patient Info */}
             <div className="flex items-start gap-4 mb-4">
               <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">

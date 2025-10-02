@@ -1,10 +1,7 @@
 "use client";
 
-import { Calendar, ChevronDown, Filter, Search } from "lucide-react";
-import { useMemo, useState } from "react";
-import DoctorAppointmentCard from "./DoctorAppointmentCard";
-import PatientProfileModal from "./PatientProfileModal";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -13,7 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card } from "@/components/ui/card";
+import { Calendar, ChevronDown, Filter, Search } from "lucide-react";
+import { useMemo, useState } from "react";
+import DoctorAppointmentCard from "./DoctorAppointmentCard";
+import PatientProfileModal from "./PatientProfileModal";
 
 type AppointmentStatus =
   | "pending"
@@ -149,7 +149,7 @@ function DoctorAppointmentsView({ appointments }: DoctorAppointmentsViewProps) {
   }, [appointments]);
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="p-6">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">Mes Rendez-vous</h1>
@@ -292,7 +292,7 @@ function DoctorAppointmentsView({ appointments }: DoctorAppointmentsViewProps) {
       </div>
 
       {/* Appointments List */}
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
         {filteredAndSortedAppointments.length > 0 ? (
           filteredAndSortedAppointments.map((appointment) => (
             <DoctorAppointmentCard

@@ -1,5 +1,6 @@
 "use server";
 
+import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { createClient } from "@/lib/supabase/server";
 
 type AppointmentStatus =
@@ -29,9 +30,7 @@ export async function updateDoctorAppointment({
     const supabase = await createClient();
 
     // Get the current user
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const { user } = await getCurrentUser();
     if (!user) {
       return {
         success: false,
