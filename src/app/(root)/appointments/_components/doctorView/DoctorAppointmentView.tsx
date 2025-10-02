@@ -286,12 +286,10 @@ function DoctorAppointmentsView({ appointments }: DoctorAppointmentsViewProps) {
         )}
       </Card>
 
-      {/* Results Count */}
       <div className="mb-4 text-sm text-muted-foreground">
         {filteredAndSortedAppointments.length} rendez-vous trouvé(s)
       </div>
 
-      {/* Appointments List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
         {filteredAndSortedAppointments.length > 0 ? (
           filteredAndSortedAppointments.map((appointment) => (
@@ -314,7 +312,6 @@ function DoctorAppointmentsView({ appointments }: DoctorAppointmentsViewProps) {
         )}
       </div>
 
-      {/* Patient Profile Modal */}
       {selectedPatient && (
         <PatientProfileModal
           patient={selectedPatient}

@@ -48,14 +48,12 @@ export default async function AppointmentsPage() {
     );
   }
 
-  // Doctor View
   if (user.role === roles.doctor) {
     return <DoctorAppointmentsView appointments={appointments as any} />;
   }
 
-  // Patient View
   return (
-    <div className="max-w-4xl mx-auto p-8">
+    <div className="p-6">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Mes Rendez-vous
@@ -66,7 +64,7 @@ export default async function AppointmentsPage() {
       </div>
 
       {appointments && appointments.length > 0 ? (
-        <div className="space-y-4">
+        <div className="mt-4 pt-4 border-t grid grid-cols-1 md:grid-cols-2">
           {appointments.map((appointment: any) => (
             <AppointmentsPatientCard
               key={appointment.id}
