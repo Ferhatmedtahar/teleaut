@@ -7,13 +7,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
-import { getDoctorById } from "../../_lib/admin";
 import VerifyTeacherButton from "./verify-doctor-button";
 
 export default async function DoctorVerificationActions({
   doctor,
 }: {
-  readonly doctor: NonNullable<Awaited<ReturnType<typeof getDoctorById>>>;
+  doctor: any;
 }) {
   return (
     <Card>

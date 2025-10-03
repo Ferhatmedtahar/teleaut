@@ -32,6 +32,8 @@ export async function sendResetPasswordEmail(
       host: process.env.EMAIL_SERVER_HOST,
       port: parseInt(process.env.EMAIL_SERVER_PORT ?? "465", 10),
       secure: process.env.EMAIL_SERVER_SECURE === "true",
+      // secure: false, // Use false for port 587
+      requireTLS: true, // Force TLS
       auth: {
         user: process.env.EMAIL_SERVER_USER,
         pass: process.env.EMAIL_SERVER_PASSWORD,
@@ -39,7 +41,7 @@ export async function sendResetPasswordEmail(
     });
 
     const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password?token=${token}`;
-
+    console.log("verificationUrl", verificationUrl);
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: email,
@@ -338,7 +340,7 @@ export async function sendResetPasswordEmail(
     };
 
     const info = await transporter.sendMail(mailOptions);
-
+    console.log("Message sent: %s", info.messageId);
     if (info.messageId) {
       await supabase.from("email_logs").insert({
         user_id: userId,

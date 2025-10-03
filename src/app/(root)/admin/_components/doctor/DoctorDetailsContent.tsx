@@ -9,12 +9,12 @@ export default async function DoctorDetailsContent({
 }: {
   readonly doctorId: string;
 }) {
-  const doctor = await getDoctorById(doctorId);
+  const { success, doctor } = await getDoctorById(doctorId);
 
   if (!doctor) {
     notFound();
   }
-
+  console.log("doctor", doctor);
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="space-y-6">

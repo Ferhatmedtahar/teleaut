@@ -8,12 +8,12 @@ import {
 } from "@/components/ui/card";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { CheckCircle, Clock, Mail, XCircle } from "lucide-react";
-import { getDoctorById } from "../../_lib/admin";
 
-export default function TeacherProfile({
+export default function DoctorProfile({
   doctor,
 }: {
-  readonly doctor: NonNullable<Awaited<ReturnType<typeof getDoctorById>>>;
+  doctor: any;
+  // readonly {doctor}: NonNullable<Awaited<ReturnType<typeof getDoctorById>>>;
 }) {
   return (
     <Card>

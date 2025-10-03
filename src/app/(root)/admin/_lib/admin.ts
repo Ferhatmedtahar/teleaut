@@ -80,7 +80,7 @@ export async function getDoctorById(id: string) {
 
   if (error) {
     console.error("Error fetching doctor:", error);
-    return null;
+    return { success: false, message: "Error fetching doctor" };
   }
 
   return { success: true, doctor: data };
