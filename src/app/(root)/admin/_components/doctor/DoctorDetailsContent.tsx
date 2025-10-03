@@ -14,7 +14,7 @@ export default async function DoctorDetailsContent({
   if (!doctor) {
     notFound();
   }
-  console.log("doctor", doctor);
+
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="space-y-6">

@@ -29,15 +29,6 @@ export async function sendVerificationEmailTeacher(
       };
     }
 
-    // Debug environment variables
-    console.log("Email Config Debug:", {
-      host: process.env.EMAIL_SERVER_HOST,
-      port: process.env.EMAIL_SERVER_PORT,
-      secure: process.env.EMAIL_SERVER_SECURE,
-      user: process.env.EMAIL_SERVER_USER ? "SET" : "NOT SET",
-      pass: process.env.EMAIL_SERVER_PASSWORD ? "SET" : "NOT SET",
-    });
-
     const port = parseInt(process.env.EMAIL_SERVER_PORT ?? "587", 10);
 
     // Try multiple configurations based on common email providers
@@ -98,23 +89,17 @@ export async function sendVerificationEmailTeacher(
     // Try each configuration
     for (const { name, config } of configurations) {
       try {
-        console.log(`Trying configuration: ${name}`, {
-          host: config.host,
-          port: config.port,
-          secure: config.secure,
-        });
-
         transporter = nodemailer.createTransport(config);
 
         // Test the connection
         await transporter.verify();
-        console.log(`✓ Configuration ${name} successful`);
+
         break;
       } catch (error: unknown) {
         if (error instanceof Error) {
           error.message = `Configuration ${name}: ${error.message}`;
         }
-        // console.log(`✗ Configuration ${name} failed:`, error.message);
+
         lastError = error;
         continue;
       }
@@ -384,9 +369,7 @@ export async function sendVerificationEmailTeacher(
 </html>`,
     };
 
-    console.log("Attempting to send email to:", email);
     const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent successfully:", info.messageId);
 
     if (info.messageId) {
       await supabase.from("email_logs").insert({

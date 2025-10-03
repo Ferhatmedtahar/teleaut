@@ -51,7 +51,6 @@ export function FilterModal({
 }: FilterModalProps) {
   const [open, setOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>(initialFilterState);
-  console.log("search videos", { searchVideos, filters });
 
   // Get available branches based on selected class
   const availableBranches =

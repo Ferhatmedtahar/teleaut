@@ -53,7 +53,6 @@ type DoctorServerData = z.infer<typeof DoctorServerSchema>;
 
 export async function signUpDoctor(formData: FormData) {
   const data = Object.fromEntries(formData.entries());
-  console.log("Raw form data:", data);
 
   let newUserId: string | null = null;
 
@@ -62,7 +61,6 @@ export async function signUpDoctor(formData: FormData) {
     const validatedData: DoctorServerData = await DoctorServerSchema.parseAsync(
       data
     );
-    console.log("Validated data:", validatedData);
 
     const {
       firstName,

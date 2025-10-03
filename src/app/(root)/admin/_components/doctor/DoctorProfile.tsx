@@ -69,7 +69,7 @@ export default function DoctorProfile({
               )}
               {doctor.verification_status ===
                 VERIFICATION_STATUS.EMAIL_SENT && (
-                <div className="flex items-center gap-2 p-1 bg-blue-50 rounded-sm">
+                <div className="flex items-center gap-2 p-1 bg-background rounded-sm">
                   <Mail className="h-5 w-5 text-blue-600" />
                   <span className="text-sm  text-blue-600">
                     Verification email sent

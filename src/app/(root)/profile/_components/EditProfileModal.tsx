@@ -174,8 +174,6 @@ export default function EditProfileModal({
   };
 
   async function onSubmit(data: EditProfileSchema) {
-    console.log(data);
-    console.log(availableBranches);
     try {
       const formData = new FormData();
       formData.append("prev_bio", userData.bio ?? "");
@@ -266,7 +264,7 @@ export default function EditProfileModal({
     userData,
     userRole,
   ]);
-  console.log("branch", availableBranches);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-full max-w-[95vw] sm:max-w-[500px] max-h-[90vh] overflow-y-auto">

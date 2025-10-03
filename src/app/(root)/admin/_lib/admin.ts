@@ -168,7 +168,6 @@ export async function getDoctorsList(): Promise<{
       .eq("role", roles.doctor)
       .order("created_at", { ascending: false });
 
-    console.log(data);
     if (error) {
       console.error("Error fetching teachers:", error);
       return {

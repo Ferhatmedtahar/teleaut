@@ -31,7 +31,7 @@ export default async function DoctorVerificationActions({
         )}
 
         {doctor.verification_status === VERIFICATION_STATUS.EMAIL_SENT && (
-          <div className="bg-blue-50 text-blue-700 p-3 rounded-md text-sm">
+          <div className="bg-blue-50 text-blue-700 dark:text-primary dark:bg-background border border-border/40  p-3 rounded-md text-sm">
             A verification email has been sent to the teacher&apos;s registered
             email address. Please wait for them to complete the process.
           </div>

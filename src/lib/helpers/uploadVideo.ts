@@ -8,15 +8,12 @@ export async function uploadVideoSecureClient(
   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
   try {
-    console.log(`Starting secure client upload for: ${file.name}`);
-    console.log("base url", BASE_URL);
     const authResponse = await fetch(`${BASE_URL}/api/video/auth`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId }),
     });
 
-    console.log("auth response", authResponse);
     if (!authResponse.ok) {
       throw new Error(
         "Échec de l'obtention des informations d'identification de téléchargement"
@@ -24,8 +21,7 @@ export async function uploadVideoSecureClient(
     }
 
     const { libraryId, apiKey } = await authResponse.json();
-    console.log("libraryId", libraryId);
-    console.log("apiKey", apiKey);
+
     const videoId = await createVideoObjectClient(libraryId, apiKey, file.name);
     const uploadUrl = `https://video.bunnycdn.com/library/${libraryId}/videos/${videoId}`;
 

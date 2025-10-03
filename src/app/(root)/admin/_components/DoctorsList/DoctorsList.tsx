@@ -36,7 +36,7 @@ interface DoctorsListClientProps {
 
 export default function DoctorsList({ doctors = [] }: DoctorsListClientProps) {
   const [isDeleting, setIsDeleting] = useState(false);
-  console.log("doctors", doctors);
+
   const handleDeleteTeacher = async (id: string) => {
     try {
       setIsDeleting(true);

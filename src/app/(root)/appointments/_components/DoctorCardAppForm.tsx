@@ -2,7 +2,6 @@ import { Doctor } from "@/types/entities/Doctor.interface";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 function DoctorCardAppForm({ doctor }: { readonly doctor: Doctor }) {
-  console.log(doctor);
   const doctorName = `${doctor.first_name} ${doctor.last_name}`;
   const initials = doctorName
     .split(" ")

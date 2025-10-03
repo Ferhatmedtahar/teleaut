@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Button } from "../common/buttons/Button";
 
 function DoctorCard({ doctor }: { readonly doctor: Doctor }) {
-  console.log(doctor);
   const doctorName = `${doctor.first_name} ${doctor.last_name}`;
   const initials = doctorName
     .split(" ")
@@ -62,47 +61,4 @@ function DoctorCard({ doctor }: { readonly doctor: Doctor }) {
   );
 }
 
-export default DoctorCard; // import { Doctor } from "@/types/entities/Doctor.interface";
-// import Link from "next/link";
-// import { Button } from "../common/buttons/Button";
-
-// function DoctorCard({ doctor }: { readonly doctor: Doctor }) {
-//   console.log(doctor);
-//   const doctorName = `${doctor.first_name} ${doctor.last_name}`;
-//   // const doctorSpecialty = doctor.specialty || "doctor";
-
-//   return (
-//     <div className="p-4 bg-primary/10 border border-primary/30 rounded-lg">
-//       <div className="flex items-center space-x-3">
-//         <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
-//           <span className="text-primary font-semibold text-lg">
-//             {doctorName
-//               .split(" ")
-//               .map((n) => n[0])
-//               .join("")
-//               .toUpperCase()}
-//           </span>
-//         </div>
-//         <div className="flex justify-between w-full">
-//           <div>
-//             <p className="font-semibold text-primary">{doctorName}</p>
-//             <p className="text-sm text-gray-600 dark:text-gray-400">
-//               {doctor.email}
-//             </p>
-//             <p className="text-sm text-gray-600 dark:text-gray-400">
-//               {doctor.location}
-//             </p>
-//           </div>
-//           <div className="flex flex-col gap-2 ">
-//             <p>{doctor?.phone_number}</p>
-//             <Link href={`/appointments/${doctor.id}`}>
-//               <Button variant="default">Rendez-vous</Button>
-//             </Link>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default DoctorCard;
+export default DoctorCard;

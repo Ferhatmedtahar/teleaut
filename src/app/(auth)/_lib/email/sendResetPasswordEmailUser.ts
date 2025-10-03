@@ -41,7 +41,7 @@ export async function sendResetPasswordEmail(
     });
 
     const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password?token=${token}`;
-    console.log("verificationUrl", verificationUrl);
+
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: email,
@@ -340,7 +340,7 @@ export async function sendResetPasswordEmail(
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log("Message sent: %s", info.messageId);
+
     if (info.messageId) {
       await supabase.from("email_logs").insert({
         user_id: userId,

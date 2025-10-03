@@ -5,46 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
 import { v4 as uuidv4 } from "uuid";
 
-// export async function POST(req: NextRequest) {
-//   try {
-//     const formData = await req.formData();
-//     const file = formData.get("file") as File;
-//     const userId = formData.get("userId") as string;
-
-//     if (!file || !userId) {
-//       return NextResponse.json(
-//         { message: "Missing file or user ID" },
-//         { status: 400 }
-//       );
-//     }
-//     console.log(file, userId);
-
-//     const fileExtension = file.name.split(".").pop();
-//     const fileName = `${uuidv4()}.${fileExtension}`;
-//     const tempPath = join("/tmp", fileName);
-
-//     const bytes = await file.arrayBuffer();
-//     const buffer = Buffer.from(bytes);
-//     await writeFile(tempPath, buffer);
-
-//     const videoUrl = await uploadToBunnyStream(tempPath, fileName, file.type);
-
-//     // Clean up temp file
-//     try {
-//       fs.unlinkSync(tempPath);
-//     } catch (err) {
-//       console.error("Failed to clean up temp file:", err);
-//     }
-
-//     return NextResponse.json({ success: true, videoUrl });
-//   } catch (err: any) {
-//     console.error(err);
-//     return NextResponse.json(
-//       { message: err.message ?? "Upload failed" },
-//       { status: 500 }
-//     );
-//   }
-// }
 export async function POST(req: NextRequest) {
   try {
     const { fileBase64, fileName, fileType, userId } = await req.json();

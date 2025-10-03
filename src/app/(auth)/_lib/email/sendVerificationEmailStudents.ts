@@ -8,8 +8,6 @@ export async function sendVerificationEmail(
   token: string
 ): Promise<{ emailSent: boolean; message: string }> {
   try {
-    console.log("Starting email send process for:", email);
-
     const supabase = await createClient();
 
     const { data: emailsLastHour, error } = await supabase
@@ -18,8 +16,6 @@ export async function sendVerificationEmail(
       .eq("user_id", userId)
       .eq("type", "verification")
       .gte("sent_at", new Date(Date.now() - 60 * 60 * 1000).toISOString());
-
-    console.log("Email logs check:", emailsLastHour, error);
 
     if (error) {
       console.error("Failed to check email logs:", error);
@@ -59,20 +55,11 @@ export async function sendVerificationEmail(
       requireTLS: false,
     };
 
-    console.log("Transport config:", {
-      ...transportConfig,
-      auth: {
-        user: transportConfig.auth.user,
-        pass: "***hidden***",
-      },
-    });
-
     const transporter = nodemailer.createTransport(transportConfig);
 
     // Test the connection first
     try {
       await transporter.verify();
-      console.log("SMTP connection verified successfully");
     } catch (verifyError: unknown) {
       console.error("SMTP verification failed:", verifyError);
       if (verifyError instanceof Error) {
@@ -88,7 +75,6 @@ export async function sendVerificationEmail(
     }
 
     const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/sign-up/verify?token=${token}`;
-    console.log("Verification URL:", verificationUrl);
 
     const mailOptions = {
       from: process.env.EMAIL_FROM,
@@ -277,13 +263,9 @@ export async function sendVerificationEmail(
 </html>`,
     };
 
-    console.log("Attempting to send email to:", email);
     const info = await transporter.sendMail(mailOptions);
-    console.log("Email send result:", info);
 
     if (info.messageId) {
-      console.log("Email sent successfully, updating database...");
-
       const { error: updateError } = await supabase
         .from("users")
         .update({ verification_status: VERIFICATION_STATUS.EMAIL_SENT })

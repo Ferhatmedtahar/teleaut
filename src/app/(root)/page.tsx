@@ -71,8 +71,6 @@ export default async function Page({ searchParams }: SearchPageProps) {
 
   const result = await getCurrentUser();
   const isAuthenticated = result.success && result.user;
-  console.log(isAuthenticated, result);
-  // For guest users
   if (!isAuthenticated) {
     if (query) {
       return (
