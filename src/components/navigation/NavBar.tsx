@@ -33,7 +33,6 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
   const [search, setSearch] = useState(params.get("query") ?? "");
   const [mobileSearch, setMobileSearch] = useState(params.get("query") ?? "");
 
-  // Focus the search input when mobile search is shown
   useEffect(() => {
     if (showMobileSearch && mobileSearchInputRef.current) {
       mobileSearchInputRef.current.focus();
@@ -47,14 +46,11 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
     const query = formData.get("query") as string;
 
     if (query?.trim()) {
-      // Close mobile search overlay first
       setShowMobileSearch(false);
-      // Navigate to search results
       router.push(`/?query=${encodeURIComponent(query.trim())}`);
     }
   };
 
-  // Handle desktop search submit
   const handleDesktopSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -65,7 +61,6 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
     }
   };
 
-  // If no user, don't render this navbar (guest navbar will be used instead)
   if (!user) return null;
 
   return (
@@ -73,9 +68,7 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
       className={`sticky top-0 z-50 flex h-16 w-full items-center border-b border-border/20 dark:border-border/90 bg-background px-4 md:px-6 lg:px-10 ${className}`}
     >
       <div className="flex w-full items-center justify-between">
-        {/* Left side with menu toggle and logo */}
         <div className="flex items-center gap-4">
-          {/* Mobile menu toggle button */}
           <Button
             variant="ghost"
             size="icon"
@@ -91,7 +84,6 @@ export function Navbar({ className, userInfo, onMenuToggle }: NavbarProps) {
           </Link>
         </div>
 
-        {/* Desktop search */}
         <div className="relative mx-auto hidden w-full max-w-md md:block  px-2 md:px-0">
           <Form
             action="/"

@@ -8,6 +8,7 @@ import {
   Info,
   MessageSquare,
   MoonIcon,
+  NotebookTabs,
   Sun,
   X,
 } from "lucide-react";
@@ -35,6 +36,11 @@ const navItems: NavItem[] = [
     title: "Appointments",
     href: "/appointments",
     icon: BriefcaseMedicalIcon,
+  },
+  {
+    title: "Medical Notes",
+    href: "/medical-notes",
+    icon: NotebookTabs,
   },
   {
     title: "Chat",
