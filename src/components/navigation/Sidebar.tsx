@@ -31,7 +31,6 @@ const navItems: NavItem[] = [
     href: "/",
     icon: Home,
   },
-  ,
   {
     title: "Appointments",
     href: "/appointments",

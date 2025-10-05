@@ -1,11 +1,10 @@
-// src/app/dashboard/medical-notes/_components/MedicalNoteForm.tsx
 "use client";
 
 import {
   createMedicalNote,
   updateMedicalNote,
-} from "@/actions/notes/createMedicalNote.action";
-import { getDoctorPatients } from "@/actions/notes/getDoctorPatients.action";
+} from "@/actions/medical-notes/createMedicalNote.action";
+import { getDoctorPatients } from "@/actions/medical-notes/getDoctorPatients.action";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -175,7 +174,7 @@ export default function MedicalNoteForm({
 
       if (result.success) {
         toast.success(result.message);
-        router.push("/dashboard/medical-notes");
+        router.push("/medical-notes");
         router.refresh();
       } else {
         toast.error(result.message);

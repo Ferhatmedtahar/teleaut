@@ -1,6 +1,8 @@
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
-import { getMedicalNotesByPatient } from "@/actions/notes/getMedicalNotesByPatient.action";
-import { getDoctorNotes } from "@/actions/notes/getDoctorNotes.action";
+import {
+  getDoctorNotes,
+  getPatientNotes,
+} from "@/actions/medical-notes/getMedicalNotebyPatient.action";
 import { roles } from "@/types/roles.enum";
 import { redirect } from "next/navigation";
 import MedicalNotesList from "./_components/MedicalNotesList";
@@ -25,7 +27,7 @@ export default async function MedicalNotesPage() {
       notes = result.data || [];
     }
   } else if (user.role === roles.patient) {
-    const result = await getMedicalNotesByPatient(user.id);
+    const result = await getPatientNotes(user.id);
     if (result.success) {
       notes = result.data || [];
     }
