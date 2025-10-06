@@ -19,7 +19,7 @@ export default async function MedicalNotesPage() {
     redirect("/login");
   }
 
-  let notes = [];
+  let notes: any[] = [];
 
   if (user.role === roles.doctor) {
     const result = await getDoctorNotes();
