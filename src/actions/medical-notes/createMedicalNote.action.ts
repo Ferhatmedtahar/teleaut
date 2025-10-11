@@ -8,21 +8,19 @@ import {
   type CreateMedicalNoteInput,
   type UpdateMedicalNoteInput,
 } from "../../app/(root)/medical-notes/_components/forms/MedicalNotesSchema";
+import { getCurrentUser } from "../auth/getCurrentUser.action";
 
 export async function createMedicalNote(data: CreateMedicalNoteInput) {
   try {
     const supabase = await createClient();
 
     // Get current user (doctor)
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const { message: authMessage, user } = await getCurrentUser();
 
-    if (authError || !user) {
+    if (!user) {
       return {
         success: false,
-        message: "Non authentifié",
+        message: authMessage || "Non authentifié",
       };
     }
 
@@ -40,8 +38,8 @@ export async function createMedicalNote(data: CreateMedicalNoteInput) {
       };
     }
 
-    // Validate input
     const validation = createMedicalNoteSchema.safeParse(data);
+    console.log("Validation result:", validation);
     if (!validation.success) {
       return {
         success: false,
@@ -52,7 +50,6 @@ export async function createMedicalNote(data: CreateMedicalNoteInput) {
 
     const validatedData = validation.data;
 
-    // Verify patient exists
     const { data: patient, error: patientError } = await supabase
       .from("users")
       .select("id, role")
@@ -66,7 +63,6 @@ export async function createMedicalNote(data: CreateMedicalNoteInput) {
       };
     }
 
-    // If appointment_id is provided, verify it exists and belongs to this doctor/patient
     if (validatedData.appointment_id) {
       const { data: appointment, error: appointmentError } = await supabase
         .from("appointments")
@@ -84,7 +80,6 @@ export async function createMedicalNote(data: CreateMedicalNoteInput) {
       }
     }
 
-    // Create medical note
     const { data: note, error: insertError } = await supabase
       .from("medical_notes")
       .insert({
@@ -123,11 +118,7 @@ export async function updateMedicalNote(data: UpdateMedicalNoteInput) {
   try {
     const supabase = await createClient();
 
-    // Get current user (doctor)
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const { user, message: authError } = await getCurrentUser();
 
     if (authError || !user) {
       return {
@@ -136,7 +127,6 @@ export async function updateMedicalNote(data: UpdateMedicalNoteInput) {
       };
     }
 
-    // Validate input
     const validation = updateMedicalNoteSchema.safeParse(data);
     if (!validation.success) {
       return {
@@ -148,7 +138,6 @@ export async function updateMedicalNote(data: UpdateMedicalNoteInput) {
 
     const validatedData = validation.data;
 
-    // Verify note exists and belongs to this doctor
     const { data: existingNote, error: fetchError } = await supabase
       .from("medical_notes")
       .select("id, doctor_id")
@@ -169,7 +158,6 @@ export async function updateMedicalNote(data: UpdateMedicalNoteInput) {
       };
     }
 
-    // Update medical note
     const { data: updatedNote, error: updateError } = await supabase
       .from("medical_notes")
       .update({
