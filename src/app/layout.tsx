@@ -42,9 +42,8 @@ const sfUiText = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Cognacia",
-  description:
-    "Cognacia est une plateforme d'apprentissage en ligne pour les étudiants et les enseignants, basée en Tunisie",
+  title: "Teleaustism",
+  description: "Teleaustism ",
 };
 
 export default function RootLayout({

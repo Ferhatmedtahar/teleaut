@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import {
   BriefcaseMedicalIcon,
   HelpCircle,
-  History,
   Home,
   Info,
   MessageSquare,
@@ -16,7 +15,7 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import CognaciaLogo from "../home/Logo";
+import TeleaustismLogo from "../home/Logo";
 import { Switch } from "../ui/switch";
 
 interface NavItem {
@@ -46,11 +45,11 @@ const navItems: NavItem[] = [
     href: "/chats",
     icon: MessageSquare,
   },
-  {
-    title: "Historique",
-    href: "/historique",
-    icon: History,
-  },
+  // {
+  //   title: "Historique",
+  //   href: "/historique",
+  //   icon: History,
+  // },
   {
     title: "Aide",
     href: "/aide",
@@ -84,14 +83,12 @@ const AppSidebar: React.FC<SidebarProps> = ({
     setMounted(true);
   }, []);
 
-  // Close sidebar on route change for mobile
   useEffect(() => {
     if (ismobile && onClose) {
       onClose();
     }
   }, [pathname, ismobile, onClose]);
 
-  // Prevent body scroll when mobile sidebar is open
   useEffect(() => {
     if (ismobile) {
       if (isOpen) {
@@ -128,7 +125,7 @@ const AppSidebar: React.FC<SidebarProps> = ({
       {...props}
     >
       <div className=" md:hidden flex items-center justify-between p-4 border-b border-border/20 dark:border-border/90">
-        <CognaciaLogo />
+        <TeleaustismLogo />
 
         {ismobile && (
           <button

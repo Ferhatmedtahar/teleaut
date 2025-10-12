@@ -101,25 +101,4 @@ export default async function Page({ searchParams }: SearchPageProps) {
   if (!query) {
     return <HomePage />;
   }
-
-  // const {
-  //   success,
-  //   videos: searchVideos,
-  //   teachers: searchTeachers,
-  //   // students: searchStudents,
-  // } = await getSearchResults(query);
-
-  // if (!success) {
-  //   return (
-  //     <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg min-h-screen">
-  //       <div className="text-center py-12">
-  //         <h3 className="text-lg font-medium mb-2">Erreur de recherche</h3>
-  //         <p className="text-muted-foreground">
-  //           Impossible d&apos;effectuer la recherche. Veuillez réessayer plus
-  //           tard.
-  //         </p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
 }

@@ -323,7 +323,6 @@ body {
     @apply px-6 py-10 max-w-7xl mx-auto;
   }
 
-  /* Updated gradients with teal/mint colors */
   .gradient-bg-light {
     @apply bg-gradient-to-r from-[#00746b] to-[#0b7d84];
   }
@@ -331,7 +330,7 @@ body {
     @apply bg-gradient-to-r from-[#00746b] to-[#0b7d84];
   }
   .gradient-sidebar-light {
-    @apply bg-gradient-to-r from-[#87cdb0] via-[#b5e0cf] to-[#fafafa];
+    @apply bg-gradient-to-r from-[#09767c] via-[#87cdb0] to-[#b5e0cf];
   }
   .gradient-sidebar-dark {
     @apply bg-gradient-to-r from-[#0b7d84] via-[#87cdb0] to-[#b5e0cf];
