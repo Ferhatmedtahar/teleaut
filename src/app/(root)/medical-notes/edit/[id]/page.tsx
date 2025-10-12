@@ -1,5 +1,5 @@
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
-import { createClient } from "@/lib/supabase/server";
+import { getMedicalNotesForEdit } from "@/actions/medical-notes/getDoctorPatients.action";
 import { roles } from "@/types/roles.enum";
 import { redirect } from "next/navigation";
 import MedicalNoteForm from "../../_components/forms/MedicalNotesFormPatient";
@@ -27,26 +27,7 @@ export default async function EditMedicalNotePage({
   if (user.role !== roles.doctor) {
     redirect("/medical-notes");
   }
-
-  const supabase = await createClient();
-
-  // Fetch the medical note
-  const { data: note, error } = await supabase
-    .from("medical_notes")
-    .select(
-      `
-      *,
-      patient:users!medical_notes_patient_id_fkey(
-        id,
-        first_name,
-        last_name,
-        email
-      )
-    `
-    )
-    .eq("id", params.id)
-    .eq("doctor_id", user.id)
-    .single();
+  const { note, error } = await getMedicalNotesForEdit(params.id, user.id);
 
   if (error || !note) {
     redirect("/medical-notes");

@@ -120,7 +120,7 @@ export async function updateMedicalNote(data: UpdateMedicalNoteInput) {
 
     const { user, message: authError } = await getCurrentUser();
 
-    if (authError || !user) {
+    if (!user) {
       return {
         success: false,
         message: "Non authentifié",
