@@ -2,18 +2,16 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { getCurrentUser } from "../auth/getCurrentUser.action";
 
 export async function deleteMedicalNote(noteId: string) {
   try {
     const supabase = await createClient();
 
     // Get current user (doctor)
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const { user } = await getCurrentUser();
 
-    if (authError || !user) {
+    if (!user) {
       return {
         success: false,
         message: "Non authentifié",
@@ -41,7 +39,6 @@ export async function deleteMedicalNote(noteId: string) {
       };
     }
 
-    // Delete medical note
     const { error: deleteError } = await supabase
       .from("medical_notes")
       .delete()
