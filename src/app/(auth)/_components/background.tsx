@@ -98,7 +98,6 @@ export default function Background() {
         )}
       </motion.div>
 
-      {/* Foreground text */}
       <motion.div
         initial={{ opacity: 0, scale: 1.1 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -112,7 +111,8 @@ export default function Background() {
         <h1 className="radial-gradient lg:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold leading-tight">
           {currentPath === "/sign-in" ? (
             <span>
-              Content de <br /> te revoir
+              Heureux de <br /> vous revoir
+              {/* Content de te revoir */}
             </span>
           ) : (
             <span>

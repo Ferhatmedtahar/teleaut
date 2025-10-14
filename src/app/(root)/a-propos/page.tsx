@@ -7,16 +7,13 @@ export const metadata = {
 export default function MissionPage() {
   return (
     <main className="min-h-screen bg-background text-gray-800">
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] dark:from-[hsl(177,85%,12%)] dark:via-[hsl(177,90%,15%)] dark:to-[hsl(177,95%,18%)] text-white  px-6">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-100/20 to-transparent"></div>
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center max-w-4xl">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
-            Notre mission
-          </h1>
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4">Notre mission</h1>
           <p className="text-lg sm:text-xl lg:text-2xl text-primary-50 font-light">
-            Offrir à chaque étudiant tunisien une nouvelle façon d’apprendre,
-            libre, moderne et humaine.
+            Offrir à chaque étudiant tunisien une nouvelle façon
+            d&apos;apprendre, libre, moderne et humaine.
           </p>
         </div>
 

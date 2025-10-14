@@ -1,12 +1,10 @@
-import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { getDoctorsList } from "@/actions/home/getDoctors.action";
 import { Calendar, FileText, Heart, MessageCircle } from "lucide-react";
 import DoctorCard from "./DoctorCard";
 
 export default async function HomePage() {
   const { success, doctors } = await getDoctorsList();
-  const user = await getCurrentUser();
-  const isPatient = user?.user?.role === "patient";
+
   if (!success) {
     return (
       <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg">
@@ -22,7 +20,10 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-6 dark:bg-background/80 bg-background/80 rounded-lg">
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] text-white py-16 px-6">
+      <section
+        // className="relative overflow-hidden bg-gradient-to-br from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] text-white py-16 px-6"
+        className="relative overflow-hidden bg-gradient-to-br from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] dark:from-[hsl(177,85%,12%)] dark:via-[hsl(177,90%,15%)] dark:to-[hsl(177,95%,18%)] text-white py-16 px-6"
+      >
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-10 w-64 h-64 bg-white rounded-full blur-3xl"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#5fa89f] rounded-full blur-3xl"></div>

@@ -64,7 +64,11 @@ export default function GuestHomePage({
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
-      <section className="opacity-95 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] px-4 py-12 sm:py-14 md:px-8 lg:px-10 relative border-b border-border/60 dark:border-border/90 ">
+      <section
+        // className="opacity-95 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] px-4 py-12 sm:py-14 md:px-8 lg:px-10 relative border-b border-border/60 dark:border-border/90 "
+
+        className="relative overflow-hidden bg-gradient-to-br from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] text-white py-16 px-6"
+      >
         <Image
           src={`icons/guestBlob.svg`}
           alt="Background Blob"

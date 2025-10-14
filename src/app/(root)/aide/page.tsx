@@ -17,7 +17,7 @@ export const metadata = {
 export default function AidePage() {
   return (
     <main className="min-h-screen bg-background text-gray-800 pb-20">
-      <section className="relative overflow-hidden bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] text-white py-12 px-6 shadow-inner">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] dark:from-[hsl(177,85%,12%)] dark:via-[hsl(177,90%,15%)] dark:to-[hsl(177,95%,18%)] text-white py-16 px-6">
         <div className="absolute inset-0 bg-primary/5"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-primary-600/20 to-transparent"></div>
         <div className="relative z-10 max-w-4xl mx-auto text-center">
@@ -33,7 +33,10 @@ export default function AidePage() {
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 space-y-16">
         <div className="text-center">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-primary-600 via-primary-900 to-[#355869] bg-clip-text text-transparent mb-10">
+          <h2
+            className="text-3xl font-bold  overflow-hidden primary-gradient-light  bg-clip-text mb-10"
+            // className="text-3xl font-bold  dark:text-primary-200 mb-10"
+          >
             Comment pouvons-nous vous aider ?
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -60,7 +63,7 @@ export default function AidePage() {
 
         {/* FAQ Section */}
         <div className="max-w-3xl mx-auto">
-          <h2 className="dark:text-primary-200 text-2xl font-bold text-center mb-6">
+          <h2 className=" overflow-hidden primary-gradient-light  bg-clip-text  text-2xl font-bold text-center mb-6">
             Questions fréquentes
           </h2>
           <div className="w-16 h-1 bg-gradient-to-r from-primary-600 to-primary-800 rounded-full mx-auto mb-8" />
@@ -98,7 +101,7 @@ export default function AidePage() {
               💬
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-transparent bg-gradient-to-r from-primary-600 via-primary-900 to-[#355869] bg-clip-text mb-4">
+            <h2 className="text-2xl sm:text-3xl font-bold  overflow-hidden primary-gradient-light   bg-clip-text mb-4">
               Vous avez encore besoin d&apos;aide ?
             </h2>
 
@@ -141,9 +144,9 @@ function HelpCard({
   gradient: string;
 }) {
   return (
-    <div className="bg-white dark:bg-background backdrop-blur-sm border border-primary-200/50 dark:border-border/90 rounded-2xl p-6 shadow-lg shadow-gray-900/5 hover:shadow-2xl hover:shadow-primary-900/10 transition-all duration-300 hover:-translate-y-1 group">
+    <div className="bg-white dark:bg-background backdrop-blur-sm border border-primary-200/50 dark:border-border/90 rounded-2xl p-6 shadow-lg shadow-gray-900/5 hover:shadow-2xl hover:shadow-primary-900/10 transition-transform hover:-translate-y-0.5 duration-300 group">
       <div
-        className={`w-12 h-12 flex items-center justify-center rounded-xl mb-4 text-white shadow-md bg-gradient-to-br ${gradient} group-hover:scale-110 transition-transform duration-300`}
+        className={`w-12 h-12 flex items-center justify-center rounded-xl mb-4 text-white shadow-md bg-gradient-to-br ${gradient} transition-transform `}
       >
         {icon}
       </div>

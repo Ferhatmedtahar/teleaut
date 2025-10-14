@@ -383,6 +383,17 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.primary-gradient-light {
+  background: linear-gradient(
+    92deg,
+    #0b7d84 2.87%,
+    #00746b 50%,
+    #087d74 96.18%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
 .radial-gradient {
   background: radial-gradient(circle, #b5e0cfff 20%, #87cdb044 100%);
