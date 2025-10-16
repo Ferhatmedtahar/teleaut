@@ -1,16 +1,17 @@
 "use client";
 
-import ExplorerVideo from "@/app/(root)/(videos)/_components/videos/ExplorerVideo";
 import { Button } from "@/components/common/buttons/Button";
-import type { RelatedVideo } from "@/types/RelatedVideos.interface";
-import { ArrowRight, BookOpen, Play, Sparkles, Users } from "lucide-react";
+import { Doctor } from "@/types/entities/Doctor.interface";
+import { ArrowRight, BookOpen, Sparkles, Users } from "lucide-react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { FaHandHoldingMedical } from "react-icons/fa6";
+import DoctorCard from "./DoctorCard";
 
 interface GuestHomePageProps {
-  readonly videos?: RelatedVideo[];
+  readonly doctors?: Doctor[];
   readonly success?: boolean;
   readonly search?: string;
 }
@@ -36,39 +37,15 @@ const scaleIn = {
 };
 
 export default function GuestHomePage({
-  videos = [],
+  doctors = [],
   success = true,
-  search = "",
 }: GuestHomePageProps) {
-  const explorerVideos = videos.length > 0 ? videos : [];
+  const doctorsArray = doctors.length > 0 ? doctors : [];
   const resultsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (search && resultsRef.current) {
-      const scrollTimeout = setTimeout(() => {
-        resultsRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "nearest",
-        });
-
-        setTimeout(() => {
-          const event = new Event("scroll");
-          window.dispatchEvent(event);
-        }, 800);
-      }, 100);
-
-      return () => clearTimeout(scrollTimeout);
-    }
-  }, [search]);
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
-      <section
-        // className="opacity-95 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] px-4 py-12 sm:py-14 md:px-8 lg:px-10 relative border-b border-border/60 dark:border-border/90 "
-
-        className="relative overflow-hidden bg-gradient-to-br from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] text-white py-16 px-6"
-      >
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] text-white py-16 px-6">
         <Image
           src={`icons/guestBlob.svg`}
           alt="Background Blob"
@@ -118,7 +95,7 @@ export default function GuestHomePage({
                   ease: "linear",
                 }}
               >
-                Cognacia
+                TeleAustism
               </motion.span>
             </h1>
           </motion.div>
@@ -163,14 +140,12 @@ export default function GuestHomePage({
             </Link>
             <Link href="/sign-in">
               <motion.div
-                whileHover={{ scale: 1.005 }}
-                whileTap={{ scale: 0.995 }}
                 transition={{ duration: 0.6, ease: [0.22, 0.03, 0.26, 1] }}
               >
                 <Button
                   variant="outline"
                   size="lg"
-                  className="dark:hover:text-white/90 bg-white/95 w-full sm:w-auto px-8 py-3 border-border/70 hover:border-[#355869]/20 transition-colors duration-200 "
+                  className="text-black border border-accent-foreground w-full sm:w-auto px-8 py-3  transition-colors duration-200 "
                 >
                   Se connecter
                 </Button>
@@ -201,11 +176,10 @@ export default function GuestHomePage({
       ) : (
         <section className="px-4 py-16 md:px-6 lg:px-10">
           <div className="mx-auto max-w-6xl space-y-24">
-            {explorerVideos.length > 0 ? (
+            {doctors.length > 0 ? (
               <motion.div
                 ref={resultsRef}
                 initial="initial"
-                animate={search ? "animate" : "initial"}
                 whileInView="animate"
                 viewport={{ once: true }}
                 variants={staggerContainer}
@@ -215,16 +189,14 @@ export default function GuestHomePage({
                   variants={fadeInUp}
                   className="text-3xl font-bold mb-10 text-center"
                   transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
-                >
-                  {search ? `Résultats pour "${search}"` : " Dernières vidéos"}
-                </motion.h2>
+                ></motion.h2>
                 <motion.div
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-8"
                   variants={staggerContainer}
                 >
-                  {explorerVideos.slice(0, 6).map((video) => (
+                  {doctors.slice(0, 6).map((doctor) => (
                     <motion.div
-                      key={video.id}
+                      key={doctor.id}
                       variants={scaleIn}
                       viewport={{ once: true }}
                       transition={{
@@ -232,46 +204,13 @@ export default function GuestHomePage({
                         ease: [0.22, 0.03, 0.26, 1],
                       }}
                     >
-                      <ExplorerVideo video={video} user={video.teacher} />
+                      <DoctorCard doctor={doctor} />
                     </motion.div>
                   ))}
                 </motion.div>
               </motion.div>
-            ) : search ? (
-              <div>
-                <motion.h2
-                  variants={fadeInUp}
-                  className="text-3xl font-bold mb-10 text-center"
-                  transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
-                >
-                  {search ? `Résultats pour "${search}"` : "Dernières vidéos"}
-                </motion.h2>
-
-                <motion.p
-                  variants={fadeInUp}
-                  className="text-lg text-center text-muted-foreground max-w-xl mx-auto"
-                  transition={{
-                    duration: 0.7,
-                    ease: [0.22, 0.03, 0.26, 1],
-                    delay: 0.1,
-                  }}
-                >
-                  Aucune vidéo n&apos;a été trouvée concernant{" "}
-                  <strong>&quot;{search}&quot;</strong>. Nous vous invitons à
-                  explorer d&apos;autres sujets passionnants — votre prochaine
-                  découverte vous attend.
-                </motion.p>
-              </div>
             ) : (
               <div>
-                <motion.h2
-                  variants={fadeInUp}
-                  className="text-3xl font-bold mb-10 text-center"
-                  transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
-                >
-                  {search ? `Résultats pour "${search}"` : "Dernières vidéos"}
-                </motion.h2>
-
                 <motion.p
                   variants={fadeInUp}
                   className="text-lg text-center text-primary-900 dark:text-primary-50/75 max-w-xl mx-auto"
@@ -302,7 +241,7 @@ export default function GuestHomePage({
             className="mb-10 sm:mb-12 text-center text-3xl font-bold"
             transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
           >
-            Pourquoi choisir Cognacia ?
+            Pourquoi choisir TeleAustism ?
           </motion.h2>
 
           <motion.div
@@ -311,7 +250,7 @@ export default function GuestHomePage({
           >
             {[
               {
-                icon: Play,
+                icon: FaHandHoldingMedical,
                 title: "Contenu Vidéo",
                 description:
                   "Accédez à des milliers de vidéos éducatives créées par des experts.",
@@ -332,7 +271,7 @@ export default function GuestHomePage({
               <motion.div
                 key={index}
                 variants={scaleIn}
-                whileHover={{ y: -1, scale: 1.01 }}
+                whileHover={{ y: -1 }}
                 transition={{ duration: 0.5, ease: [0.22, 0.03, 0.26, 1] }}
                 className="text-center p-10 rounded-xl border border-border/30 dark:border-border/70 bg-gradient-to-br from-card via-card to-card/95 dark:from-border/15 dark:via-border/30 dark:to-border/40 shadow-lg hover:shadow-xl transition-shadow duration-1000"
               >
@@ -354,26 +293,13 @@ export default function GuestHomePage({
       </section>
 
       <motion.section
-        className=" px-4 py-24 md:px-6 lg:px-10 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] relative overflow-hidden"
+        // className=" px-4 py-24 md:px-6 lg:px-10 bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] relative overflow-hidden"
+        className="px-4 py-24 md:px-6 lg:px-10 relative overflow-hidden bg-gradient-to-br from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] dark:from-[hsl(177,85%,12%)] dark:via-[hsl(177,90%,15%)] dark:to-[hsl(177,95%,18%)] text-white "
         initial="initial"
         whileInView="animate"
         viewport={{ once: true, margin: "-50%" }}
         variants={staggerContainer}
       >
-        <Image
-          src={`icons/guestBlob.svg`}
-          alt="Background Blob"
-          className="  top-4 right-0 dark:opacity-50 absolute z-10  animate-pulse pointer-events-none"
-          height={500}
-          width={500}
-        />{" "}
-        <Image
-          src={`icons/guestBlob.svg`}
-          alt="Background Blob"
-          className=" opacity-60  dark:opacity-50  bottom-4 left-0 absolute z-10  animate-pulse pointer-events-none"
-          height={500}
-          width={500}
-        />
         <motion.div
           className="mx-auto max-w-4xl relative z-10"
           variants={staggerContainer}

@@ -10,5 +10,5 @@ export interface Doctor {
   license_file_url: string;
   created_at: string;
   //review
-  speciality?: string;
+  specialty?: string;
 }

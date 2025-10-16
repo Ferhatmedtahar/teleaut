@@ -1,5 +1,5 @@
 import { Doctor } from "@/types/entities/Doctor.interface";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Hospital, Mail, MapPinCheck, Phone } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../common/buttons/Button";
 
@@ -40,7 +40,12 @@ function DoctorCard({ doctor }: { readonly doctor: Doctor }) {
           </div>
 
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-            <MapPin className="w-4 h-4 mr-3 text-gray-500" />
+            <Hospital className="w-4 h-4 mr-3 text-gray-500" />
+            <span>{doctor?.specialty}</span>
+          </div>
+
+          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+            <MapPinCheck className="w-4 h-4 mr-3 text-gray-500" />
             <span>{doctor.location}</span>
           </div>
 

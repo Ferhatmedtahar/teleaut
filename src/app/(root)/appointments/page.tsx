@@ -63,17 +63,8 @@ export default async function AppointmentsPage() {
         </p>
       </div>
 
-      {appointments && appointments.length > 0 ? (
-        <div className="mt-4 pt-4 border-t grid grid-cols-1 md:grid-cols-2">
-          {appointments.map((appointment: any) => (
-            <AppointmentsPatientCard
-              key={appointment.id}
-              appointment={appointment}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+      {!appointments || appointments.length === 0 ? (
+        <div className="bg-white rounded-lg border border-gray-200 p-12  text-center">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg
               className="w-8 h-8 text-gray-400"
@@ -93,8 +84,17 @@ export default async function AppointmentsPage() {
             Aucun rendez-vous trouvé
           </h3>
           <p className="text-gray-600">
-            Vous n'avez pas encore de rendez-vous planifiés
+            Vous n'avez pas encore de rende-vous planifiés
           </p>
+        </div>
+      ) : (
+        <div className="mt-4 pt-4 border-t grid grid-cols-1 md:grid-cols-2">
+          {appointments.map((appointment: any) => (
+            <AppointmentsPatientCard
+              key={appointment.id}
+              appointment={appointment}
+            />
+          ))}
         </div>
       )}
     </div>

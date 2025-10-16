@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Notebook, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import MedicalNoteCard from "./MedicalNoteCard";
 
@@ -63,7 +63,7 @@ export default function MedicalNotesList({
             onClick={() => router.push("/medical-notes/new")}
             className="gap-2"
           >
-            <Plus className="w-4 h-4" />
+            <Notebook className="w-4 h-4" />
             Créer une note médicale
           </Button>
         </div>
@@ -72,7 +72,7 @@ export default function MedicalNotesList({
       {notes.length === 0 ? (
         <div className="text-center py-12">
           <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-            <Plus className="w-8 h-8 text-muted-foreground" />
+            <Notebook className="w-8 h-8 text-muted-foreground" />
           </div>
           <h3 className="text-lg font-semibold mb-2">Aucune note médicale</h3>
           <p className="text-muted-foreground mb-4">

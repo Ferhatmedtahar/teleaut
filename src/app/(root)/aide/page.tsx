@@ -33,10 +33,7 @@ export default function AidePage() {
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 space-y-16">
         <div className="text-center">
-          <h2
-            className="text-3xl font-bold  overflow-hidden primary-gradient-light  bg-clip-text mb-10"
-            // className="text-3xl font-bold  dark:text-primary-200 mb-10"
-          >
+          <h2 className="text-3xl font-bold  overflow-hidden primary-gradient-light  bg-clip-text mb-10">
             Comment pouvons-nous vous aider ?
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

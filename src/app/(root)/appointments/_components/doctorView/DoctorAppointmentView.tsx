@@ -289,28 +289,27 @@ function DoctorAppointmentsView({ appointments }: DoctorAppointmentsViewProps) {
       <div className="mb-4 text-sm text-muted-foreground">
         {filteredAndSortedAppointments.length} rendez-vous trouvé(s)
       </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-        {filteredAndSortedAppointments.length > 0 ? (
-          filteredAndSortedAppointments.map((appointment) => (
+      {filteredAndSortedAppointments.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+          {filteredAndSortedAppointments.map((appointment) => (
             <DoctorAppointmentCard
               key={appointment.id}
               appointment={appointment}
               onViewPatient={(patient) => setSelectedPatient(patient)}
             />
-          ))
-        ) : (
-          <Card className="p-12 text-center">
-            <Calendar className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">
-              Aucun rendez-vous trouvé
-            </h3>
-            <p className="text-muted-foreground">
-              Essayez de modifier vos filtres ou votre recherche
-            </p>
-          </Card>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <Card className="w-full p-12 text-center">
+          <Calendar className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">
+            Aucun rendez-vous trouvé
+          </h3>
+          <p className="text-muted-foreground">
+            Essayez de modifier vos filtres ou votre recherche
+          </p>
+        </Card>
+      )}
 
       {selectedPatient && (
         <PatientProfileModal

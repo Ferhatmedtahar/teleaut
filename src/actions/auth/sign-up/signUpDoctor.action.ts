@@ -68,6 +68,7 @@ export async function signUpDoctor(formData: FormData) {
       email,
       phoneNumber,
       role,
+      specialty,
       password,
       yearsOfExperience,
       nationalIdCard,
@@ -80,7 +81,6 @@ export async function signUpDoctor(formData: FormData) {
 
     const supabase = await createClient();
 
-    // Check if user already exists
     const { data: existingUser } = await supabase
       .from("users")
       .select("id")
@@ -92,7 +92,6 @@ export async function signUpDoctor(formData: FormData) {
       return { success: false, message: "L'e-mail est déjà enregistré." };
     }
 
-    // Check if national ID already exists
     const { data: existingNationalId } = await supabase
       .from("users")
       .select("id")
@@ -118,6 +117,7 @@ export async function signUpDoctor(formData: FormData) {
         email,
         phone_number: phoneNumber,
         role,
+        specialty,
         password: hashedPassword,
         years_of_experience: yearsOfExperience,
         national_id_card: nationalIdCard,

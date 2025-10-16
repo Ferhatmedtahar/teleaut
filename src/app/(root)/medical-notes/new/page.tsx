@@ -33,7 +33,6 @@ export default async function NewMedicalNotePage() {
     ? appointmentsResult.data
     : [];
 
-  console.log("Appointments:", appointments);
   return (
     <div className="container max-w-4xl mx-auto p-6">
       <div className="mb-6">

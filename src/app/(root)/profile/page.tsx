@@ -11,7 +11,7 @@ import TeacherVideosList from "./_components/TeacherVideosList";
 export const metadata = {
   title: "Mon profil",
   description:
-    "Accédez à votre profil personnel pour consulter vos informations, vos vidéos, vos suggestions ou vos paramètres, selon votre rôle.",
+    "Accédez à votre profil personnel pour consulter vos informations,selon votre rôle.",
 };
 async function ProfileContent() {
   const {
@@ -27,7 +27,6 @@ async function ProfileContent() {
     return <ErrorProfile />;
   }
 
-  //teacher profile
   if (user?.role == roles.doctor) {
     return (
       <>
@@ -37,7 +36,6 @@ async function ProfileContent() {
     );
   }
 
-  //student profile
   if (user?.role == roles.patient) {
     return (
       <>
@@ -47,12 +45,10 @@ async function ProfileContent() {
     );
   }
 
-  //admin profile like the student because he has no videos
   if (user?.role == roles.admin) {
     return (
       <>
         <ProfileContentAdmin user={user} currentUserId={currentUser.id} />
-        {/* <>here you can add any content to the admin profile</> */}
       </>
     );
   }

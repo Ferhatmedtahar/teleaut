@@ -41,12 +41,12 @@ export default function MissionPage() {
               chaque étudiant mérite une explication claire, adaptée et
               motivante
             </strong>
-            . L’enseignement ne doit pas être limité à un seul style, ni
-            dépendre d’un seul professeur.
+            . L'enseignement ne doit pas être limité à un seul style, ni
+            dépendre d'un seul professeur.
           </p>
           <p className="text-gray-700 dark:text-gray-100 text-lg leading-relaxed">
             Ici, chaque prof apporte sa touche, son énergie, et sa façon
-            d’expliquer. Tu peux{" "}
+            d'expliquer. Tu peux{" "}
             <em className="text-primary-900 font-medium">
               choisir celui qui te correspond le mieux
             </em>
@@ -60,24 +60,24 @@ export default function MissionPage() {
         <h2 className="text-center text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary-600 via-primary-900 to-[#355869] bg-clip-text text-transparent mb-12">
           Nos valeurs
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          <ValueCard
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-6">
+          <HelpCard
             title="Accessibilité"
             desc="Apprendre devrait être possible pour tous. Peu importe ton niveau, ton rythme ou ton lieu."
             icon="🤝"
-            gradient="from-blue-500 to-indigo-600"
+            gradient="from-primary-600 to-primary-900"
           />
-          <ValueCard
+          <HelpCard
             title="Liberté"
-            desc="Tu choisis ton prof, ton rythme et ton style. L’apprentissage devient enfin personnel."
+            desc="Tu choisis ton prof, ton rythme et ton style. L'apprentissage devient enfin personnel."
             icon="🕊️"
-            gradient="from-emerald-500 to-teal-600"
+            gradient="from-primary-600 to-primary-900"
           />
-          <ValueCard
+          <HelpCard
             title="Excellence"
             desc="Des professeurs passionnés, du contenu vérifié, et une expérience conçue avec soin."
             icon="🏆"
-            gradient="from-rose-500 to-pink-600"
+            gradient="from-primary-600 to-primary-900"
           />
         </div>
       </section>
@@ -99,6 +99,34 @@ export default function MissionPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function HelpCard({
+  title,
+  desc,
+  icon,
+  gradient,
+}: {
+  title: string;
+  desc: string;
+  icon: React.ReactNode;
+  gradient: string;
+}) {
+  return (
+    <div className="bg-white dark:bg-background backdrop-blur-sm border border-primary-200/50 dark:border-border/90 rounded-2xl p-6 shadow-lg shadow-gray-900/5 hover:shadow-2xl hover:shadow-primary-900/10 transition-transform hover:-translate-y-0.5 duration-300 group">
+      <div
+        className={`w-12 h-12 flex items-center justify-center rounded-xl mb-4 text-white shadow-md bg-gradient-to-br ${gradient} transition-transform `}
+      >
+        {icon}
+      </div>
+      <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-100 mb-2 group-hover:text-gray-800 transition-colors">
+        {title}
+      </h3>
+      <p className="text-sm text-gray-600 dark:text-gray-200 group-hover:text-gray-700 transition-colors">
+        {desc}
+      </p>
+    </div>
   );
 }
 
