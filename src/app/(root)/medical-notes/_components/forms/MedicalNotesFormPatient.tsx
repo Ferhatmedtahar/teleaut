@@ -232,8 +232,10 @@ export default function MedicalNoteForm({
           </h2>
 
           <div className="space-y-4">
-            <div>
-              <Label htmlFor="patient">Patient *</Label>
+            <div className="space-y-2">
+              <Label htmlFor="patient">
+                Patient <span className="text-red-500 ">*</span>
+              </Label>
               <Select
                 value={selectedPatientId}
                 onValueChange={setSelectedPatientId}
@@ -306,7 +308,7 @@ export default function MedicalNoteForm({
         <h2 className="text-xl font-semibold mb-4">Diagnostic et Symptômes</h2>
 
         <div className="space-y-4">
-          <div>
+          <div className="space-y-2">
             <Label htmlFor="symptoms">Symptômes</Label>
             <Textarea
               id="symptoms"
@@ -317,7 +319,7 @@ export default function MedicalNoteForm({
             />
           </div>
 
-          <div>
+          <div className="space-y-2">
             <Label htmlFor="diagnosis">Diagnostic</Label>
             <Textarea
               id="diagnosis"
@@ -334,7 +336,7 @@ export default function MedicalNoteForm({
         <h2 className="text-xl font-semibold mb-4">Traitement</h2>
 
         <div className="space-y-4">
-          <div>
+          <div className="space-y-2">
             <Label htmlFor="treatment">Plan de traitement</Label>
             <Textarea
               id="treatment"
@@ -362,7 +364,7 @@ export default function MedicalNoteForm({
             {medications.map((med, index) => (
               <Card key={index} className="p-4 mb-3">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div>
+                  <div className="space-y-2">
                     <Label>Nom du médicament</Label>
                     <Input
                       value={med.name}
@@ -372,7 +374,7 @@ export default function MedicalNoteForm({
                       placeholder="Ex: Paracétamol"
                     />
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <Label>Dosage</Label>
                     <Input
                       value={med.dosage}
@@ -382,7 +384,7 @@ export default function MedicalNoteForm({
                       placeholder="Ex: 500mg"
                     />
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <Label>Fréquence</Label>
                     <Input
                       value={med.frequency}
@@ -392,7 +394,7 @@ export default function MedicalNoteForm({
                       placeholder="Ex: 3 fois par jour"
                     />
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <Label>Durée</Label>
                     <Input
                       value={med.duration}
@@ -423,7 +425,7 @@ export default function MedicalNoteForm({
         <h2 className="text-xl font-semibold mb-4">Examens et Suivi</h2>
 
         <div className="space-y-4">
-          <div>
+          <div className="space-y-2">
             <Label>Examens prescrits</Label>
             <div className="flex gap-2 mb-2">
               <Input
@@ -442,7 +444,7 @@ export default function MedicalNoteForm({
               {testsOrdered.map((test, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between bg-muted p-2 rounded"
+                  className="flex items-center justify-between bg-background border border-primary-600 p-2 rounded"
                 >
                   <span>{test}</span>
                   <Button
@@ -458,7 +460,7 @@ export default function MedicalNoteForm({
             </div>
           </div>
 
-          <div>
+          <div className="space-y-2">
             <Label htmlFor="followUp">Instructions de suivi</Label>
             <Textarea
               id="followUp"
@@ -471,8 +473,8 @@ export default function MedicalNoteForm({
         </div>
       </Card>
 
-      <Card className="p-6">
-        <h2 className="text-xl font-semibold mb-4">Notes additionnelles</h2>
+      <Card className="p-6 space-y-2">
+        <h2 className="text-xl font-semibold ">Notes additionnelles</h2>
         <Textarea
           value={additionalNotes}
           onChange={(e) => setAdditionalNotes(e.target.value)}
@@ -498,7 +500,7 @@ export default function MedicalNoteForm({
         <Button
           type="button"
           variant="outline"
-          onClick={() => router.back()}
+          onClick={() => router.replace("/medical-notes")}
           disabled={isLoading}
         >
           Annuler

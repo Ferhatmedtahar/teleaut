@@ -72,11 +72,11 @@ export default function AidePage() {
             />
             <Faq
               question="Comment savoir si mon rendez-vous a été accepté ?"
-              answer="Une fois votre demande envoyée, le médecin peut l’accepter, la refuser ou la reprogrammer. Vous recevrez une notification selon sa décision."
+              answer="Une fois votre demande envoyée, le médecin peut l'accepter, la refuser ou la reprogrammer. Vous recevrez une notification selon sa décision."
             />
             <Faq
               question="Où puis-je consulter mes notes médicales ?"
-              answer="Rendez-vous dans votre espace patient, section « Notes médicales ». Vous y trouverez les rapports, instructions et diagnostics rédigés par votre médecin."
+              answer="Dans votre espace patient, sous « Notes médicales », vous trouverez les rapports, les instructions et les diagnostics rédigés par votre médecin."
             />
             <Faq
               question="Puis-je discuter avec mon médecin avant un rendez-vous ?"
