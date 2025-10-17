@@ -14,7 +14,7 @@ export default function FailAuthPage() {
   }, []);
 
   return (
-    <div className="bg-[#355869] dark:bg-[#1F2F3F] w-full relative  ">
+    <div className="  bg-[#18706e] dark:bg-[hsl(177,75%,14%)] w-full relative  ">
       <div className="flex flex-col items-center justify-center h-screen py-10 gap-6 sm:gap-8 md:gap-10 lg:gap-14 bg-gray-50 dark:bg-background  px-6 lg:items-start lg:px-24 lg:rounded-tl-[6rem]">
         <div className="flex min-h-screen w-full flex-col gap-4 items-center justify-center">
           <h1 className="text-3xl font-semibold">Sign up failed</h1>

@@ -19,7 +19,7 @@ export default async function ResetPasswordPage({
   }
   const { id } = await verifyToken(token);
   return (
-    <div className="bg-[#355869] dark:bg-[#1F2F3F] w-full relative">
+    <div className="  bg-[#18706e] dark:bg-[hsl(177,75%,14%)] w-full relative">
       <Link href="/sign-in" className="absolute top-10 right-10">
         <Button size={"sm"} className="text-sm sm:text-base cursor-pointer">
           connecter

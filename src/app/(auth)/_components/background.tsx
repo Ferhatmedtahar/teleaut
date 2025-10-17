@@ -10,7 +10,14 @@ export default function Background() {
   const currentPath = usePathname();
 
   return (
-    <div className="hidden w-full lg:flex lg:w-1/2 lg:rounded-br-[6rem] items-center justify-center bg-[#0F2C3F] bg-gradient-to-tr from-[#16222A] to-[#355869] dark:bg-gradient-to-tr dark:from-[#0B111E] dark:via-[#14212E] dark:to-[#1F2F3F] text-gray-300 relative overflow-hidden">
+    <div
+      // className="hidden w-full lg:flex lg:w-1/2 lg:rounded-br-[6rem] items-center justify-center bg-[#0F2C3F] bg-gradient-to-tr  dark:bg-gradient-to-tr  from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] dark:from-[hsl(177,85%,12%)] dark:via-[hsl(177,90%,15%)] dark:to-[hsl(177,95%,18%)] text-gray-300 relative overflow-hidden"
+      className="hidden w-full lg:flex lg:w-1/2 lg:rounded-br-[6rem] items-center justify-center 
+  bg-[hsl(177,75%,14%)] 
+  bg-gradient-to-tr dark:bg-gradient-to-tr from-[#0e3b46] via-[#13555f] to-[#18706e]
+  dark:from-[hsl(177,85%,10%)] dark:via-[hsl(177,80%,12%)] dark:to-[hsl(177,75%,14%)]
+  text-gray-300 relative overflow-hidden"
+    >
       <motion.div
         initial={{ opacity: 0, scale: 1.02 }}
         animate={{ opacity: 1, scale: 1 }}

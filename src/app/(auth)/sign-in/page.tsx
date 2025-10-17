@@ -10,7 +10,7 @@ export const metadata = {
 };
 export default function SignInPage() {
   return (
-    <div className="bg-[#355869] dark:bg-[#1F2F3F] w-full relative  ">
+    <div className=" bg-[#18706e]  dark:bg-[hsl(177,75%,14%)]  w-full relative  ">
       <Link
         href="/"
         className="lg:hidden absolute top-5 left-5 sm:top-10 sm:left-10"

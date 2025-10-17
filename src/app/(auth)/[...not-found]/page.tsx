@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function notFound() {
   return (
-    <div className="bg-white lg:bg-[#355869] dark:bg-[#1F2F3F] w-full h-screen">
+    <div className="bg-white    lg:bg-[#18706e] dark:bg-[hsl(177,75%,14%)] w-full h-screen">
       <div className="flex flex-col dark:bg-background bg-gray-50 rounded-tl-[6rem]  items-center justify-center h-screen">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
           404 - Page non trouvée

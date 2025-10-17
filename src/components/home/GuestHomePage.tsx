@@ -45,7 +45,7 @@ export default function GuestHomePage({
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] text-white py-16 px-6">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1a4d5c] via-[#206b7a] to-[#2d8a94] dark:from-[hsl(177,85%,12%)] dark:via-[hsl(177,90%,15%)] dark:to-[hsl(177,95%,18%)] text-white py-16 px-6">
         <Image
           src={`icons/guestBlob.svg`}
           alt="Background Blob"
@@ -72,20 +72,20 @@ export default function GuestHomePage({
             className="mb-10"
           >
             <motion.div
-              className="cursor-default inline-flex items-center gap-1.5 sm:gap-2 px-4 py-2 rounded-full  border bg-primary-900/70 border-[#355869]/40 mb-10"
-              whileHover={{ scale: 1.03, y: -2 }}
-              transition={{ duration: 0.8, ease: [0.22, 0.03, 0.26, 1] }}
+              className="cursor-default inline-flex items-center gap-1.5 sm:gap-2 px-4 py-2 rounded-full  border border-primary-500 bg-[#206b7a] dark:bg-[hsl(177,90%,15%)] mb-10"
+              whileHover={{ scale: 1.01, y: -1 }}
+              transition={{ duration: 0.5 }}
             >
               <Sparkles className="w-4 h-4 text-white" />
               <span className="text-xs sm:text-sm font-medium text-white text-nowrap">
-                Plateforme d&apos;apprentissage de confiance
+                Plateforme de santé de confiance
               </span>
             </motion.div>
 
             <h1 className="  text-white/90    text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl leading-tight">
               Bienvenue sur{" "}
               <motion.span
-                className="bg-gradient-to-r from-primary-800 via-primary-500 to-primary-300 bg-[length:200%_200%] bg-clip-text text-transparent"
+                className="bg-gradient-to-r from-primary-500 via-secondary-400 to-primary-300 bg-[length:200%_200%] bg-clip-text text-transparent"
                 animate={{
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                 }}
@@ -145,7 +145,7 @@ export default function GuestHomePage({
                 <Button
                   variant="outline"
                   size="lg"
-                  className="text-black border border-accent-foreground w-full sm:w-auto px-8 py-3  transition-colors duration-200 "
+                  className="text-black dark:text-white border border-black  w-full sm:w-auto px-8 py-3  transition-colors duration-200 "
                 >
                   Se connecter
                 </Button>
@@ -175,6 +175,13 @@ export default function GuestHomePage({
         </motion.section>
       ) : (
         <section className="px-4 py-16 md:px-6 lg:px-10">
+          <motion.h2
+            variants={fadeInUp}
+            className="mb-10 sm:mb-12 text-center text-3xl font-bold"
+            transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+          >
+            Médecins sur la plateforme?
+          </motion.h2>
           <div className="mx-auto max-w-6xl space-y-24">
             {doctors.length > 0 ? (
               <motion.div
@@ -191,7 +198,7 @@ export default function GuestHomePage({
                   transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
                 ></motion.h2>
                 <motion.div
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-8"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4"
                   variants={staggerContainer}
                 >
                   {doctors.slice(0, 6).map((doctor) => (
@@ -309,9 +316,9 @@ export default function GuestHomePage({
             variants={staggerContainer}
           >
             {[
-              { number: "100+", label: "Vidéos disponibles" },
-              { number: "50+", label: "Enseignants actifs" },
-              { number: "500+", label: "Étudiants inscrits" },
+              { number: "10+", label: "Docteurs actifs" },
+              { number: "20+", label: "Patients satisfaits" },
+              { number: "20+", label: "Rendez-vous parfaitement gérés" },
             ].map((stat, index) => (
               <motion.div
                 key={index}
@@ -356,7 +363,7 @@ export default function GuestHomePage({
             transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
             className="mb-6 text-3xl font-bold"
           >
-            Prêt à commencer votre aventure d&apos;apprentissage ?
+            Prêt à prendre soin de votre santé ?
           </motion.h2>
           <motion.p
             variants={fadeInUp}
@@ -367,8 +374,8 @@ export default function GuestHomePage({
             }}
             className="mb-12 text-lg dark:text-primary-50 text-primary-900 leading-relaxed"
           >
-            Rejoignez des milliers d&apos;apprenants qui transforment déjà leur
-            avenir avec Cognacia.
+            Rejoignez des centaines de patients qui bénéficient déjà d'un suivi
+            médical personnalisé et accessible avec TéléAutism.
           </motion.p>
           <motion.div
             variants={fadeInUp}
@@ -386,7 +393,7 @@ export default function GuestHomePage({
               >
                 <Button
                   size="lg"
-                  className="px-10 py-4 group bg-gradient-to-r from-primary to-[#355869] hover:from-primary/98 hover:to-[#355869]/98 text-base"
+                  className="px-10 py-4 group  transition-colors duration-200 bg-gradient-to-r from-primary to-[#355869] hover:from-primary/98 hover:to-[#355869]/90 text-base"
                 >
                   Créer un compte gratuit
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-500" />

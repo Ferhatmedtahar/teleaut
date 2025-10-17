@@ -20,7 +20,6 @@ export default async function RootLayout({
   const baseurl = process.env.NEXT_PUBLIC_SITE_URL!;
   const result = await getCurrentUser();
 
-  // Guest user - no authentication required
   if (!result.success || !result.user) {
     return (
       <div className="flex min-h-screen flex-col bg-background selection:bg-yellow-100 selection:text-[#355869]">
