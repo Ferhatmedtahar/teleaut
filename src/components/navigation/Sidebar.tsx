@@ -149,7 +149,7 @@ const AppSidebar: React.FC<SidebarProps> = ({
               onClick={handleLinkClick}
               className={cn(
                 "flex items-center rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200 ease-in-out",
-                "hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 hover:scale-[1.01]",
+                "hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 ",
                 "active:scale-[0.99] transform",
                 isActive
                   ? "gradient-sidebar-light text-foreground shadow-sm"

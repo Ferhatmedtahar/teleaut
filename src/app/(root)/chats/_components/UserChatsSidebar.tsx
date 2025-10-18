@@ -91,7 +91,7 @@ export default function UserChatsSidebar() {
       <div className="flex-1 overflow-y-auto">
         {userRole !== "admin" && (
           <div className="p-4 border-b border-border/20 dark:border-border/90">
-            <h2 className="text-sm font-semibold text-gray-600 mb-2 uppercase">
+            <h2 className="text-sm font-semibold text-gray-600  dark:text-gray-400 mb-2 uppercase">
               Group Chats
             </h2>
             {groupChats.length > 0 ? (
@@ -102,8 +102,8 @@ export default function UserChatsSidebar() {
                     onClick={() => router.push(`/chats/${chat.id}`)}
                     className={`p-3 rounded-lg cursor-pointer transition ${
                       activeChatId === chat.id
-                        ? "bg-blue-50 border border-blue-200"
-                        : "hover:bg-gray-100"
+                        ? "bg-background border "
+                        : "hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 "
                     }`}
                   >
                     <h3 className="font-medium text-sm">{chat.name}</h3>
@@ -132,7 +132,7 @@ export default function UserChatsSidebar() {
 
         {/* Direct Messages Section */}
         <div className="p-4">
-          <h2 className="text-sm font-semibold text-gray-600 mb-2 uppercase">
+          <h2 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2 uppercase">
             Direct Messages
           </h2>
           {oneOnOneChats.length > 0 ? (

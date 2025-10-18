@@ -3,7 +3,7 @@
 import { sendMessage } from "@/actions/chats/createMessage";
 import { subscribeToChat } from "@/actions/chats/realtime";
 import { Message } from "@/types/entities/Chat.interface";
-import { Send, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -79,9 +79,9 @@ export default function ChatContainer({
   };
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-background ">
       {/* Header */}
-      <div className="bg-white border-b px-4 py-3 flex items-center gap-3">
+      <div className="bg-background border-b  border-border/20 dark:border-border/90  px-4 py-3 flex items-center gap-3">
         <button
           onClick={() => router.push("/chats")}
           className="lg:hidden p-2 hover:bg-gray-100 rounded-full"
@@ -165,7 +165,7 @@ export default function ChatContainer({
       </div>
 
       {/* Input */}
-      <div className="border-t bg-white p-4">
+      <div className="border-t bg-background p-4">
         <form
           onSubmit={(e) => {
             e.preventDefault();

@@ -25,7 +25,7 @@ export default function ChatsPage() {
 
         {/* Feature cards */}
         <div className="grid grid-cols-1 gap-4 text-left ">
-          <div className="bg-backgorund p-4 rounded-lg shadow-sm border">
+          <div className="bg-backgorund hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 transition-colors duration-200 p-4 rounded-lg shadow-sm border">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-blue-50 dark:bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Users className="w-5 h-5 text-blue-600" />
@@ -40,7 +40,7 @@ export default function ChatsPage() {
             </div>
           </div>
 
-          <div className="bg-backgorund p-4 rounded-lg shadow-sm border">
+          <div className="bg-backgorund hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 transition-colors duration-200  p-4 rounded-lg shadow-sm border">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-green-50 dark:bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                 <MessageSquare className="w-5 h-5 text-green-600" />
@@ -55,7 +55,7 @@ export default function ChatsPage() {
             </div>
           </div>
 
-          <div className="bg-backgorund p-4 rounded-lg shadow-sm border">
+          <div className="bg-backgorund p-4  hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 transition-colors duration-200 rounded-lg shadow-sm border">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-purple-50 dark:bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Search className="w-5 h-5 text-purple-600" />
