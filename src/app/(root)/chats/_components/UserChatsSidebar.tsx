@@ -86,8 +86,7 @@ export default function UserChatsSidebar() {
     <div className="flex flex-col h-full">
       <div className="p-4 border-b border-border/20 dark:border-border/90">
         <h1 className="text-xl font-bold">Messages</h1>
-      </div>
-
+      </div>{" "}
       <div className="flex-1 overflow-y-auto">
         {userRole !== "admin" && (
           <div className="p-4 border-b border-border/20 dark:border-border/90">
@@ -130,7 +129,6 @@ export default function UserChatsSidebar() {
           </div>
         )}
 
-        {/* Direct Messages Section */}
         <div className="p-4">
           <h2 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2 uppercase">
             Direct Messages

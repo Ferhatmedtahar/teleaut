@@ -24,7 +24,7 @@ export default function ChatsPage() {
         </p>
 
         {/* Feature cards */}
-        <div className="grid grid-cols-1 gap-4 text-left ">
+        <div className="cursor-default grid grid-cols-1 gap-4 text-left ">
           <div className="bg-backgorund hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 transition-colors duration-200 p-4 rounded-lg shadow-sm border">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-blue-50 dark:bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -32,7 +32,7 @@ export default function ChatsPage() {
               </div>
               <div>
                 <h3 className="font-semibold text-sm mb-1">Group Chats</h3>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-gray-600 dark:text-gray-400">
                   Join group conversations with other doctors or patients to
                   share knowledge and experiences.
                 </p>
@@ -47,7 +47,7 @@ export default function ChatsPage() {
               </div>
               <div>
                 <h3 className="font-semibold text-sm mb-1">Direct Messages</h3>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-gray-600 dark:text-gray-400">
                   Have private conversations with doctors or patients. Visit
                   their profile to start chatting.
                 </p>
@@ -62,7 +62,7 @@ export default function ChatsPage() {
               </div>
               <div>
                 <h3 className="font-semibold text-sm mb-1">Find Users</h3>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-gray-600 dark:text-gray-400">
                   Browse through doctor or patient profiles to find the right
                   person to connect with.
                 </p>

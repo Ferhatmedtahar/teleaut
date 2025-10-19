@@ -1,13 +1,11 @@
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { getCurrentUserById } from "@/actions/profile/getCurrentUserById.action";
 import { roles } from "@/types/roles.enum";
-import { SuggestionList } from "@/types/UserProps";
+import { DoctorProps, PatientProps } from "@/types/UserProps";
 import ErrorProfile from "./_components/ErrorProfile";
 import ProfileContentAdmin from "./_components/ProfileContent/ProfileContentAdmin";
+import ProfileContentDoctor from "./_components/ProfileContent/ProfileContentDoctor";
 import ProfileContentStudent from "./_components/ProfileContent/ProfileContentStudent";
-import ProfileContentTeacher from "./_components/ProfileContent/ProfileContentTeacher";
-import SuggestionProfileStudentList from "./_components/stduentSugguestion/SugguestionProfileStudentList";
-import TeacherVideosList from "./_components/TeacherVideosList";
 export const metadata = {
   title: "Mon profil",
   description:
@@ -17,7 +15,7 @@ async function ProfileContent() {
   const {
     user,
     success,
-  }: { user?: SuggestionList; success: boolean; message?: string } =
+  }: { user?: DoctorProps | PatientProps; success: boolean; message?: string } =
     await getCurrentUserById();
 
   const { user: currentUser, success: userSuccess } = await getCurrentUser();
@@ -30,8 +28,7 @@ async function ProfileContent() {
   if (user?.role == roles.doctor) {
     return (
       <>
-        <ProfileContentTeacher user={user} currentUserId={currentUser.id} />
-        <TeacherVideosList user={user} />
+        <ProfileContentDoctor user={user} currentUserId={currentUser.id} />
       </>
     );
   }
@@ -40,7 +37,6 @@ async function ProfileContent() {
     return (
       <>
         <ProfileContentStudent user={user} currentUserId={currentUser.id} />
-        <SuggestionProfileStudentList user={user} />
       </>
     );
   }

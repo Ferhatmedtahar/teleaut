@@ -1,5 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { SuggestionList } from "@/types/UserProps";
+import { PatientProps } from "@/types/UserProps";
 import BackgroundUser from "./BackgroundUser";
 import ProfilePictureUser from "./ProfilePictureUser";
 
@@ -7,21 +6,18 @@ export default async function ProfileContentStudent({
   user,
   currentUserId,
 }: {
-  readonly user: SuggestionList;
+  readonly user: PatientProps;
   readonly currentUserId: string;
 }) {
   const firstName = user?.first_name ?? "User";
   const lastName = user?.last_name ?? "";
   const role = user?.role ?? "student";
-  const branch = user?.branch;
-  const classValue = user?.class;
-  const bio = user?.bio ?? `Hi, i'm ${firstName} ${lastName}.`;
+
+  const bio = user?.bio ?? `Bonjour, je suis ${firstName} ${lastName}.`;
   const userId = user?.id;
 
   return (
     <div className="w-full p-3">
-      {/* max-w-6xl mx-auto */}
-      {/* Profile Banner and Info */}
       <div className="relative mb-6">
         <BackgroundUser
           firstName={firstName}
@@ -32,8 +28,6 @@ export default async function ProfileContentStudent({
           background_cover={user?.background_url}
           userId={userId}
           currentUserId={currentUserId}
-          classValue={classValue}
-          branch={branch}
         />
 
         <ProfilePictureUser
@@ -51,13 +45,9 @@ export default async function ProfileContentStudent({
               {firstName} {lastName}
             </h1>
 
-            <div className="flex flex-wrap gap-2">
-              <Badge>{classValue}</Badge>
-              {branch && <Badge>{branch}</Badge>}
-            </div>
             {/* Bio Section */}
           </div>
-          <p className="text-background text-sm capitalize bg-[#355869] w-fit px-3 py-1 rounded-md">
+          <p className="text-background text-sm capitalize bg-background w-fit px-3 py-1 rounded-md">
             {role}
           </p>
         </div>

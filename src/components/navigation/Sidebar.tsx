@@ -31,12 +31,12 @@ const navItems: NavItem[] = [
     icon: Home,
   },
   {
-    title: "Appointments",
+    title: "Rendez-vous",
     href: "/appointments",
     icon: BriefcaseMedicalIcon,
   },
   {
-    title: "Medical Notes",
+    title: "Notes médicales",
     href: "/medical-notes",
     icon: NotebookTabs,
   },
