@@ -84,9 +84,9 @@ export default function UserChatsSidebar() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-border/20 dark:border-border/90">
+      {/* <div className="p-4 border-b border-border/20 dark:border-border/90">
         <h1 className="text-xl font-bold">Messages</h1>
-      </div>{" "}
+      </div>{" "} */}
       <div className="flex-1 overflow-y-auto">
         {userRole !== "admin" && (
           <div className="p-4 border-b border-border/20 dark:border-border/90">
@@ -98,7 +98,7 @@ export default function UserChatsSidebar() {
                 {groupChats.map((chat) => (
                   <div
                     key={chat.id}
-                    onClick={() => router.push(`/chats/${chat.id}`)}
+                    onClick={() => router.push(`/messages/${chat.id}`)}
                     className={`p-3 rounded-lg cursor-pointer transition ${
                       activeChatId === chat.id
                         ? "bg-background border "
@@ -129,8 +129,8 @@ export default function UserChatsSidebar() {
           </div>
         )}
 
-        <div className="p-4">
-          <h2 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2 uppercase">
+        <div className="p-2">
+          <h2 className="px-2 text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2 uppercase">
             Direct Messages
           </h2>
           {oneOnOneChats.length > 0 ? (
@@ -143,13 +143,12 @@ export default function UserChatsSidebar() {
                 return (
                   <div
                     key={chat.id}
-                    onClick={() => router.push(`/chats/${chat.id}`)}
-                    className={`p-3  cursor-pointer transition flex items-center gap-3 hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 ${
-                      activeChatId === chat.id ? "bg-background border-b " : " "
+                    onClick={() => router.push(`/messages/${chat.id}`)}
+                    className={`p-3  rounded-lg cursor-pointer transition flex items-center gap-3 hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 ${
+                      activeChatId === chat.id && "bg-secondary-100  "
                     }`}
                   >
-                    {/* Profile Picture */}
-                    <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-secondary-300 dark:bg-secondary-100 flex items-center justify-center flex-shrink-0">
                       {otherParticipant?.user?.profile_url ? (
                         <img
                           src={otherParticipant.user.profile_url}
@@ -194,10 +193,3 @@ export default function UserChatsSidebar() {
     </div>
   );
 }
-// import React from "react";
-
-// function UserChatsSidebar() {
-//   return <div>UserChatsSidebar</div>;
-// }
-
-// export default UserChatsSidebar;

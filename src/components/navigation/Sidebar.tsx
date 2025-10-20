@@ -41,8 +41,8 @@ const navItems: NavItem[] = [
     icon: NotebookTabs,
   },
   {
-    title: "Chat",
-    href: "/chats",
+    title: "Messages",
+    href: "/messages",
     icon: MessageSquare,
   },
   // {
