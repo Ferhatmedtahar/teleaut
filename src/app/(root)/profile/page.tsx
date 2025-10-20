@@ -5,7 +5,7 @@ import { DoctorProps, PatientProps } from "@/types/UserProps";
 import ErrorProfile from "./_components/ErrorProfile";
 import ProfileContentAdmin from "./_components/ProfileContent/ProfileContentAdmin";
 import ProfileContentDoctor from "./_components/ProfileContent/ProfileContentDoctor";
-import ProfileContentStudent from "./_components/ProfileContent/ProfileContentStudent";
+import ProfileContentPatient from "./_components/ProfileContent/ProfileContentPatient";
 export const metadata = {
   title: "Mon profil",
   description:
@@ -15,7 +15,7 @@ async function ProfileContent() {
   const {
     user,
     success,
-  }: { user?: DoctorProps | PatientProps; success: boolean; message?: string } =
+  }: { user?: PatientProps | DoctorProps; success: boolean; message?: string } =
     await getCurrentUserById();
 
   const { user: currentUser, success: userSuccess } = await getCurrentUser();
@@ -25,20 +25,12 @@ async function ProfileContent() {
     return <ErrorProfile />;
   }
 
-  if (user?.role == roles.doctor) {
-    return (
-      <>
-        <ProfileContentDoctor user={user} currentUserId={currentUser.id} />
-      </>
-    );
+  if (user?.role == roles.doctor && "specialty" in user) {
+    return <ProfileContentDoctor user={user} currentUserId={currentUser.id} />;
   }
 
   if (user?.role == roles.patient) {
-    return (
-      <>
-        <ProfileContentStudent user={user} currentUserId={currentUser.id} />
-      </>
-    );
+    return <ProfileContentPatient user={user} currentUserId={currentUser.id} />;
   }
 
   if (user?.role == roles.admin) {

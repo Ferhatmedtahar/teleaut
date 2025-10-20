@@ -1,8 +1,9 @@
+import { Button } from "@/components/common/buttons/Button";
 import { PatientProps } from "@/types/UserProps";
 import BackgroundUser from "./BackgroundUser";
 import ProfilePictureUser from "./ProfilePictureUser";
 
-export default async function ProfileContentStudent({
+export default async function ProfileContentPatient({
   user,
   currentUserId,
 }: {
@@ -45,7 +46,10 @@ export default async function ProfileContentStudent({
               {firstName} {lastName}
             </h1>
 
-            {/* Bio Section */}
+            {/*review button chat */}
+            <Button size="sm" variant="outline" className="w-fit">
+              Chat avec {firstName}
+            </Button>
           </div>
           <p className="text-background text-sm capitalize bg-background w-fit px-3 py-1 rounded-md">
             {role}

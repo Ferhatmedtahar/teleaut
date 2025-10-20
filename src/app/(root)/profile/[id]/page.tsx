@@ -1,12 +1,10 @@
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { getUserById } from "@/actions/profile/getUserById.action";
-import { roles } from "@/types/roles.enum";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import ErrorProfile from "../_components/ErrorProfile";
 import ProfileContent from "../_components/profileByid/ProfileContent";
-import VisitorsProfile from "../_components/profileByid/visitorsTeacher/VisitorsProfile";
 
 const getUser = cache(getUserById);
 export async function generateMetadata({
@@ -53,6 +51,7 @@ export default async function Profile({
   const { id } = await params;
   const { user: visitedUser, success } = await getUserById(id);
   const { success: currentSuccess, user: currentUser } = await getCurrentUser();
+  console.log("visitedUser", visitedUser, "currentUser", currentUser);
   if (!currentSuccess || !currentUser?.id || !visitedUser || !success) {
     return <ErrorProfile />;
   }
@@ -60,17 +59,11 @@ export default async function Profile({
   if (currentUser && id === currentUser.id) {
     return redirect("/profile");
   }
+  // if ("specialty" in visitedUser) return <ErrorProfile />;
 
   return (
     <div>
       <ProfileContent user={visitedUser} currentUser={currentUser} />
-      <VisitorsProfile
-        currentUserId={currentUser.id}
-        currentUserRole={currentUser.role}
-        isDoctor={currentUser.role == roles.doctor}
-        isPatient={currentUser.role == roles.patient}
-        visitedUser={visitedUser}
-      />
     </div>
   );
 }

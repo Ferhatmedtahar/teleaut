@@ -144,10 +144,8 @@ export default function UserChatsSidebar() {
                   <div
                     key={chat.id}
                     onClick={() => router.push(`/chats/${chat.id}`)}
-                    className={`p-3 rounded-lg cursor-pointer transition flex items-center gap-3 ${
-                      activeChatId === chat.id
-                        ? "bg-blue-50 border border-blue-200"
-                        : "hover:bg-gray-100"
+                    className={`p-3  cursor-pointer transition flex items-center gap-3 hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 ${
+                      activeChatId === chat.id ? "bg-background border-b " : " "
                     }`}
                   >
                     {/* Profile Picture */}
