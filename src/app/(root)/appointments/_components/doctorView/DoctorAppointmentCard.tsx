@@ -35,6 +35,8 @@ import {
   User,
   XCircle,
 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -209,11 +211,10 @@ function DoctorAppointmentCard({
       <Card className="p-6 hover:shadow-md transition-shadow h-full flex flex-col">
         <div className="flex justify-between items-start h-full">
           <div className="flex-1 flex flex-col">
-            {/* Patient Info */}
             <div className="flex items-start gap-4 mb-4">
               <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                 {appointment?.patient?.profile_url ? (
-                  <img
+                  <Image
                     src={appointment.patient.profile_url || "/placeholder.svg"}
                     alt={`${appointment.patient.first_name} ${appointment.patient.last_name}`}
                     className="w-14 h-14 rounded-full object-cover"
@@ -230,23 +231,23 @@ function DoctorAppointmentCard({
                   {appointment.patient.first_name}{" "}
                   {appointment.patient.last_name}
                 </button>
-                <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground">
+                <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground dark:text-muted/80">
                   {appointment.patient.phone_number && (
                     <div className="flex items-center gap-1">
                       <Phone className="w-4 h-4" />
-                      <a
+                      <Link
                         href={`tel:${appointment.patient.phone_number}`}
-                        className="hover:text-primary"
+                        className="hover:text-primary dark:hover:text-secondary-400"
                       >
                         {appointment.patient.phone_number}
-                      </a>
+                      </Link>
                     </div>
                   )}
                   <div className="flex items-center gap-1">
                     <Mail className="w-4 h-4" />
                     <a
                       href={`mailto:${appointment.patient.email}`}
-                      className="hover:text-primary"
+                      className="hover:text-primary dark:hover:text-secondary-400"
                     >
                       {appointment.patient.email}
                     </a>
@@ -258,7 +259,7 @@ function DoctorAppointmentCard({
             {/* Appointment Details */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-muted-foreground" />
+                <Calendar className="w-5 h-5 text-muted-foreground dark:text-muted/80" />
                 <span className="text-sm font-medium">
                   {formatDate(appointment.appointment_date)}
                 </span>
@@ -285,10 +286,12 @@ function DoctorAppointmentCard({
               )}
 
               {appointment.note && (
-                <div className="flex items-start gap-2 bg-muted p-3 rounded-md">
-                  <FileText className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2 bg-background border border-border/30 dark:border-border/70 p-3 rounded-md">
+                  <FileText className="w-5 h-5 text-muted-foreground dark:text-muted/80 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground mb-1">Note</p>
+                    <p className="text-xs text-muted-foreground dark:text-muted/80 mb-1">
+                      Note
+                    </p>
                     <p className="text-sm">{appointment.note}</p>
                   </div>
                 </div>
@@ -297,12 +300,12 @@ function DoctorAppointmentCard({
           </div>
 
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild className="">
               <Button variant="ghost" size="icon" disabled={isSubmitting}>
                 <MoreVertical className="w-5 h-5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent align="end" className="w-56 bg-background">
               <DropdownMenuItem
                 onClick={() => onViewPatient(appointment.patient)}
               >

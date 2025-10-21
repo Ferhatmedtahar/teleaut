@@ -11,4 +11,8 @@ export interface Doctor {
   created_at: string;
   //review
   specialty?: string;
+  years_of_experience: number;
+  consultation_fee: number;
+  availability_times: string;
+  national_id_card?: string;
 }

@@ -58,7 +58,7 @@ export default async function AppointmentsPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Mes Rendez-vous
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-400">
           Consultez et gérez vos rendez-vous avec vos médecins
         </p>
       </div>

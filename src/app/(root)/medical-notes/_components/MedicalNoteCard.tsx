@@ -116,7 +116,6 @@ export default function MedicalNoteCard({
   };
 
   const displayPerson = isDoctor ? note.patient : note.doctor;
-
   return (
     <>
       <Card className="hover:shadow-lg transition-shadow cursor-pointer">
@@ -135,12 +134,12 @@ export default function MedicalNoteCard({
                   {displayPerson?.first_name} {displayPerson?.last_name}
                 </h3>
                 {isDoctor ? (
-                  <p className="text-xs text-muted-foreground truncate">
+                  <p className="text-xs text-muted-foreground dark:text-muted/80 truncate">
                     {note.patient?.email}
                   </p>
                 ) : (
                   note.doctor?.specialty && (
-                    <p className="text-xs text-muted-foreground truncate">
+                    <p className="text-xs text-muted-foreground dark:text-muted/80 truncate">
                       {note.doctor.specialty}
                     </p>
                   )
@@ -158,7 +157,7 @@ export default function MedicalNoteCard({
                     <MoreVertical className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="bg-background">
                   <DropdownMenuItem
                     onClick={(e) => {
                       e.stopPropagation();
@@ -188,7 +187,7 @@ export default function MedicalNoteCard({
           className="space-y-3"
           onClick={() => setShowDetailsModal(true)}
         >
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground dark:text-muted/80">
             <Calendar className="w-4 h-4" />
             <span>{formatDate(note.created_at)}</span>
           </div>
@@ -205,7 +204,7 @@ export default function MedicalNoteCard({
                 <FileText className="w-4 h-4" />
                 Diagnostic
               </div>
-              <p className="text-sm text-muted-foreground line-clamp-2">
+              <p className="text-sm text-muted-foreground dark:text-muted/80 line-clamp-2">
                 {note.content.diagnosis}
               </p>
             </div>

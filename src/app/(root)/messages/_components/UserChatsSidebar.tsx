@@ -77,7 +77,9 @@ export default function UserChatsSidebar() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-full">
-        <div className="text-gray-500">Loading chats...</div>
+        <div className="text-gray-500 dark:text-secondary-400">
+          Loading chats...
+        </div>
       </div>
     );
   }
@@ -144,8 +146,9 @@ export default function UserChatsSidebar() {
                   <div
                     key={chat.id}
                     onClick={() => router.push(`/messages/${chat.id}`)}
-                    className={`p-3  rounded-lg cursor-pointer transition flex items-center gap-3 hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 ${
-                      activeChatId === chat.id && "bg-secondary-100  "
+                    className={`p-3  rounded-lg cursor-pointer transition flex items-center gap-3 hover:bg-secondary-400/40 dark:hover:bg-secondary-200/40 ${
+                      activeChatId === chat.id &&
+                      "bg-secondary-100 dark:bg-secondary-900 "
                     }`}
                   >
                     <div className="w-10 h-10 rounded-full bg-secondary-300 dark:bg-secondary-100 flex items-center justify-center flex-shrink-0">
@@ -156,7 +159,7 @@ export default function UserChatsSidebar() {
                           className="w-full h-full rounded-full object-cover"
                         />
                       ) : (
-                        <span className="text-sm font-semibold text-gray-600">
+                        <span className="text-sm font-semibold text-gray-600 ">
                           {otherParticipant?.user?.first_name?.[0]}
                         </span>
                       )}
@@ -166,13 +169,13 @@ export default function UserChatsSidebar() {
                       <h3 className="font-medium text-sm truncate">
                         {getChatDisplayName(chat)}
                       </h3>
-                      <p className="text-xs text-gray-500 capitalize">
+                      <p className="text-xs text-gray-500 dark:text-gray-300 capitalize">
                         {otherParticipant?.user?.role}
                       </p>
                     </div>
 
                     {chat.last_message_at && (
-                      <span className="text-xs text-gray-400 flex-shrink-0">
+                      <span className="text-xs text-gray-400 dark:text-gray-300 flex-shrink-0">
                         {new Date(chat.last_message_at).toLocaleDateString(
                           "en-US",
                           { month: "short", day: "numeric" }

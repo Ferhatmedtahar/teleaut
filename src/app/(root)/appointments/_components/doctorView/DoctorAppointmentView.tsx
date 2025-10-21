@@ -153,7 +153,7 @@ function DoctorAppointmentsView({ appointments }: DoctorAppointmentsViewProps) {
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">Mes Rendez-vous</h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground dark:text-muted/80">
           Gérez vos rendez-vous avec vos patients
         </p>
       </div>
@@ -239,8 +239,7 @@ function DoctorAppointmentsView({ appointments }: DoctorAppointmentsViewProps) {
         </div>
 
         {showFilters && (
-          <div className="mt-4 pt-4 border-t grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Date Filter */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Période</label>
               <Select
@@ -260,7 +259,6 @@ function DoctorAppointmentsView({ appointments }: DoctorAppointmentsViewProps) {
               </Select>
             </div>
 
-            {/* Sort By */}
             <div>
               <label className="block text-sm font-medium mb-2">
                 Trier par
@@ -286,7 +284,7 @@ function DoctorAppointmentsView({ appointments }: DoctorAppointmentsViewProps) {
         )}
       </Card>
 
-      <div className="mb-4 text-sm text-muted-foreground">
+      <div className="mb-4 text-sm text-muted-foreground dark:text-muted/80">
         {filteredAndSortedAppointments.length} rendez-vous trouvé(s)
       </div>
       {filteredAndSortedAppointments.length > 0 ? (
