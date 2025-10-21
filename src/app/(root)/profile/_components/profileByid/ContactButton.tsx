@@ -32,7 +32,7 @@ export default function ChatButton({
       }
 
       if (result.chatId) {
-        router.push(`/chats?chatId=${result.chatId}`);
+        router.push(`/messages?chatId=${result.chatId}`);
       }
     } catch (error) {
       toast.error("Une erreur s'est produite lors de la création du chat");

@@ -118,7 +118,7 @@ export default function MedicalNoteCard({
   const displayPerson = isDoctor ? note.patient : note.doctor;
   return (
     <>
-      <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+      <Card className="hover:shadow-lg transition-shadow cursor-pointer border border-border/80">
         <CardHeader className="pb-3" onClick={() => setShowDetailsModal(true)}>
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-3 flex-1">
@@ -232,7 +232,7 @@ export default function MedicalNoteCard({
           </DialogHeader>
 
           <div className="space-y-6">
-            <div className="flex items-center gap-3 p-4 bg-muted rounded-lg">
+            <div className="flex items-center gap-3 p-4 bg-background border rounded-lg">
               <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
                 {isDoctor ? (
                   <User className="w-6 h-6 text-primary" />
@@ -245,7 +245,7 @@ export default function MedicalNoteCard({
                   {displayPerson?.first_name} {displayPerson?.last_name}
                 </p>
                 {isDoctor ? (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground dark:text-muted/80">
                     {note.patient?.email}
                   </p>
                 ) : (
@@ -261,7 +261,7 @@ export default function MedicalNoteCard({
             {note.content.symptoms && (
               <div>
                 <h4 className="font-semibold mb-2">Symptômes</h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground dark:text-secondary-100">
                   {note.content.symptoms}
                 </p>
               </div>
@@ -270,7 +270,7 @@ export default function MedicalNoteCard({
             {note.content.diagnosis && (
               <div>
                 <h4 className="font-semibold mb-2">Diagnostic</h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground dark:text-secondary-100">
                   {note.content.diagnosis}
                 </p>
               </div>
@@ -279,7 +279,7 @@ export default function MedicalNoteCard({
             {note.content.treatment && (
               <div>
                 <h4 className="font-semibold mb-2">Traitement</h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground dark:text-secondary-100">
                   {note.content.treatment}
                 </p>
               </div>
@@ -290,13 +290,13 @@ export default function MedicalNoteCard({
                 <div>
                   <h4 className="font-semibold mb-3">Médicaments prescrits</h4>
                   <div className="space-y-3">
-                    {note.content.medications.map((med, index) => (
+                    {note?.content?.medications.map((med, index) => (
                       <div
                         key={index}
-                        className="p-3 bg-muted rounded-lg space-y-1"
+                        className="p-3 bg-background  rounded-lg space-y-1"
                       >
                         <p className="font-medium text-sm">{med.name}</p>
-                        <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+                        <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground dark:text-secondary-100">
                           <div>
                             <span className="font-medium">Dosage:</span>{" "}
                             {med.dosage}
@@ -324,7 +324,10 @@ export default function MedicalNoteCard({
                   <h4 className="font-semibold mb-2">Examens prescrits</h4>
                   <ul className="list-disc list-inside space-y-1">
                     {note.content.tests_ordered.map((test, index) => (
-                      <li key={index} className="text-sm text-muted-foreground">
+                      <li
+                        key={index}
+                        className="text-sm text-muted-foreground dark:text-secondary-100"
+                      >
                         {test}
                       </li>
                     ))}
@@ -335,7 +338,7 @@ export default function MedicalNoteCard({
             {note.content.follow_up_instructions && (
               <div>
                 <h4 className="font-semibold mb-2">Instructions de suivi</h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground dark:text-secondary-100">
                   {note.content.follow_up_instructions}
                 </p>
               </div>
@@ -344,7 +347,7 @@ export default function MedicalNoteCard({
             {note.content.additional_notes && (
               <div>
                 <h4 className="font-semibold mb-2">Notes additionnelles</h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground dark:text-secondary-100">
                   {note.content.additional_notes}
                 </p>
               </div>
@@ -369,7 +372,6 @@ export default function MedicalNoteCard({
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Modal */}
       <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>

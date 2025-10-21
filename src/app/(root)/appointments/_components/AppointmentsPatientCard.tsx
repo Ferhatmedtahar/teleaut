@@ -196,10 +196,12 @@ function AppointmentsPatientCard({
                 </div>
 
                 {appointment.note && (
-                  <div className="flex items-start gap-2 text-foreground bg-muted p-3 rounded-md">
-                    <AlertCircle className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-2 text-foreground bg-background border p-3 rounded-md">
+                    <AlertCircle className="w-5 h-5 text-muted-foreground dark:text-muted/80 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs text-muted-foreground mb-1">Note</p>
+                      <p className="text-xs text-muted-foreground  dark:text-muted/80 mb-1">
+                        Note
+                      </p>
                       <p className="text-sm">{appointment.note}</p>
                     </div>
                   </div>
@@ -214,7 +216,7 @@ function AppointmentsPatientCard({
                   <span className="sr-only">Options</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="bg-background">
                 <DropdownMenuItem onClick={() => setShowEditModal(true)}>
                   <Edit className="w-4 h-4 mr-2" />
                   Modifier

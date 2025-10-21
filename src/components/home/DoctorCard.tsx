@@ -12,12 +12,12 @@ function DoctorCard({ doctor }: { readonly doctor: Doctor }) {
     .toUpperCase();
 
   return (
-    <div className=" border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className=" border  rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
       <div className="p-6">
         {/* Header section with avatar and name */}
         <div className="flex items-center space-x-4 mb-6">
           {/* Simple avatar */}
-          <div className="w-14 h-14 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+          <div className="w-14 h-14 bg-gray-100 dark:bg-primary-700 rounded-full flex items-center justify-center">
             <span className="text-gray-700 dark:text-gray-200 font-semibold text-lg">
               {initials}
             </span>

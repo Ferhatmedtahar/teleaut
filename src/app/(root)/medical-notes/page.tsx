@@ -41,7 +41,7 @@ export default async function MedicalNotesPage() {
         <h1 className="text-3xl font-bold mb-2">
           {isDoctor ? "Notes Médicales" : "Mes Notes Médicales"}
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground dark:text-muted/80">
           {isDoctor
             ? "Créez et gérez les notes médicales de vos patients"
             : "Consultez vos notes médicales"}

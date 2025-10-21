@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { getChatMessages } from "@/actions/chats/getChatMessages";
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import ChatContainer from "../_components/ChatContainer";
 
 export default async function ChatPage({
@@ -17,12 +17,9 @@ export default async function ChatPage({
     redirect("/sign-in");
   }
 
-  // Fetch initial messages on server
-  const { data: initialMessages } = await getChatMessages(chatId);
-
-  // Optionally: Fetch chat details (for header, participants, etc.)
+  // Fetch chat details with participants
   const supabase = await createClient();
-  const { data: chat } = await supabase
+  const { data: chat, error } = await supabase
     .from("chats")
     .select(
       `
@@ -36,7 +33,25 @@ export default async function ChatPage({
     .eq("id", chatId)
     .single();
 
-  const otherParticipant = chat?.participants?.find(
+  // Check if chat exists
+  if (error || !chat) {
+    notFound();
+  }
+
+  // SECURITY CHECK: Verify current user is a participant
+  const isParticipant = chat.participants?.some(
+    (p: any) => p.user_id === user.id
+  );
+
+  if (!isParticipant) {
+    // User is not authorized to view this chat
+    notFound(); // or redirect("/chats") if you prefer
+  }
+
+  // Now safely fetch messages since user is authorized
+  const { data: initialMessages } = await getChatMessages(chatId);
+
+  const otherParticipant = chat.participants?.find(
     (p: any) => p.user_id !== user.id
   );
 

@@ -78,15 +78,15 @@ export default function AppointmentForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-lg border border-blue-100 dark:border-gray-600">
+      <div className="bg-gradient-to-r from-secondary-50 to-secondary-100 dark:from-primary-900 dark:to-primary-800 rounded-lg border border-blue-100 dark:border-gray-600">
         <div className="p-6 flex flex-col items-center justify-center">
-          <Calendar className="w-16 h-16 mb-4 text-blue-600 dark:text-blue-400" />
+          <Calendar className="w-16 h-16 mb-4 text-primary-600 dark:text-secondary-200" />
           <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
             Prendre un rendez-vous
           </h3>
           <p className="text-sm text-center mb-4 max-w-md text-gray-600 dark:text-gray-300">
             Sélectionnez une date pour votre rendez-vous avec <br />
-            <span className="font-medium">
+            <span className="font-medium text-accent-foreground">
               Dr. {doctor?.first_name} {doctor?.last_name}
             </span>
           </p>
@@ -104,6 +104,7 @@ export default function AppointmentForm({
             <Label className="block text-sm font-medium mb-1">
               Médecin sélectionné
             </Label>
+            {/* <DoctorCard doctor={doctor} /> */}
             <DoctorCardAppForm doctor={doctor} />
           </div>
 
@@ -119,6 +120,7 @@ export default function AppointmentForm({
                 <DatePicker
                   value={field.value}
                   onChange={field.onChange}
+                  className="dark:placeholder:text-gray-400"
                   placeholder="Choisir une date de rendez-vous"
                   error={!!errors.appointment_date}
                 />

@@ -1,5 +1,4 @@
 "use client";
-
 import { getCurrentUser } from "@/actions/auth/getCurrentUser.action";
 import { getOrCreateGroupChat } from "@/actions/chats/getGroupChat";
 import { getUserChats } from "@/actions/chats/getUserChats";
@@ -50,7 +49,7 @@ export default function UserChatsSidebar() {
   async function handleJoinGroupChat(type: "group_doctors" | "group_patients") {
     const { chatId } = await getOrCreateGroupChat(type, currentUserId);
     if (chatId) {
-      router.push(`/chats/${chatId}`);
+      router.push(`/messages/${chatId}`);
     }
   }
 
