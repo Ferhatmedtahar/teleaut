@@ -2,6 +2,7 @@ import { roles } from "./roles.enum";
 
 export type UserProps = {
   id: string;
+  email: string;
   first_name: string;
   last_name?: string;
   role: roles;

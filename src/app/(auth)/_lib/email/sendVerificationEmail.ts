@@ -1,6 +1,6 @@
 "use server";
 
-import { sendVerificationEmailTeacher } from "@/app/(auth)/_lib/email/sendApprovaleEmailTeacher";
+import { sendVerificationEmailApprovalDoctor } from "@/app/(auth)/_lib/email/sendApprovaleEmailDoctor";
 import { generateToken } from "@/app/(auth)/_lib/generateToken";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
@@ -48,7 +48,7 @@ export async function handleVerificationEmail(
 
   const token = await generateToken({ id: doctorId, role: roles.doctor });
 
-  const { emailSent, message } = await sendVerificationEmailTeacher(
+  const { emailSent, message } = await sendVerificationEmailApprovalDoctor(
     doctorId,
     email,
     token

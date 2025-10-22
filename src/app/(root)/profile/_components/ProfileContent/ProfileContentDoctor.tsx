@@ -1,4 +1,3 @@
-import { Button } from "@/components/common/buttons/Button";
 import { Badge } from "@/components/ui/badge";
 import { roles } from "@/types/roles.enum";
 import { DoctorProps } from "@/types/UserProps";
@@ -31,7 +30,7 @@ export default function ProfileContentDoctor({
   const education = user?.education;
   const availabilityTimes = user?.availability_times;
   const bio = user?.bio ?? `Bonjour, je suis ${firstName} ${lastName}.`;
-
+  const email = user?.email;
   const userId = user?.id;
 
   if (role in roles === false) return <ErrorProfile />;
@@ -73,10 +72,11 @@ export default function ProfileContentDoctor({
                 </Badge>
               )}
 
-              {/*review button chat */}
-              <Button size="sm" variant="outline">
-                Chat avec le Dr. {firstName}
-              </Button>
+              {user.email && (
+                <Badge variant="outline" className="text-sm">
+                  {user.email}
+                </Badge>
+              )}
             </div>
           </div>
           <p className="text-white/95 text-sm capitalize bg-primary w-fit px-3 py-1 rounded-md">
@@ -87,7 +87,9 @@ export default function ProfileContentDoctor({
         {/* Bio Section */}
         <div className="mt-4 border rounded-md p-4">
           <h2 className="text-sm font-semibold mb-2">À propos</h2>
-          <p className="text-sm text-muted-foreground">{bio}</p>
+          <p className="text-sm text-muted-foreground  dark:text-white/90">
+            {bio}
+          </p>
         </div>
 
         {/* Professional Information Grid */}
@@ -96,10 +98,10 @@ export default function ProfileContentDoctor({
           {yearsOfExperience !== undefined && (
             <div className="border rounded-md p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Briefcase className="w-4 h-4 text-primary" />
+                <Briefcase className="w-4 h-4 text-primary " />
                 <h3 className="text-sm font-semibold">Expérience</h3>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground dark:text-white/90">
                 {yearsOfExperience} {yearsOfExperience > 1 ? "ans" : "an"}{" "}
                 d'expérience
               </p>
@@ -113,7 +115,7 @@ export default function ProfileContentDoctor({
                 <DollarSign className="w-4 h-4 text-primary" />
                 <h3 className="text-sm font-semibold">Tarif de consultation</h3>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground dark:text-white/90">
                 {consultationFee} DZD
               </p>
             </div>
@@ -126,7 +128,9 @@ export default function ProfileContentDoctor({
                 <GraduationCap className="w-4 h-4 text-primary" />
                 <h3 className="text-sm font-semibold">Formation</h3>
               </div>
-              <p className="text-sm text-muted-foreground">{education}</p>
+              <p className="text-sm text-muted-foreground dark:text-white/90">
+                {education}
+              </p>
             </div>
           )}
 
@@ -137,7 +141,7 @@ export default function ProfileContentDoctor({
                 <Calendar className="w-4 h-4 text-primary" />
                 <h3 className="text-sm font-semibold">Disponibilité</h3>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground dark:text-white/90">
                 {availabilityTimes}
               </p>
             </div>

@@ -8,24 +8,18 @@ import { revalidatePath } from "next/cache";
 export async function updateUserProfile(formData: FormData) {
   try {
     const userRole = formData.get("role") as string;
-    let prev_class: string = "";
-    let prev_branch: string = "";
-
     if (!userRole) {
       return { success: false, message: "Échec de la mise à jour du profil" };
     }
     //get the previous data sent within the form
     const prev_bio = formData.get("prev_bio") as string;
-    if (userRole == roles.student) {
-      prev_class = formData.get("prev_class") as string;
-      prev_branch = formData.get("prev_branch") as string;
+    if (userRole == roles.patient) {
     }
 
     //get the values
     const bio = formData.get("bio") as string;
     const userId = formData.get("userId") as string;
-    const classValue = formData.get("class") as string;
-    const branch = formData.get("branch") as string;
+
     const profileImage = formData.get("profileImage") as File;
     const backgroundImage = formData.get("backgroundImage") as File;
 
@@ -57,8 +51,6 @@ export async function updateUserProfile(formData: FormData) {
       branch?: string;
     } = {
       bio,
-      class: classValue,
-      branch,
     };
 
     if (removeProfileImage === "true") {

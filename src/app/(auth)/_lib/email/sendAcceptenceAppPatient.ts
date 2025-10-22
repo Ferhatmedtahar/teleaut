@@ -1,29 +1,37 @@
+// lib/email/sendAppointmentConfirmationEmail.ts
 import { createClient } from "@/lib/supabase/server";
 import nodemailer from "nodemailer";
 
-export async function sendResetPasswordEmail(
+type AppointmentDetails = {
+  appointment_date: string;
+  doctor_name: string;
+  doctor_specialty?: string;
+};
+
+export async function sendAppointmentConfirmationEmail(
   userId: string,
   email: string,
-  token: string
+  appointmentDetails: AppointmentDetails
 ): Promise<{ emailSent: boolean; message: string }> {
   try {
     const supabase = await createClient();
 
+    // Rate limiting check
     const { data: emailsLastHour, error } = await supabase
       .from("email_logs")
       .select("id")
       .eq("user_id", userId)
-      .eq("type", "reset_password")
+      .eq("type", "appointment_confirmation")
       .gte("sent_at", new Date(Date.now() - 60 * 60 * 1000).toISOString());
 
     if (error) {
       console.error("Failed to check email logs:", error);
       return { message: "Internal error.", emailSent: false };
     }
-    if ((emailsLastHour?.length ?? 0) >= 3) {
+
+    if ((emailsLastHour?.length ?? 0) >= 5) {
       return {
-        message:
-          "Rate limit exceeded. You can request up to 3 reset emails per hour.",
+        message: "Rate limit exceeded.",
         emailSent: false,
       };
     }
@@ -32,26 +40,36 @@ export async function sendResetPasswordEmail(
       host: process.env.EMAIL_SERVER_HOST,
       port: parseInt(process.env.EMAIL_SERVER_PORT ?? "465", 10),
       secure: process.env.EMAIL_SERVER_SECURE === "true",
-      // secure: false, // Use false for port 587
-      requireTLS: true, // Force TLS
+      requireTLS: true,
       auth: {
         user: process.env.EMAIL_SERVER_USER,
         pass: process.env.EMAIL_SERVER_PASSWORD,
       },
     });
 
-    const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password?token=${token}`;
+    // Format date in French
+    const appointmentDate = new Date(appointmentDetails.appointment_date);
+    const formattedDate = appointmentDate.toLocaleDateString("fr-FR", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const formattedTime = appointmentDate.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: email,
-      subject: "TéléAutism - Réinitialisation du Mot de Passe",
+      subject: "TéléAutism - Rendez-vous Confirmé ✓",
       html: `<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TéléAutism - Réinitialisation du Mot de Passe</title>
+    <title>TéléAutism - Rendez-vous Confirmé</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -84,7 +102,7 @@ export async function sendResetPasswordEmail(
         
         .header {
             background: linear-gradient(135deg, #0b7d84 0%, #00746b 50%, #005f5a 100%);
-            padding: 40px 30px;
+            padding: 45px 30px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -114,7 +132,7 @@ export async function sendResetPasswordEmail(
             blur: 40px;
         }
         
-        .security-badge {
+        .confirmation-badge {
             position: relative;
             z-index: 1;
             display: inline-flex;
@@ -153,65 +171,100 @@ export async function sendResetPasswordEmail(
             padding: 45px 35px;
         }
         
-        .icon-section {
+        .success-icon {
             text-align: center;
             margin-bottom: 25px;
         }
         
-        .security-icon {
-            font-size: 72px;
+        .checkmark {
+            font-size: 80px;
             display: block;
             margin-bottom: 10px;
-            animation: pulse 2s ease-in-out infinite;
+            animation: scaleIn 0.5s ease-out;
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
         }
         
-        .reset-title {
+        .confirmation-title {
             font-size: 28px;
             font-weight: 700;
             color: #0b7d84;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
             line-height: 1.3;
         }
         
-        .main-text {
-            font-size: 15px;
-            color: #6b7280;
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-        
-        .security-warning {
-            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
-            border-left: 4px solid #f97316;
-            border-radius: 12px;
-            padding: 25px;
-            margin: 28px 0;
-            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.08);
-        }
-        
-        .warning-title {
+        .confirmation-subtitle {
             font-size: 16px;
-            color: #ea580c;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .warning-text {
-            font-size: 14px;
-            color: #c2410c;
+            color: #6b7280;
+            margin-bottom: 30px;
+            text-align: center;
             line-height: 1.6;
         }
         
-        .action-section {
+        .appointment-card {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 28px 0;
+            border-left: 4px solid #87cdb0;
+            box-shadow: 0 2px 8px rgba(135, 205, 176, 0.12);
+        }
+        
+        .appointment-header {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0b7d84;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .appointment-detail {
+            display: flex;
+            align-items: start;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(135, 205, 176, 0.3);
+        }
+        
+        .appointment-detail:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .detail-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .detail-content {
+            flex: 1;
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: #00746b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        
+        .detail-value {
+            font-size: 16px;
+            color: #0b7d84;
+            font-weight: 600;
+        }
+        
+        .cta-section {
             background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
             border-radius: 12px;
             padding: 35px 30px;
@@ -221,17 +274,17 @@ export async function sendResetPasswordEmail(
             box-shadow: 0 4px 12px rgba(11, 125, 132, 0.08);
         }
         
-        .action-title {
-            font-size: 20px;
+        .cta-title {
+            font-size: 18px;
             font-weight: 700;
             color: #0b7d84;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         
-        .action-text {
-            font-size: 15px;
+        .cta-text {
+            font-size: 14px;
             color: #374151;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             line-height: 1.6;
         }
         
@@ -254,7 +307,7 @@ export async function sendResetPasswordEmail(
             box-shadow: 0 6px 25px rgba(11, 125, 132, 0.4);
         }
         
-        .security-info {
+        .info-box {
             background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
             border: 1px solid #93c5fd;
             border-radius: 12px;
@@ -262,7 +315,7 @@ export async function sendResetPasswordEmail(
             margin: 28px 0;
         }
         
-        .security-info-title {
+        .info-title {
             font-size: 15px;
             color: #0284c7;
             font-weight: 700;
@@ -272,13 +325,13 @@ export async function sendResetPasswordEmail(
             gap: 8px;
         }
         
-        .security-info-text {
+        .info-text {
             font-size: 14px;
             color: #0369a1;
             line-height: 1.6;
         }
         
-        .security-tips {
+        .tips-section {
             background: #f9fafb;
             border-radius: 12px;
             padding: 25px;
@@ -371,18 +424,18 @@ export async function sendResetPasswordEmail(
             }
             
             .header {
-                padding: 35px 25px;
+                padding: 40px 25px;
             }
             
             .content {
                 padding: 35px 25px;
             }
             
-            .action-section, .security-warning, .security-info, .security-tips {
+            .appointment-card, .cta-section, .info-box, .tips-section {
                 padding: 22px 18px;
             }
             
-            .reset-title {
+            .confirmation-title {
                 font-size: 24px;
             }
             
@@ -395,7 +448,7 @@ export async function sendResetPasswordEmail(
                 font-size: 28px;
             }
             
-            .security-icon {
+            .checkmark {
                 font-size: 64px;
             }
         }
@@ -405,81 +458,104 @@ export async function sendResetPasswordEmail(
     <div class="email-wrapper">
         <div class="email-container">
             <div class="header">
-                <div class="security-badge">
-                    🔒 SÉCURITÉ
+                <div class="confirmation-badge">
+                    ✓ CONFIRMÉ
                 </div>
                 <div class="logo">🩺 TéléAutism</div>
-                <div class="tagline">Réinitialisation sécurisée du mot de passe</div>
+                <div class="tagline">Votre rendez-vous est confirmé</div>
             </div>
             
             <div class="content">
-                <div class="icon-section">
-                    <span class="security-icon">🔑</span>
+                <div class="success-icon">
+                    <span class="checkmark">✓</span>
                 </div>
                 
-                <h1 class="reset-title">
-                    Réinitialisation du Mot de Passe
+                <h1 class="confirmation-title">
+                    Rendez-vous Confirmé !
                 </h1>
                 
-                <p class="main-text">
-                    Vous avez demandé la réinitialisation de votre mot de passe sur TéléAutism. 
-                    Nous sommes là pour vous aider à sécuriser votre compte.
+                <p class="confirmation-subtitle">
+                    Excellente nouvelle ! Votre médecin a confirmé votre rendez-vous. 
+                    Vous recevrez les meilleurs soins adaptés à vos besoins.
                 </p>
                 
-                <div class="security-warning">
-                    <div class="warning-title">
-                        ⚠️ Important - Vérification de Sécurité
+                <div class="appointment-card">
+                    <div class="appointment-header">
+                        📋 Détails du Rendez-vous
                     </div>
-                    <div class="warning-text">
-                        Si vous n'avez pas fait cette demande, veuillez ignorer cet email. 
-                        Votre mot de passe actuel restera inchangé et votre compte reste sécurisé.
+                    
+                    <div class="appointment-detail">
+                        <span class="detail-icon">👨‍⚕️</span>
+                        <div class="detail-content">
+                            <div class="detail-label">Médecin</div>
+                            <div class="detail-value">${
+                              appointmentDetails.doctor_name
+                            }</div>
+                            ${
+                              appointmentDetails.doctor_specialty
+                                ? `<div style="font-size: 13px; color: #00746b; margin-top: 4px;">${appointmentDetails.doctor_specialty}</div>`
+                                : ""
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="appointment-detail">
+                        <span class="detail-icon">📅</span>
+                        <div class="detail-content">
+                            <div class="detail-label">Date</div>
+                            <div class="detail-value">${formattedDate}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="appointment-detail">
+                        <span class="detail-icon">⏰</span>
+                        <div class="detail-content">
+                            <div class="detail-label">Heure</div>
+                            <div class="detail-value">${formattedTime}</div>
+                        </div>
                     </div>
                 </div>
                 
-                <p class="main-text">
-                    Si c'est bien vous qui avez demandé cette réinitialisation, cliquez sur le bouton 
-                    ci-dessous pour créer un nouveau mot de passe sécurisé.
-                </p>
-                
-                <div class="action-section">
-                    <h2 class="action-title">🔐 Créer un Nouveau Mot de Passe</h2>
-                    <p class="action-text">
-                        Cliquez sur ce bouton pour accéder à la page de réinitialisation sécurisée. 
-                        Vous pourrez y définir un nouveau mot de passe pour votre compte.
+                <div class="cta-section">
+                    <h2 class="cta-title">Accédez à votre Espace Patient</h2>
+                    <p class="cta-text">
+                        Consultez tous les détails de votre rendez-vous, échangez avec votre médecin 
+                        et préparez votre consultation.
                     </p>
-                    <a href="${verificationUrl}" class="cta-button">
-                        Réinitialiser mon Mot de Passe
+                    <a href="${
+                      process.env.NEXT_PUBLIC_SITE_URL
+                    }/appointments" class="cta-button">
+                        Voir mes Rendez-vous
                     </a>
                 </div>
                 
-                <div class="security-info">
-                    <div class="security-info-title">
-                        🛡️ Note de Sécurité
+                <div class="info-box">
+                    <div class="info-title">
+                        💡 Important
                     </div>
-                    <div class="security-info-text">
-                        Ce lien de réinitialisation est sécurisé et expire automatiquement dans 24 heures. 
-                        Si le lien expire, vous devrez faire une nouvelle demande de réinitialisation depuis 
-                        la page de connexion.
+                    <div class="info-text">
+                        Vous recevrez un rappel 24 heures avant votre rendez-vous. Si vous devez 
+                        modifier ou annuler, veuillez le faire au moins 24 heures à l'avance.
                     </div>
                 </div>
                 
-                <div class="security-tips">
-                    <div class="tips-title">💡 Conseils pour un Mot de Passe Sécurisé</div>
+                <div class="tips-section">
+                    <div class="tips-title">📝 Pour préparer votre consultation</div>
                     <div class="tip-item">
                         <span class="tip-icon">✓</span>
-                        <span>Utilisez au moins 8 caractères avec des lettres majuscules et minuscules</span>
+                        <span>Notez les questions que vous souhaitez poser à votre médecin</span>
                     </div>
                     <div class="tip-item">
                         <span class="tip-icon">✓</span>
-                        <span>Incluez des chiffres et des caractères spéciaux (@, #, $, etc.)</span>
+                        <span>Préparez la liste de vos médicaments actuels si applicable</span>
                     </div>
                     <div class="tip-item">
                         <span class="tip-icon">✓</span>
-                        <span>Évitez d'utiliser des informations personnelles évidentes</span>
+                        <span>Assurez-vous d'avoir une connexion internet stable</span>
                     </div>
                     <div class="tip-item">
                         <span class="tip-icon">✓</span>
-                        <span>N'utilisez pas le même mot de passe sur plusieurs sites</span>
+                        <span>Connectez-vous 5 minutes avant l'heure prévue</span>
                     </div>
                 </div>
                 
@@ -490,9 +566,8 @@ export async function sendResetPasswordEmail(
                         <strong>Besoin d'aide ?</strong>
                     </p>
                     <p class="footer-text">
-                        Si vous rencontrez des difficultés ou avez des questions concernant 
-                        la sécurité de votre compte, contactez-nous à 
-                        <a href="mailto:S.bensafiddine.ss@lagh-univ.dz" class="contact-link">S.bensafiddine.ss@lagh-univ.dz</a>
+                        Notre équipe support est disponible pour vous assister. 
+                        Contactez-nous à <a href="mailto:S.bensafiddine.ss@lagh-univ.dz" class="contact-link">S.bensafiddine.ss@lagh-univ.dz</a>
                     </p>
                 </div>
             </div>
@@ -516,14 +591,14 @@ export async function sendResetPasswordEmail(
     if (info.messageId) {
       await supabase.from("email_logs").insert({
         user_id: userId,
-        type: "reset_password",
+        type: "appointment_confirmation",
         sent_at: new Date(),
       });
     }
 
     return { message: "Email sent successfully.", emailSent: true };
   } catch (error) {
-    console.error("Failed to send email:", error);
+    console.error("Failed to send appointment confirmation email:", error);
     return { message: "Internal error.", emailSent: false };
   }
 }

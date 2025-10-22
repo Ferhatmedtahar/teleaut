@@ -12,8 +12,7 @@ export default async function ProfileContentPatient({
 }) {
   const firstName = user?.first_name ?? "User";
   const lastName = user?.last_name ?? "";
-  const role = user?.role ?? "student";
-
+  const role = user?.role ?? "patient";
   const bio = user?.bio ?? `Bonjour, je suis ${firstName} ${lastName}.`;
   const userId = user?.id;
 

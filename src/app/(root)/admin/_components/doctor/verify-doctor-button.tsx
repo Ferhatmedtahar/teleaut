@@ -1,6 +1,6 @@
 "use client";
 
-import { approveDoctor } from "@/actions/admin/approveTeacher.action";
+import { approveDoctor } from "@/actions/admin/approveDoctoraction";
 import { rejectTeacher } from "@/actions/admin/rejectTeacher.action";
 import { resendVerificationEmail } from "@/actions/admin/resendVerificationEmail.action";
 import { Button } from "@/components/common/buttons/Button";

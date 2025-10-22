@@ -1,7 +1,7 @@
 "use server";
 
 import { SignUpSchema } from "@/app/(auth)/_components/forms/signUp/SignUp.schema";
-import { sendVerificationEmail } from "@/app/(auth)/_lib/email/sendVerificationEmailStudents";
+import { sendVerificationEmailPatient } from "@/app/(auth)/_lib/email/sendVerificationEmailPatient";
 import { generateToken } from "@/app/(auth)/_lib/generateToken";
 import { hashPassword } from "@/app/(auth)/_lib/hashComparePassword";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
@@ -83,7 +83,7 @@ export async function signUpPatient(formData: FormData) {
     //!generate token and send email server action call
     const token = await generateToken({ id: newUser.id, role: roles.patient });
 
-    const { emailSent, message } = await sendVerificationEmail(
+    const { emailSent, message } = await sendVerificationEmailPatient(
       newUser.id,
       newUser.email,
       token

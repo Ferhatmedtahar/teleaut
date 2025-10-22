@@ -1,11 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-import { roles } from "@/types/roles.enum";
 import { UserProps } from "@/types/UserProps";
-import Image from "next/image";
-import EditProfileButton from "../EditProfileButton";
-import ProfilePictureUser from "./ProfilePictureUser";
 import BackgroundUser from "./BackgroundUser";
+import ProfilePictureUser from "./ProfilePictureUser";
 
 export default async function ProfileContentAdmin({
   user,
@@ -17,7 +12,7 @@ export default async function ProfileContentAdmin({
   const firstName = user?.first_name ?? "User";
   const lastName = user?.last_name ?? "";
   const role = user?.role ?? "student";
-  const bio = user?.bio ?? `Hi, i'm ${firstName} ${lastName}.`;
+  const bio = user?.bio ?? `Bonjour, je suis ${firstName} ${lastName}.`;
   const userId = user?.id;
 
   return (
@@ -53,7 +48,7 @@ export default async function ProfileContentAdmin({
 
             {/* Bio Section */}
           </div>
-          <p className="text-background text-sm capitalize bg-[#355869] w-fit px-3 py-1 rounded-md">
+          <p className="text-background text-sm capitalize bg-primary w-fit px-3 py-1 rounded-md">
             {role}
           </p>
         </div>
