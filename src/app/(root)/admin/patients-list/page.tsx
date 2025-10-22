@@ -1,4 +1,4 @@
-import PatientList from "../_components/studentsList/StudentsList";
+import PatientList from "../_components/studentsList/PatientList";
 import { getPatientsList } from "../_lib/admin";
 
 export default async function StudentsListPage() {

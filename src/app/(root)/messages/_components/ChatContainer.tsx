@@ -1,14 +1,15 @@
 "use client";
 
 import { sendMessage } from "@/actions/chats/createMessage";
-import { subscribeToChat } from "@/actions/chats/realtime";
 import { getChatMessages } from "@/actions/chats/getChatMessages";
+import { subscribeToChat } from "@/actions/chats/realtime";
 import { Button } from "@/components/common/buttons/Button";
 import { Input } from "@/components/ui/input";
 import { Message } from "@/types/entities/Chat.interface";
-import { ArrowLeft, Send, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Send } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface ChatContainerProps {
   chatId: string;
@@ -43,7 +44,6 @@ export default function ChatContainer({
 
   const router = useRouter();
 
-  // Load more messages
   const loadMoreMessages = useCallback(async () => {
     if (loading || !hasMore) return;
 
@@ -155,33 +155,34 @@ export default function ChatContainer({
     }
     return "Chat";
   };
-
+  console.log("otherParticipant", otherParticipant);
   return (
     <div className="flex flex-col h-full bg-background">
       {/* Header */}
-      <div className="bg-background border-b border-border/20 dark:border-border/90 px-4 py-3 flex items-center gap-3">
-        <button
+      <div className=" bg-background border-b border-border/20 dark:border-border/90 px-4 py-3 flex items-center gap-3">
+        <Button
           onClick={() => router.push("/chats")}
           className="lg:hidden p-2 hover:bg-gray-100 rounded-full"
         >
           <ArrowLeft className="w-5 h-5" />
-        </button>
-
-        {otherParticipant?.user && (
-          <div className="w-10 h-10 rounded-full bg-secondary-300 dark:bg-secondary-100 flex items-center justify-center flex-shrink-0">
-            {otherParticipant.user.profile_url ? (
-              <img
-                src={otherParticipant.user.profile_url}
-                alt=""
-                className="w-full h-full rounded-full object-cover"
-              />
-            ) : (
-              <span className="text-sm font-semibold text-gray-600">
-                {otherParticipant.user.first_name?.[0]}
-              </span>
-            )}
-          </div>
-        )}
+        </Button>
+        <Link href={`/profile/${otherParticipant?.user?.id}`} className="">
+          {otherParticipant?.user && (
+            <div className="w-10 h-10 rounded-full bg-secondary-300 dark:bg-secondary-100 flex items-center justify-center flex-shrink-0">
+              {otherParticipant.user.profile_url ? (
+                <img
+                  src={otherParticipant.user.profile_url}
+                  alt=""
+                  className="w-full h-full rounded-full object-cover"
+                />
+              ) : (
+                <span className="text-sm font-semibold text-primary-700">
+                  {otherParticipant.user.first_name?.[0]}
+                </span>
+              )}
+            </div>
+          )}
+        </Link>
 
         <div className="flex-1">
           <h2 className="font-semibold">{getChatName()}</h2>
