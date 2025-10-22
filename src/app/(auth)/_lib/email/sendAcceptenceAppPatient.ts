@@ -1,4 +1,3 @@
-// lib/email/sendAppointmentConfirmationEmail.ts
 import { createClient } from "@/lib/supabase/server";
 import nodemailer from "nodemailer";
 
@@ -15,8 +14,6 @@ export async function sendAppointmentConfirmationEmail(
 ): Promise<{ emailSent: boolean; message: string }> {
   try {
     const supabase = await createClient();
-
-    // Rate limiting check
     const { data: emailsLastHour, error } = await supabase
       .from("email_logs")
       .select("id")

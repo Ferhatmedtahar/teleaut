@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 
+import AppointmentsChart from "./_components/dashboard/AppointmentsChart";
 import LoadingSkeleton from "./_components/dashboard/LoadingDashboardSkeleton";
 import StatsCards from "./_components/dashboard/StatsCards";
 import UserChart from "./_components/dashboard/user-chart";
-import VideoChart from "./_components/dashboard/VideoChart";
-import { getAdminStats, getVideoStatsOverTime } from "./_lib/admin";
+import { getAdminStats, getAppointmentsStatsOverTime } from "./_lib/admin";
 export const metadata = {
   title: "Tableau de Bord Admin | Gestion de la Plateforme",
   description:
@@ -12,13 +12,13 @@ export const metadata = {
 };
 async function DashboardContent() {
   const stats = await getAdminStats();
-  const videosOverTime = await getVideoStatsOverTime();
+  const videosOverTime = await getAppointmentsStatsOverTime();
 
   return (
     <>
       <StatsCards stats={stats} />
       <UserChart stats={stats} />
-      <VideoChart videosOverTime={videosOverTime} />
+      <AppointmentsChart appointmentsOverTime={videosOverTime} />
     </>
   );
 }

@@ -16,13 +16,13 @@ export default function UserChart({
   readonly stats: Awaited<ReturnType<typeof getAdminStats>>;
 }) {
   const data = [
-    { name: "Students", count: stats.totalStudents },
-    { name: "Teachers", count: stats.totalTeachers },
+    { name: "Patients", count: stats.totalPatients },
+    { name: "Doctors", count: stats.totalDoctors },
     {
-      name: "Verified Teachers",
-      count: stats.totalTeachers - stats.pendingVerifications,
+      name: "Verified Doctors",
+      count: stats.totalDoctors - stats.pendingVerifications,
     },
-    { name: "Unverified Teachers", count: stats.pendingVerifications },
+    { name: "Unverified Doctors", count: stats.pendingVerifications },
   ];
 
   return (
@@ -37,7 +37,7 @@ export default function UserChart({
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="count" fill="#355869" />
+            <Bar dataKey="count" fill="#0b7d84" />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

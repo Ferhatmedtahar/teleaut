@@ -11,11 +11,13 @@ import {
   YAxis,
 } from "recharts";
 
-interface VideoChartProps {
-  readonly videosOverTime: { name: string; count: number }[];
+interface AppointmentChartProps {
+  readonly appointmentsOverTime: { name: string; count: number }[];
 }
 
-export default function VideoChart({ videosOverTime }: VideoChartProps) {
+export default function AppointmentsChart({
+  appointmentsOverTime,
+}: AppointmentChartProps) {
   return (
     <Card className="col-span-4 mt-6">
       <CardHeader>
@@ -25,12 +27,15 @@ export default function VideoChart({ videosOverTime }: VideoChartProps) {
       </CardHeader>
       <CardContent className="pl-2">
         <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={videosOverTime} key={`${videosOverTime.length}`}>
+          <BarChart
+            data={appointmentsOverTime}
+            key={`${appointmentsOverTime.length}`}
+          >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="count" fill="#355869" />
+            <Bar dataKey="count" fill="#0b7d84" />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

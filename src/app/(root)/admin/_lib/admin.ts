@@ -3,7 +3,6 @@ import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
 import { createClient } from "@/lib/supabase/server";
 import { Doctor } from "@/types/entities/Doctor.interface";
 import { roles } from "@/types/roles.enum";
-import { TeacherFile } from "@/types/TeacherFile";
 import { revalidatePath } from "next/cache";
 // import { revalidatePath } from "next/cache";
 //! Admin statistics
@@ -17,34 +16,34 @@ export async function getAdminStats() {
     .select("*", { count: "exact", head: true });
 
   // Get total teachers count
-  const { count: totalTeachers } = await supabase
+  const { count: totalDoctors } = await supabase
     .from("users")
     .select("*", { count: "exact", head: true })
-    .eq("role", "teacher");
+    .eq("role", roles.doctor);
 
   // Get total students count
-  const { count: totalStudents } = await supabase
+  const { count: totalPatients } = await supabase
     .from("users")
     .select("*", { count: "exact", head: true })
-    .eq("role", "student");
+    .eq("role", roles.patient);
 
   // Get pending verifications count
   const { count: pendingVerifications } = await supabase
     .from("users")
     .select("*", { count: "exact", head: true })
-    .eq("role", "teacher")
+    .eq("role", roles.doctor)
     .eq("verification_status", VERIFICATION_STATUS.PENDING);
 
-  const { count: videos } = await supabase
-    .from("videos")
+  const { count: appointments } = await supabase
+    .from("appointments")
     .select("*", { count: "exact", head: true });
 
   return {
     totalUsers: totalUsers ?? 0,
-    totalTeachers: totalTeachers ?? 0,
-    totalStudents: totalStudents ?? 0,
+    totalDoctors: totalDoctors ?? 0,
+    totalPatients: totalPatients ?? 0,
     pendingVerifications: pendingVerifications ?? 0,
-    totalVideos: videos,
+    totalAppointments: appointments,
   };
 }
 
@@ -55,7 +54,7 @@ export async function getUnverifiedTeachers() {
   const { data, error } = await supabase
     .from("users")
     .select("*")
-    .eq("role", "teacher")
+    .eq("role", roles.doctor)
     .eq("verification_status", VERIFICATION_STATUS.PENDING)
     .order("created_at", { ascending: false });
 
@@ -86,27 +85,7 @@ export async function getDoctorById(id: string) {
   return { success: true, doctor: data };
 }
 
-//! Teacher Files from user_files table
-export async function getTeacherFiles(
-  teacherId: string
-): Promise<TeacherFile[]> {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("user_files")
-    .select("*")
-    .eq("user_id", teacherId)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("Error fetching teacher files:", error);
-    return [];
-  }
-
-  return data || [];
-}
-
-//!Get all students
+//!Get all patients
 export async function getPatientsList() {
   "use server";
   const supabase = await createClient();
@@ -142,11 +121,11 @@ export async function deleteStudent(id: string) {
       console.error("Error deleting student:", error);
       return {
         success: false,
-        message: "Échec de la suppression de l'étudiant",
+        message: "Échec de la suppression de patient",
       };
     }
 
-    revalidatePath("/admin/students-list");
+    revalidatePath("/admin/patients-list");
     return { success: true, message: "L'étudiant a été supprimé avec succès" };
   } catch (error) {
     console.error("Error in deleteStudent:", error);
@@ -201,7 +180,7 @@ export async function deleteTeacher(id: string) {
         message: "Échec de la suppression de l'enseignant",
       };
     }
-    revalidatePath("/admin/teachers-list");
+    revalidatePath("/admin/doctors-list");
     return {
       success: true,
       message: "L'enseignant a été supprimé avec succès",
@@ -260,12 +239,12 @@ export async function deleteVideo(id: string) {
 }
 
 //! Get video stats
-export async function getVideoStatsOverTime() {
+export async function getAppointmentsStatsOverTime() {
   "use server";
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("videos")
+    .from("appointments")
     .select("id, created_at");
 
   if (error) {
@@ -275,8 +254,8 @@ export async function getVideoStatsOverTime() {
 
   // Group by month
   const statsByMonth: Record<string, number> = {};
-  data?.forEach((video) => {
-    const month = new Date(video.created_at).toLocaleString("default", {
+  data?.forEach((appointments) => {
+    const month = new Date(appointments.created_at).toLocaleString("default", {
       month: "short",
       year: "numeric",
     });
