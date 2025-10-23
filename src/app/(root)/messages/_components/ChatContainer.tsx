@@ -161,7 +161,7 @@ export default function ChatContainer({
       {/* Header */}
       <div className=" bg-background border-b border-border/20 dark:border-border/90 px-4 py-3 flex items-center gap-3">
         <Button
-          onClick={() => router.push("/chats")}
+          onClick={() => router.push("/messages")}
           className="lg:hidden p-2 hover:bg-gray-100 rounded-full"
         >
           <ArrowLeft className="w-5 h-5" />
