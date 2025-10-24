@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { AlertCircle, Clock, Mail, MapPin, Phone, User } from "lucide-react";
+import Image from "next/image";
 
 interface Patient {
   id: string;
@@ -43,8 +44,10 @@ export default function PatientProfileModal({
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
               {patient.profile_url ? (
-                <img
-                  src={patient.profile_url || "/placeholder.svg"}
+                <Image
+                  width={100}
+                  height={100}
+                  src={patient.profile_url || "/images/profile.png"}
                   alt={`${patient.first_name} ${patient.last_name}`}
                   className="w-16 h-16 rounded-full object-cover"
                 />

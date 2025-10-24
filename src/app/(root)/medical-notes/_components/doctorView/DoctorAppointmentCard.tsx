@@ -35,6 +35,7 @@ import {
   User,
   XCircle,
 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -213,8 +214,12 @@ function DoctorAppointmentCard({
             <div className="flex items-start gap-4 mb-4">
               <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                 {appointment?.patient?.profile_url ? (
-                  <img
-                    src={appointment.patient.profile_url || "/placeholder.svg"}
+                  <Image
+                    width={40}
+                    height={40}
+                    src={
+                      appointment.patient.profile_url || "/images/profie.png"
+                    }
                     alt={`${appointment.patient.first_name} ${appointment.patient.last_name}`}
                     className="w-14 h-14 rounded-full object-cover"
                   />

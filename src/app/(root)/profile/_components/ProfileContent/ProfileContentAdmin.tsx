@@ -17,8 +17,6 @@ export default async function ProfileContentAdmin({
 
   return (
     <div className="w-full p-3">
-      {/* max-w-6xl mx-auto */}
-      {/* Profile Banner and Info */}
       <div className="relative mb-6">
         <BackgroundUser
           firstName={firstName}
@@ -38,15 +36,12 @@ export default async function ProfileContentAdmin({
         />
       </div>
 
-      {/* Profile Info */}
       <div className="px-8 pt-10 pb-6 ">
         <div className="flex justify-between items-start ">
           <div className="flex-1 flex flex-col gap-2">
             <h1 className="text-xl font-bold">
               {firstName} {lastName}
             </h1>
-
-            {/* Bio Section */}
           </div>
           <p className="text-background text-sm capitalize bg-primary w-fit px-3 py-1 rounded-md">
             {role}

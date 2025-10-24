@@ -215,6 +215,8 @@ function DoctorAppointmentCard({
               <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                 {appointment?.patient?.profile_url ? (
                   <Image
+                    width={56}
+                    height={56}
                     src={appointment.patient.profile_url || "/placeholder.svg"}
                     alt={`${appointment.patient.first_name} ${appointment.patient.last_name}`}
                     className="w-14 h-14 rounded-full object-cover"

@@ -9,15 +9,13 @@ import EditProfileModal from "./EditProfileModal";
 interface EditProfileButtonProps {
   readonly userId: string;
   readonly currentUserId: string;
-  readonly userRole: roles.admin | roles.student | roles.teacher;
+  readonly userRole: roles.admin | roles.patient | roles.doctor;
   readonly userData: {
     first_name: string;
     last_name: string;
     bio: string;
     profile_url: string;
     background_url: string;
-    class?: string;
-    branch?: string;
   };
 }
 

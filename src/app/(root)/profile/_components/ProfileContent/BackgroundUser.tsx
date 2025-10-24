@@ -11,8 +11,6 @@ export default function BackgroundUser({
   background_cover,
   userId,
   currentUserId,
-  classValue,
-  branch,
 }: {
   readonly firstName: string;
   readonly lastName: string;
@@ -22,8 +20,6 @@ export default function BackgroundUser({
   readonly background_cover: string;
   readonly userId: string;
   readonly currentUserId: string;
-  readonly classValue?: string;
-  readonly branch?: string;
 }) {
   return (
     <>
@@ -41,35 +37,35 @@ export default function BackgroundUser({
           <EditProfileButton
             userId={userId}
             currentUserId={currentUserId}
-            userRole={role as roles.student}
+            userRole={role as roles.admin | roles.doctor | roles.patient}
             userData={{
               first_name: firstName,
               last_name: lastName,
               bio,
               profile_url: profileUrl,
               background_url: background_cover,
-              class: classValue,
-              branch: branch,
+              // class: classValue,
+              // branch: branch,
             }}
           />
         </div>
       ) : (
         <div className="h-40 w-full rounded-t-lg overflow-hidden">
-          <div className="w-full h-full bg-gradient-to-r from-[#355869] via-primary-700 to-green-600"></div>
+          <div className="w-full h-full bg-gradient-to-r from-primary-500 via-secondary-700 to-secondary-400"></div>
 
           {/* Edit button - only visible if current user is viewing their own profile */}
           <EditProfileButton
             userId={userId}
             currentUserId={currentUserId}
-            userRole={role as roles.student}
+            userRole={role as roles.admin | roles.doctor | roles.patient}
             userData={{
               first_name: firstName,
               last_name: lastName,
               bio,
               profile_url: profileUrl,
               background_url: background_cover,
-              class: classValue,
-              branch: branch,
+              // class: classValue,
+              // branch: branch,
             }}
           />
         </div>

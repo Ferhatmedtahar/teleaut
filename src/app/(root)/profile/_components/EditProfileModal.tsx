@@ -11,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
@@ -78,15 +77,6 @@ export default function EditProfileModal({
   // File input refs
   const profileInputRef = useRef<HTMLInputElement>(null);
   const backgroundInputRef = useRef<HTMLInputElement>(null);
-
-  // Class and branch states for students
-  const [selectedClass, setSelectedClass] = useState<string>(
-    userData?.class ?? ""
-  );
-  const [availableBranches, setAvailableBranches] = useState<string[]>([]);
-  const [selectedBranch, setSelectedBranch] = useState<string>(
-    userData?.branch ?? ""
-  );
 
   const {
     register,
@@ -196,22 +186,6 @@ export default function EditProfileModal({
         removeBackgroundImage.toString()
       );
 
-      if (userRole === roles.patient) {
-        if (
-          !data.branch &&
-          availableBranches.length > 1 &&
-          !availableBranches.includes("Aucune filière")
-        ) {
-          toast.error("Veuillez sélectionner une branche");
-          return;
-        }
-        formData.append("prev_class", userData.class ?? "");
-        formData.append("prev_branch", userData.branch ?? "");
-
-        formData.append("class", data.class ?? "");
-        formData.append("branch", data.branch ?? "");
-      }
-
       const { success, message } = await updateUserProfile(formData);
       setBackgroundImage(null);
       setProfileImage(null);
@@ -237,8 +211,6 @@ export default function EditProfileModal({
   }
 
   const watchedBio = watch("bio");
-  const watchedClass = watch("class");
-  const watchedBranch = watch("branch");
 
   const [hasChanged, setHasChanged] = useState(false);
 
@@ -248,15 +220,11 @@ export default function EditProfileModal({
       profileImage !== null ||
       backgroundImage !== null ||
       removeProfileImage ||
-      removeBackgroundImage ||
-      (userRole === roles.patient &&
-        (watchedClass !== userData.class || watchedBranch !== userData.branch));
+      removeBackgroundImage;
 
     setHasChanged(isChanged);
   }, [
     watchedBio,
-    watchedClass,
-    watchedBranch,
     profileImage,
     backgroundImage,
     removeProfileImage,
@@ -304,7 +272,7 @@ export default function EditProfileModal({
                 )}
               </div>
 
-              {userRole === roles.patient && (
+              {/* {userRole === roles.patient && (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Classe</Label>
@@ -337,6 +305,7 @@ export default function EditProfileModal({
                   </div>
                 </div>
               )}
+              */}
             </TabsContent>
 
             <TabsContent value="images" className="space-y-6 mt-0">
@@ -541,7 +510,6 @@ export default function EditProfileModal({
               </div>
             </TabsContent>
 
-            {/* Action Buttons - Fixed positioning and spacing */}
             <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-4 border-t">
               <Button
                 type="button"
