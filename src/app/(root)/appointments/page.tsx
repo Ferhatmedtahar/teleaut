@@ -82,7 +82,7 @@ export default async function AppointmentsPage() {
             Aucun rendez-vous trouvé
           </h3>
           <p className="text-gray-600 dark:text-gray-400">
-            Vous n'avez pas encore de rende-vous planifiés
+            Vous n&apos;avez pas encore de rende-vous planifiés
           </p>
         </div>
       ) : (

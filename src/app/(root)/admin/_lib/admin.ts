@@ -161,7 +161,7 @@ export async function getDoctorsList(): Promise<{
       data: data || [],
     };
   } catch (error) {
-    console.error("Error in getTeachersList:", error);
+    console.error("Error in getDoctorsList:", error);
     return { success: false, message: "Impossible de trouver des enseignants" };
   }
 }

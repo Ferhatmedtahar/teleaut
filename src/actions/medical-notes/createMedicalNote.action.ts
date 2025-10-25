@@ -39,7 +39,6 @@ export async function createMedicalNote(data: CreateMedicalNoteInput) {
     }
 
     const validation = createMedicalNoteSchema.safeParse(data);
-    console.log("Validation result:", validation);
     if (!validation.success) {
       return {
         success: false,

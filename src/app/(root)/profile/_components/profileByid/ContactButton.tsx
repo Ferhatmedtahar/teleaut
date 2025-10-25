@@ -21,18 +21,20 @@ export default function ChatButton({
   const handleStartChat = async () => {
     setIsCreatingChat(true);
     try {
-      const result = await findOrCreateOneOnOneChat(
+      const { chatId, error } = await findOrCreateOneOnOneChat(
         currentUserId,
         targetUserId
       );
 
-      if (result.error) {
-        toast.error(result.error);
+      if (error) {
+        toast.error(
+          `Une erreur s'est produite lors de la création du chat` as string
+        );
         return;
       }
 
-      if (result.chatId) {
-        router.push(`/messages?chatId=${result.chatId}`);
+      if (chatId) {
+        router.push(`/messages?chatId=${chatId}`);
       }
     } catch (error) {
       toast.error("Une erreur s'est produite lors de la création du chat");

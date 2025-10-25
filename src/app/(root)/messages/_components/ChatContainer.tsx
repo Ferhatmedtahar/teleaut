@@ -150,10 +150,9 @@ export default function ChatContainer({
     }
     return "Chat";
   };
-  console.log("otherParticipant", otherParticipant);
+
   return (
     <div className="flex flex-col h-full bg-background">
-      {/* Header */}
       <div className=" bg-background border-b border-border/20 dark:border-border/90 px-4 py-3 flex items-center gap-3">
         <Button
           onClick={() => router.push("/messages")}

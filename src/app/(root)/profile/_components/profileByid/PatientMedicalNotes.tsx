@@ -123,7 +123,7 @@ export default function PatientMedicalNotes({
           </div>
           <h3 className="text-lg font-semibold mb-2">Aucune note médicale</h3>
           <p className="text-muted-foreground mb-4">
-            Ce patient n'a pas encore de notes médicales
+            Ce patient n&apos;a pas encore de notes médicales
           </p>
           <Button
             onClick={() =>

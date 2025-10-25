@@ -251,7 +251,7 @@ function DoctorAppointmentsView({ appointments }: DoctorAppointmentsViewProps) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Toutes les dates</SelectItem>
-                  <SelectItem value="today">Aujourd'hui</SelectItem>
+                  <SelectItem value="today">Aujourd&apos;hui</SelectItem>
                   <SelectItem value="week">Cette semaine</SelectItem>
                   <SelectItem value="future">À venir</SelectItem>
                   <SelectItem value="past">Passés</SelectItem>

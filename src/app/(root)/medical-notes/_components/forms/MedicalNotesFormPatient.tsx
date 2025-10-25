@@ -297,7 +297,7 @@ export default function MedicalNoteForm({
 
             {selectedPatientId && patientAppointments.length === 0 && (
               <p className="text-sm text-muted-foreground">
-                Ce patient n'a pas de rendez-vous confirmés ou complétés.
+                Ce patient n&apos;a pas de rendez-vous confirmés ou complétés.
               </p>
             )}
           </div>

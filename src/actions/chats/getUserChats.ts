@@ -42,6 +42,5 @@ export async function getUserChats(userId: string) {
     return { success: false, data: [], error };
   }
 
-  console.log("Fetched chats for user:", userId, data);
   return { success: true, data: data as Chat[], error: null };
 }

@@ -43,8 +43,8 @@ export default function WaitlistPage() {
           <div className="max-w-2xl text-center space-y-6">
             <h1 className="text-4xl font-bold text-gray-800">Merci!</h1>
             <p className="text-lg text-gray-600">
-              Votre demande a été envoyée avec succès. L'équipe TeleAustism
-              l'étudie actuellement et vous contactera dès son traitement.
+              Votre demande a été envoyée avec succès. L&apos;équipe TeleAustism
+              l&apos;étudie actuellement et vous contactera dès son traitement.
             </p>
           </div>
         </div>

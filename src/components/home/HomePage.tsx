@@ -35,13 +35,13 @@ export default async function HomePage() {
           </div>
           <p className="text-xl sm:text-2xl mb-6 text-blue-50 font-light leading-relaxed">
             Connecter les familles et les spécialistes pour un meilleur
-            accompagnement de l'autisme
+            accompagnement de l&apos;autisme
           </p>
 
           <p className="text-base sm:text-lg mb-10 text-blue-100 max-w-2xl mx-auto leading-relaxed">
             Une plateforme de télésanté sécurisée qui facilite les rendez-vous,
-            l'accès aux dossiers médicaux et la communication entre familles et
-            professionnels.
+            l&apos;accès aux dossiers médicaux et la communication entre
+            familles et professionnels.
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-3xl mx-auto">

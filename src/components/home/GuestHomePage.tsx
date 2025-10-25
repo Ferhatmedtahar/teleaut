@@ -507,8 +507,8 @@ export default function GuestHomePage({
             }}
             className="mb-12 text-lg dark:text-primary-50 text-primary-900 leading-relaxed"
           >
-            Rejoignez des centaines de patients qui bénéficient déjà d'un suivi
-            médical personnalisé et accessible avec TéléAutism.
+            Rejoignez des centaines de patients qui bénéficient déjà d&apos;un
+            suivi médical personnalisé et accessible avec TéléAutism.
           </motion.p>
           <motion.div
             variants={fadeInUp}

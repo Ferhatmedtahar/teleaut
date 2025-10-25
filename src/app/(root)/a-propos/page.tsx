@@ -123,10 +123,10 @@ export default function AProposPage() {
             Notre vision
           </h2>
           <p className="text-gray-700 dark:text-gray-100 text-lg leading-relaxed max-w-2xl mx-auto">
-            Nous rêvons d'un système de santé où chaque patient peut consulter
-            un spécialiste rapidement, où les médecins peuvent exercer
-            efficacement, et où la technologie sert l'humain. Un futur où les
-            soins sont accessibles, transparents et bienveillants.
+            Nous rêvons d&apos;un système de santé où chaque patient peut
+            consulter un spécialiste rapidement, où les médecins peuvent exercer
+            efficacement, et où la technologie sert l&apos;humain. Un futur où
+            les soins sont accessibles, transparents et bienveillants.
           </p>
         </div>
       </section>

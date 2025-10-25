@@ -135,7 +135,7 @@ export default function PatientProfileModal({
                     <Phone className="w-4 h-4 text-muted-foreground mt-0.5" />
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">
-                        Contact d'urgence
+                        Contact d&apos;urgence
                       </p>
                       <p>{patient.emergency_contact}</p>
                     </div>

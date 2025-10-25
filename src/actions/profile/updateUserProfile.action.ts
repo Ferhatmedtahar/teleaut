@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache";
 
 export async function updateUserProfile(formData: FormData) {
   try {
-    console.log("Updating user profile...", formData);
     const userRole = formData.get("role") as string;
     if (!userRole) {
       return { success: false, message: "Échec de la mise à jour du profil" };

@@ -103,7 +103,7 @@ export default function ProfileContentDoctor({
               </div>
               <p className="text-sm text-muted-foreground dark:text-white/90">
                 {yearsOfExperience} {yearsOfExperience > 1 ? "ans" : "an"}{" "}
-                d'expérience
+                d&apos;expérience
               </p>
             </div>
           )}

@@ -9,17 +9,13 @@ export const metadata = {
   description: "Modifier une note médicale existante",
 };
 
-interface EditMedicalNotePageProps {
-  params: {
-    id: string;
-  };
-}
-
 export default async function EditMedicalNotePage({
   params,
-}: EditMedicalNotePageProps) {
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { user } = await getCurrentUser();
-
+  const { id } = await params;
   if (!user) {
     redirect("/login");
   }
@@ -27,7 +23,7 @@ export default async function EditMedicalNotePage({
   if (user.role !== roles.doctor) {
     redirect("/medical-notes");
   }
-  const { note, error } = await getMedicalNotesForEdit(params.id, user.id);
+  const { note, error } = await getMedicalNotesForEdit(id, user.id);
 
   if (error || !note) {
     redirect("/medical-notes");

@@ -3,19 +3,23 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 
 export default function FailAuthPage() {
-  localStorage.removeItem("signedUp");
   useEffect(() => {
+    // Only access localStorage inside useEffect (client-side only)
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("signedUp");
+    }
+
     toast.error(
       "Échec de l'inscription ! Veuillez contacter l'administrateur pour plus d'informations.",
       {
         duration: 10000,
       }
     );
-  }, []);
+  }, []); // Remove localStorage from dependency array
 
   return (
-    <div className="  bg-[#18706e] dark:bg-[hsl(177,75%,14%)] w-full relative  ">
-      <div className="flex flex-col items-center justify-center h-screen py-10 gap-6 sm:gap-8 md:gap-10 lg:gap-14 bg-gray-50 dark:bg-background  px-6 lg:items-start lg:px-24 lg:rounded-tl-[6rem]">
+    <div className="bg-[#18706e] dark:bg-[hsl(177,75%,14%)] w-full relative">
+      <div className="flex flex-col items-center justify-center h-screen py-10 gap-6 sm:gap-8 md:gap-10 lg:gap-14 bg-gray-50 dark:bg-background px-6 lg:items-start lg:px-24 lg:rounded-tl-[6rem]">
         <div className="flex min-h-screen w-full flex-col gap-4 items-center justify-center">
           <h1 className="text-3xl font-semibold">Sign up failed</h1>
           <p className="text-lg text-center">

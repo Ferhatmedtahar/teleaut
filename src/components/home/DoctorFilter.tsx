@@ -84,8 +84,8 @@ export default function DoctorsFilter({ doctors }: DoctorsFilterProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="desc">Plus d'expérience</SelectItem>
-                <SelectItem value="asc">Moins d'expérience</SelectItem>
+                <SelectItem value="desc">Plus d&apos;expérience</SelectItem>
+                <SelectItem value="asc">Moins d&apos;expérience</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

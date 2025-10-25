@@ -51,7 +51,6 @@ export default async function Profile({
   const { id } = await params;
   const { user: visitedUser, success } = await getUserById(id);
   const { success: currentSuccess, user: currentUser } = await getCurrentUser();
-  console.log("visitedUser", visitedUser, "currentUser", currentUser);
   if (!currentSuccess || !currentUser?.id || !visitedUser || !success) {
     return <ErrorProfile />;
   }
