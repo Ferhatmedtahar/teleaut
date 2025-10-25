@@ -43,7 +43,7 @@ const sfUiText = localFont({
 
 export const metadata: Metadata = {
   title: "Teleaustism",
-  description: "Teleaustism ",
+  description: "Teleaustism - Plateforme de soutien pour l'autisme",
 };
 
 export default function RootLayout({

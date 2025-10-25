@@ -111,14 +111,14 @@ export default function AidePage() {
               <ContactButton
                 text="Envoyer un email"
                 icon={<Mail className="w-5 h-5" />}
-                href="mailto:support@teleautism.com"
+                href="mailto:S.bensafiddine.ss@lagh-univ.dz"
                 primary
               />
 
               <ContactButton
                 text="Appeler le support"
                 icon={<Phone className="w-5 h-5" />}
-                href="tel:+21300000000"
+                href="tel:+213656771568"
                 primary={false}
               />
             </div>

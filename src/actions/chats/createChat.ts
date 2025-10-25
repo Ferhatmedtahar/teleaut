@@ -8,7 +8,6 @@ export async function findOrCreateOneOnOneChat(
 ) {
   const supabase = createClient();
 
-  // Fetch both users' roles
   const { data: users, error: usersError } = await supabase
     .from("users")
     .select("id, role")
@@ -21,7 +20,6 @@ export async function findOrCreateOneOnOneChat(
   const user1Role = users.find((u) => u.id === userId1)?.role;
   const user2Role = users.find((u) => u.id === userId2)?.role;
 
-  // Prevent patient-to-patient chats
   if (user1Role === roles.patient && user2Role === roles.patient) {
     return {
       chatId: null,
@@ -29,7 +27,6 @@ export async function findOrCreateOneOnOneChat(
     };
   }
 
-  // Check for existing chat
   const { data: existingChats } = await supabase
     .from("chat_participants")
     .select("chat_id")
@@ -57,7 +54,6 @@ export async function findOrCreateOneOnOneChat(
     }
   }
 
-  // Create new chat
   const { data: newChat, error } = await supabase
     .from("chats")
     .insert({ type: "1-1" })
@@ -66,7 +62,6 @@ export async function findOrCreateOneOnOneChat(
 
   if (error || !newChat) return { chatId: null, error };
 
-  // Add both participants
   await supabase.from("chat_participants").insert([
     { chat_id: newChat.id, user_id: userId1 },
     { chat_id: newChat.id, user_id: userId2 },

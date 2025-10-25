@@ -70,19 +70,16 @@ export default function ChatContainer({
     }
   }, [chatId, loading, hasMore, offset]);
 
-  // Handle scroll for loading more messages
   const handleScroll = useCallback(() => {
     const container = messagesContainerRef.current;
     if (!container) return;
 
-    // If user scrolls to top (within 100px), load more
     if (container.scrollTop < 100 && hasMore && !loading) {
       previousScrollHeight.current = container.scrollHeight;
       loadMoreMessages();
     }
   }, [hasMore, loading, loadMoreMessages]);
 
-  // Subscribe to realtime updates
   useEffect(() => {
     const unsubscribe = subscribeToChat(chatId, (message) => {
       setMessages((prev) => {
@@ -96,16 +93,13 @@ export default function ChatContainer({
     return () => unsubscribe();
   }, [chatId]);
 
-  // Auto-scroll to bottom on new messages (only for new messages, not when loading old ones)
   useEffect(() => {
     const container = messagesContainerRef.current;
 
     if (isInitialScroll.current) {
-      // Initial load - scroll to bottom
       messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
       isInitialScroll.current = false;
     } else if (container && !loading) {
-      // Check if user was already at bottom before new message
       const isAtBottom =
         container.scrollHeight - container.scrollTop - container.clientHeight <
         100;
@@ -215,7 +209,7 @@ export default function ChatContainer({
         {/* Show "No more messages" when reached the end */}
         {!hasMore && messages.length > 0 && (
           <div className="flex justify-center py-2">
-            <p className="text-xs text-gray-400">No more messages</p>
+            <p className="text-xs text-gray-400">Plus de messages</p>
           </div>
         )}
 

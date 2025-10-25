@@ -41,48 +41,7 @@ const SearchFormReset = ({
 };
 
 export default function GuestNavbar({ className }: GuestNavbarProps) {
-  const [search, setSearch] = useState("");
-  const [mobileSearch, setMobileSearch] = useState("");
   const [showMobileSearch, setShowMobileSearch] = useState(false);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const mobileSearchInputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  // useEffect(() => {
-  //   const searchParam = searchParams.get("search");
-  //   if (searchParam) {
-  //     setSearch(searchParam);
-  //     setMobileSearch(searchParam);
-  //   }
-  // }, [searchParams]);
-
-  // useEffect(() => {
-  //   if (showMobileSearch && mobileSearchInputRef.current) {
-  //     mobileSearchInputRef.current.focus();
-  //   }
-  // }, [showMobileSearch]);
-
-  // const handleDesktopSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   if (search.trim()) {
-  //     // Navigate to search results with search parameter
-  //     router.push(`/?search=${encodeURIComponent(search.trim())}`);
-  //   }
-  // };
-
-  // const handleMobileSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   const formData = new FormData(e.currentTarget);
-  //   const query = formData.get("search") as string;
-
-  //   if (query?.trim()) {
-  //     // Close mobile search overlay first
-  //     setShowMobileSearch(false);
-  //     // Navigate to search results
-  //     router.push(`/?search=${encodeURIComponent(query.trim())}`);
-  //   }
-  // };
 
   return (
     <>

@@ -1,6 +1,6 @@
 import SignUpBasicInfoForm from "@/app/(auth)/_components/forms/signUp/info/SignUpBasicInfoForm";
 import { Button } from "@/components/common/buttons/Button";
-import MobileCognaciaLogo from "@/components/home/MobileLogo";
+import MobileTele from "@/components/home/MobileLogo";
 import * as motion from "motion/react-client";
 import Link from "next/link";
 
@@ -16,7 +16,7 @@ export default function page() {
         href="/"
         className="lg:hidden absolute top-5 left-5 sm:top-10 sm:left-10"
       >
-        <MobileCognaciaLogo textColor="text-primary dark:text-primary-50" />
+        <MobileTele textColor="text-primary dark:text-primary-50" />
       </Link>
       <Link href="/sign-in" className="absolute top-10 right-10">
         <Button size={"lg"} className="text-base cursor-pointer">

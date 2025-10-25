@@ -1,5 +1,5 @@
 "use client";
-import CognaciaLogo from "@/components/home/Logo";
+import TeleaustismLogo from "@/components/home/Logo";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import Image from "next/image";
@@ -26,7 +26,7 @@ export default function Background() {
         className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden"
       >
         <Link href="/">
-          <CognaciaLogo
+          <TeleaustismLogo
             className="absolute top-10 left-10 font-bold"
             textColor="text-white"
           />

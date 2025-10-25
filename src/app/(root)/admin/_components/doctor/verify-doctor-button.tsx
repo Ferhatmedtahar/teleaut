@@ -1,7 +1,7 @@
 "use client";
 
 import { approveDoctor } from "@/actions/admin/approveDoctoraction";
-import { rejectTeacher } from "@/actions/admin/rejectTeacher.action";
+import { rejectDoctor } from "@/actions/admin/rejectDoctor.action";
 import { resendVerificationEmail } from "@/actions/admin/resendVerificationEmail.action";
 import { Button } from "@/components/common/buttons/Button";
 import { VERIFICATION_STATUS } from "@/lib/constants/verificationStatus";
@@ -57,7 +57,7 @@ export default function VerifyDoctorButton({
     try {
       const formData = new FormData();
       formData.append("doctorId", doctorId);
-      const result = await rejectTeacher(formData);
+      const result = await rejectDoctor(formData);
 
       if (!result.success) {
         toast.error(result.message);

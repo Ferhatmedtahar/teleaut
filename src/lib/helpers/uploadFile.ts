@@ -43,12 +43,10 @@ export async function uploadFile(
       throw new Error(`Failed to upload ${fileType}: ${error.message}`);
     }
 
-    // Get public URL
     const {
       data: { publicUrl },
     } = supabase.storage.from("tele").getPublicUrl(data.path);
 
-    // Store file record in user_files table
     const { error: dbError } = await supabase.from("user_files").insert({
       user_id: userId,
       file_type: fileType,
@@ -126,104 +124,3 @@ export async function deleteFile(
     throw e;
   }
 }
-// import { createClient } from "@/lib/supabase/server";
-
-// export async function uploadFile(
-//   file: File,
-//   fileType: string,
-//   userId: string
-// ): Promise<string> {
-//   if (!file) throw new Error(`${fileType} file is required`);
-
-//   try {
-//     const supabase = await createClient();
-
-//     // Create a unique file name
-//     const fileExt = file.name.split(".").pop();
-//     const fileName = `${userId}/${fileType}_${Date.now()}.${fileExt}`;
-
-//     // Determine the folder path based on file type
-//     let folderPath = "";
-//     if (fileType === "profile_picture") {
-//       folderPath = "profiles/profile-pictures";
-//     } else if (fileType === "cover_picture") {
-//       folderPath = "profiles/cover-pictures";
-//     }
-
-//     const fullPath = `${folderPath}/${fileName}`;
-
-//     // Convert File to ArrayBuffer for upload
-//     const arrayBuffer = await file.arrayBuffer();
-//     const buffer = new Uint8Array(arrayBuffer);
-
-//     // Upload to Supabase Storage
-//     const { data, error } = await supabase.storage
-//       .from("tele")
-//       .upload(fullPath, buffer, {
-//         contentType: file.type,
-//         upsert: false,
-//       });
-
-//     if (error) {
-//       console.error("Supabase upload error:", error);
-//       throw new Error(`Failed to upload ${fileType}: ${error.message}`);
-//     }
-
-//     // Get public URL
-//     const {
-//       data: { publicUrl },
-//     } = supabase.storage.from("tele").getPublicUrl(data.path);
-
-//     // Store file record in user_files table
-//     const { error: dbError } = await supabase.from("user_files").insert({
-//       user_id: userId,
-//       file_type: fileType,
-//       file_url: publicUrl,
-//       file_path: data.path,
-//     });
-
-//     if (dbError) {
-//       console.error("Error storing file record:", dbError);
-//       // Don't throw here, file is already uploaded
-//     }
-
-//     return publicUrl;
-//   } catch (e) {
-//     console.error(e);
-//     throw new Error(`Failed to upload ${fileType}`);
-//   }
-// }
-// // export async function uploadFile(
-// //   file: File,
-// //   fileType: string,
-// //   userId: string
-// // ): Promise<string> {
-// //   if (!file) throw new Error(`${fileType} file is required`);
-// //   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
-// //   const formData = new FormData();
-// //   formData.append("file", file);
-// //   formData.append("fileType", fileType);
-// //   formData.append("userId", userId);
-// //   try {
-// //     const response = await fetch(
-// //       `${BASE_URL}/api/upload/upload_file_to_bunny`,
-// //       {
-// //         method: "POST",
-// //         body: formData,
-// //       }
-// //     );
-
-// //     if (!response.ok) {
-// //       const error = await response.json();
-
-// //       throw new Error(error.message ?? `Failed to upload ${fileType}`);
-// //     }
-
-// //     const result = await response.json();
-// //     return result.url;
-// //   } catch (e) {
-// //     console.error(e);
-// //     throw new Error(`Failed to upload ${fileType}`);
-// //   }
-// // }

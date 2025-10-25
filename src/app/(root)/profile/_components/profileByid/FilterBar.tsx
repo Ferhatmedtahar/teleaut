@@ -31,7 +31,7 @@ export default function FilterBar({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const flatBranches = useMemo(() => branches.flat(), [branches]); // ✅ Flatten the array
+  const flatBranches = useMemo(() => branches.flat(), [branches]);
 
   const currentClass = searchParams.get("class") ?? "";
   const currentBranch = searchParams.get("branch") ?? "";

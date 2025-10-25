@@ -45,11 +45,7 @@ const navItems: NavItem[] = [
     href: "/messages",
     icon: MessageSquare,
   },
-  // {
-  //   title: "Historique",
-  //   href: "/historique",
-  //   icon: History,
-  // },
+
   {
     title: "Aide",
     href: "/aide",

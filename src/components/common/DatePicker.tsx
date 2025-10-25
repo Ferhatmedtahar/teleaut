@@ -34,14 +34,13 @@ export function DatePicker({
     value ? new Date(value) : undefined
   );
 
-  // Get tomorrow's date as minimum selectable date
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
 
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
       setSelectedDate(date);
-      // Format date as YYYY-MM-DD for form compatibility
+
       const formattedDate = format(date, "yyyy-MM-dd");
       onChange?.(formattedDate);
       setOpen(false);

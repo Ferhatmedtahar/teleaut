@@ -1,5 +1,5 @@
 import { Button } from "@/components/common/buttons/Button";
-import MobileCognaciaLogo from "@/components/home/MobileLogo";
+import MobileTeleLogo from "@/components/home/MobileLogo";
 import Link from "next/link";
 import ForgotPasswordForm from "../_components/forms/forgot-password/ForgotPasswordForm";
 export const metadata = {
@@ -8,12 +8,12 @@ export const metadata = {
 };
 export default function ForgotPasswordPage() {
   return (
-    <div className="bg-[#355869]  dark:bg-[#1F2F3F] w-full relative">
+    <div className="bg-[#18706e]  dark:bg-[hsl(177,75%,14%)] w-full relative">
       <Link
         href="/"
         className="lg:hidden absolute top-5 left-5 sm:top-10 sm:left-10"
       >
-        <MobileCognaciaLogo textColor="text-primary dark:text-primary-50" />
+        <MobileTeleLogo textColor="text-primary dark:text-primary-50" />
       </Link>
       <Link
         href="/sign-in"

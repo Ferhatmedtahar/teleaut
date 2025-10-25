@@ -1,5 +1,5 @@
 import SignUpDetailsForm from "@/app/(auth)/_components/forms/signUp/details/SignUpDetailsForm";
-import MobileCognaciaLogo from "@/components/home/MobileLogo";
+import MobileLogo from "@/components/home/MobileLogo";
 import * as motion from "motion/react-client";
 import Link from "next/link";
 export const metadata = {
@@ -13,7 +13,7 @@ export default function Page() {
         href="/"
         className="lg:hidden absolute top-5 left-5 sm:top-10 sm:left-10"
       >
-        <MobileCognaciaLogo textColor="text-primary dark:text-primary-50" />
+        <MobileLogo textColor="text-primary dark:text-primary-50" />
       </Link>
       <div className="flex flex-col items-center justify-center h-screen py-10 gap-6 sm:gap-8 md:gap-10 lg:gap-14 bg-gray-50 dark:bg-background  px-6 lg:items-start lg:px-24 lg:rounded-tl-[6rem]">
         <motion.div

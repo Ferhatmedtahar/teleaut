@@ -58,7 +58,7 @@ export async function getDoctorPatients() {
     // Extract unique patients and filter out null values
     const uniquePatients = appointments
       ?.map((app: any) => app.patient)
-      .filter((patient: any) => patient !== null) // Filter out null patients
+      .filter((patient: any) => patient !== null)
       .filter(
         (patient: any, index: number, self: any[]) =>
           index === self.findIndex((p: any) => p?.id === patient?.id)
@@ -81,7 +81,6 @@ export async function getDoctorAppointments() {
   try {
     const supabase = await createClient();
 
-    // Get current user (doctor)
     const { user } = await getCurrentUser();
 
     if (!user) {

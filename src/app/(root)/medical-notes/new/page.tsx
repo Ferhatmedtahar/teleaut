@@ -23,7 +23,6 @@ export default async function NewMedicalNotePage() {
     redirect("/medical-notes");
   }
 
-  // Get doctor's patients
   const patientsResult = await getDoctorPatients();
   const patients = patientsResult.success ? patientsResult.data : [];
 

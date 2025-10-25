@@ -1,6 +1,6 @@
 import SignInForm from "@/app/(auth)/_components/forms/signIn/SignIn";
 import { Button } from "@/components/common/buttons/Button";
-import MobileCognaciaLogo from "@/components/home/MobileLogo";
+import MobileTeleLogo from "@/components/home/MobileLogo";
 import * as motion from "motion/react-client";
 import Link from "next/link";
 
@@ -15,7 +15,7 @@ export default function SignInPage() {
         href="/"
         className="lg:hidden absolute top-5 left-5 sm:top-10 sm:left-10"
       >
-        <MobileCognaciaLogo textColor="text-primary dark:text-primary-50" />
+        <MobileTeleLogo textColor="text-primary dark:text-primary-50" />
       </Link>
       <Link
         href="/sign-up/info"

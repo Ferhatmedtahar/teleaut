@@ -13,18 +13,6 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "kduodvrtdkdbbfthjstp.supabase.co",
       },
-      // {
-      //   protocol: "https",
-      //   hostname: "media.licdn.com",
-      // },
-      // {
-      //   protocol: "https",
-      //   hostname: "mypullzonecognacia.b-cdn.net",
-      // },
-      // {
-      //   protocol: "https",
-      //   hostname: "cognacia.b-cdn.net",
-      // },
     ],
   },
 };

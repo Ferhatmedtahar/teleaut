@@ -52,4 +52,4 @@ function DoctorCardAppForm({ doctor }: { readonly doctor: Doctor }) {
   );
 }
 
-export default DoctorCardAppForm; // import { Doctor } from "@/types/entities/Doctor.interface";
+export default DoctorCardAppForm;

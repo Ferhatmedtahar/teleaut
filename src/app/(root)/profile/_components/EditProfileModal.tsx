@@ -61,7 +61,6 @@ export default function EditProfileModal({
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("general");
 
-  // File states
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [backgroundImage, setBackgroundImage] = useState<File | null>(null);
@@ -69,12 +68,10 @@ export default function EditProfileModal({
     null
   );
 
-  // New state to track if the user wants to remove their images
   const [removeProfileImage, setRemoveProfileImage] = useState<boolean>(false);
   const [removeBackgroundImage, setRemoveBackgroundImage] =
     useState<boolean>(false);
 
-  // File input refs
   const profileInputRef = useRef<HTMLInputElement>(null);
   const backgroundInputRef = useRef<HTMLInputElement>(null);
 
@@ -124,7 +121,6 @@ export default function EditProfileModal({
     }
   };
 
-  // Handle removing profile image
   const handleRemoveProfileImage = () => {
     setProfileImage(null);
     setProfilePreview(null);
@@ -144,7 +140,6 @@ export default function EditProfileModal({
     }
   };
 
-  // Handle drag and drop for background image
   const handleBackgroundDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
@@ -201,7 +196,6 @@ export default function EditProfileModal({
         toast.error(message);
       }
 
-      // Close modal and refresh page
       onClose();
       router.refresh();
     } catch (error) {

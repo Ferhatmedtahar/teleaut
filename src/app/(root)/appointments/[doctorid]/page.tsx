@@ -1,6 +1,4 @@
 import { getCurrentUserById } from "@/actions/profile/getCurrentUserById.action";
-// import FeaturedVideoUploadForm from "../_components/forms/AdminVideoUploadForm";
-// import VideoUploadForm from "../_components/forms/VideoUploadForm";
 import { getDoctorById } from "../../admin/_lib/admin";
 import AppointmentForm from "../_components/forms/AppointmentFormPatient";
 

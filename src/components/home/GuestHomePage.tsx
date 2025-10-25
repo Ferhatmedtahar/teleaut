@@ -411,9 +411,9 @@ export default function GuestHomePage({
               <motion.div
                 key={index}
                 variants={scaleIn}
-                whileHover={{ y: -1 }}
-                transition={{ duration: 0.5, ease: [0.22, 0.03, 0.26, 1] }}
-                className="text-center p-10 rounded-xl border border-border/30 dark:border-border/70 bg-gradient-to-br from-card via-card to-card/95 dark:from-border/15 dark:via-border/30 dark:to-border/40 shadow-lg hover:shadow-xl transition-shadow duration-1000"
+                whileHover={{ y: -2 }}
+                // transition={{ duration: 0.5, ease: [0.22, 0.03, 0.26, 1] }}
+                className="text-center p-10 rounded-xl border border-border/30 dark:border-border/70 bg-gradient-to-br from-card via-card to-card/95 dark:from-border/15 dark:via-border/30 dark:to-border/40 shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
               >
                 <motion.div
                   className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-[#355869]/10 to-primary/10"
@@ -518,7 +518,7 @@ export default function GuestHomePage({
               ease: [0.22, 0.03, 0.26, 1],
             }}
           >
-            <Link href="/sign-up">
+            <Link href="/sign-up/info">
               <motion.div
                 whileHover={{ scale: 1.005 }}
                 whileTap={{ scale: 0.995 }}

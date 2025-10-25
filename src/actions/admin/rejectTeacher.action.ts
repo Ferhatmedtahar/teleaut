@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { roles } from "@/types/roles.enum";
 import { revalidatePath } from "next/cache";
 
-export async function rejectTeacher(formData: FormData) {
+export async function rejectDoctor(formData: FormData) {
   const { user } = await getCurrentUser();
 
   if (!user || user.role !== "admin") {

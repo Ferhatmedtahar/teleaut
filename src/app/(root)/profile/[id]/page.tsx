@@ -16,7 +16,7 @@ export async function generateMetadata({
   const { user } = await getUser(id);
 
   return {
-    title: `Profil de ${user.first_name} ${user?.last_name} | Cognacia`,
+    title: `Profil de ${user.first_name} ${user?.last_name} | Teleaustism`,
     description: user?.bio,
     authors: [
       {
@@ -24,7 +24,7 @@ export async function generateMetadata({
       },
     ],
     openGraph: {
-      title: `${user.first_name} | Cognacia`,
+      title: `${user.first_name} | Teleaustism`,
       description: user.bio,
       type: "article",
       url: `https://cognacia.vercel.app/profile/${user.id}`,

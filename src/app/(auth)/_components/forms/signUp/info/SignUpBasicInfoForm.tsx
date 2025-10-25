@@ -30,7 +30,6 @@ export default function SignUpBasicInfoForm() {
     if (!useSignUpStore.persist?.hasHydrated) return;
     const signedUp = localStorage.getItem("signedUp");
     const roleLocalStorage = localStorage.getItem("role");
-    //REVIEW change the roles here and use constants and same them in a constant file
     if (signedUp && signedUp == "true" && roleLocalStorage === roles.doctor) {
       router.replace("/sign-up/waitlist");
     }

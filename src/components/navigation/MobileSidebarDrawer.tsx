@@ -49,12 +49,10 @@ export const MobileSidebarProvider: React.FC<MobileSidebarProviderProps> = ({
   );
 };
 
-// Mobile Sidebar Drawer Component
 export const MobileSidebarDrawer: React.FC = () => {
   const { isOpen, close } = useMobileSidebar();
 
   return <AppSidebar ismobile isOpen={isOpen} onClose={close} />;
 };
 
-// Import your AppSidebar component here
 import AppSidebar from "./Sidebar";

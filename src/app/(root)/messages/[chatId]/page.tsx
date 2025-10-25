@@ -11,13 +11,11 @@ export default async function ChatPage({
 }) {
   const { chatId } = await params;
 
-  // Get current user
   const { user } = await getCurrentUser();
   if (!user) {
     redirect("/sign-in");
   }
 
-  // Fetch chat details with participants
   const supabase = await createClient();
   const { data: chat, error } = await supabase
     .from("chats")
@@ -33,22 +31,18 @@ export default async function ChatPage({
     .eq("id", chatId)
     .single();
 
-  // Check if chat exists
   if (error || !chat) {
     notFound();
   }
 
-  // SECURITY CHECK: Verify current user is a participant
   const isParticipant = chat.participants?.some(
     (p: any) => p.user_id === user.id
   );
 
   if (!isParticipant) {
-    // User is not authorized to view this chat
-    notFound(); // or redirect("/chats") if you prefer
+    notFound();
   }
 
-  // Now safely fetch messages since user is authorized
   const { data: initialMessages } = await getChatMessages(chatId);
 
   const otherParticipant = chat.participants?.find(

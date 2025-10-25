@@ -30,7 +30,7 @@ export default function WaitlistPage() {
       toastShown.current = true;
       toast.success("Votre demande a été soumise avec succès !", {
         description:
-          "L'équipe Cognacia est en train de l'examiner et vous enverra un e-mail une fois votre demande traitée.",
+          "L'équipe de TeleAustism est en train de l'examiner et vous enverra un e-mail une fois votre demande traitée.",
         duration: 5000,
       });
     }
@@ -41,11 +41,10 @@ export default function WaitlistPage() {
       <div className="flex flex-col items-center justify-center h-screen py-10 gap-6 sm:gap-8 md:gap-10 lg:gap-14 bg-gray-50  dark:bg-background  px-6 lg:items-start lg:px-24 lg:rounded-tl-[6rem]">
         <div className="bg-gray-50 dark:bg-background w-full min-h-screen flex items-center justify-center px-6">
           <div className="max-w-2xl text-center space-y-6">
-            <h1 className="text-4xl font-bold text-gray-800">Thank You!</h1>
+            <h1 className="text-4xl font-bold text-gray-800">Merci!</h1>
             <p className="text-lg text-gray-600">
-              Your request has been successfully submitted. The TeleAustism team
-              is now reviewing it and will contact you once it&apos;s been
-              processed.
+              Votre demande a été envoyée avec succès. L'équipe TeleAustism
+              l'étudie actuellement et vous contactera dès son traitement.
             </p>
           </div>
         </div>

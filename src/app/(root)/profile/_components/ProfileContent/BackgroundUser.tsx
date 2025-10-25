@@ -44,8 +44,6 @@ export default function BackgroundUser({
               bio,
               profile_url: profileUrl,
               background_url: background_cover,
-              // class: classValue,
-              // branch: branch,
             }}
           />
         </div>
@@ -64,8 +62,6 @@ export default function BackgroundUser({
               bio,
               profile_url: profileUrl,
               background_url: background_cover,
-              // class: classValue,
-              // branch: branch,
             }}
           />
         </div>
