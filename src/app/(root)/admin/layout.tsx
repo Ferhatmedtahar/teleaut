@@ -1,7 +1,6 @@
 "use client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/providers/UserProvider";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import { redirect, usePathname } from "next/navigation";
 import type React from "react";
@@ -25,7 +24,7 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="container mx-auto p-4 transition-colors duration-200 dark:bg-[#000211] dark:text-white min-h-screen">
+    <div className="container mx-auto p-4  dark:bg-background dark:text-white min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl md:text-3xl font-bold text-[#16222A] dark:text-white">
           Admin Dashboard
@@ -70,9 +69,7 @@ export default function AdminLayout({
         </TabsList>
       </Tabs>
 
-      <div className="bg-background rounded-lg  p-4 transition-colors duration-200">
-        {children}
-      </div>
+      <div className="bg-background p-4">{children}</div>
     </div>
   );
 }
