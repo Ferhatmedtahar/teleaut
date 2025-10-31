@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-interface VerifyTeacherButtonProps {
+interface VerifyDoctorButtonProps {
   readonly doctorId: string;
   readonly doctorEmail: string;
   readonly verificationStatus: UserVerificationStatus;
@@ -21,7 +21,7 @@ export default function VerifyDoctorButton({
   doctorId,
   doctorEmail,
   verificationStatus,
-}: VerifyTeacherButtonProps) {
+}: VerifyDoctorButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const user = useUser();
   const router = useRouter();

@@ -40,17 +40,6 @@ export default function DoctorProfile({
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {/* <div>
-            <h3 className="font-medium mb-2">Specialties</h3>
-            <div className="flex flex-wrap gap-2">
-              {doctor.specialties
-                ? teacher.specialties.map((specialty: string) => (
-                    <Badge key={specialty}>{specialty}</Badge>
-                  ))
-                : null}
-            </div>
-          </div> */}
-
           {doctor.bio && (
             <div>
               <h3 className="font-medium mb-2">Bio</h3>
