@@ -3,6 +3,7 @@ import { signUpDoctor } from "@/actions/auth/sign-up/signUpDoctor.action";
 import { signUpPatient } from "@/actions/auth/sign-up/signUpPatient.action";
 import { useSignUpStore } from "@/app/(auth)/sign-up/store";
 import { Button } from "@/components/common/buttons/Button";
+import { Spinner } from "@/components/common/Spinner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -553,6 +554,7 @@ export default function SignUpDetailsForm() {
             disabled={isSubmitting}
             className=" flex-1 py-4"
           >
+            {isSubmitting && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
             Continuer
           </Button>
         </div>

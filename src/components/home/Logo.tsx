@@ -17,7 +17,7 @@ export default function TeleaustismLogo({
   return (
     <div className={`${className}  px-2 flex items-center gap-1`}>
       <Image
-        src={"/logo_1.png"}
+        src={"/images/logo.png"}
         width={30}
         height={30}
         alt="TeleAustism Logo"
