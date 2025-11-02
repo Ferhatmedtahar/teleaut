@@ -33,25 +33,42 @@ export async function sendVerificationEmailPatient(
     // Parse port and secure settings properly
     const port = parseInt(process.env.EMAIL_SERVER_PORT ?? "587", 10);
 
-    // Force secure to false for Mailtrap and most development SMTP servers
+    // // Force secure to false for Mailtrap and most development SMTP servers
+    // const transportConfig = {
+    //   host: process.env.EMAIL_SERVER_HOST,
+    //   port: port,
+    //   secure: false, // Always false - let the server handle STARTTLS if available
+    //   auth: {
+    //     user: process.env.EMAIL_SERVER_USER,
+    //     pass: process.env.EMAIL_SERVER_PASSWORD,
+    //   },
+
+    //   tls: {
+    //     rejectUnauthorized: false, // More permissive for development
+    //     ciphers: "SSLv3", // Sometimes helps with compatibility
+    //   },
+    //   debug: true, // Enable debug logs
+    //   logger: true, // Enable logger
+
+    //   ignoreTLS: false,
+    //   requireTLS: false,
+    // };
+    const secure = process.env.EMAIL_SERVER_SECURE === "true"; // Parse as boolean
+
     const transportConfig = {
       host: process.env.EMAIL_SERVER_HOST,
       port: port,
-      secure: false, // Always false - let the server handle STARTTLS if available
+      secure: secure, // Use the parsed boolean value
       auth: {
         user: process.env.EMAIL_SERVER_USER,
         pass: process.env.EMAIL_SERVER_PASSWORD,
       },
-
+      // Remove or simplify TLS config for Gmail
       tls: {
-        rejectUnauthorized: false, // More permissive for development
-        ciphers: "SSLv3", // Sometimes helps with compatibility
+        rejectUnauthorized: true, // Gmail works fine with this as true
       },
-      debug: true, // Enable debug logs
-      logger: true, // Enable logger
-
-      ignoreTLS: false,
-      requireTLS: false,
+      debug: true,
+      logger: true,
     };
 
     const transporter = nodemailer.createTransport(transportConfig);
