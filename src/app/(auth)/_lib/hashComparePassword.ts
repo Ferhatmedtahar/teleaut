@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 export async function hashPassword(payload: string) {
-  const saltRounds = 10;
+  const saltRounds = 12;
   const salt = await bcrypt.genSalt(saltRounds);
   return await bcrypt.hash(payload, salt);
 }

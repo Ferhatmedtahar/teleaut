@@ -25,10 +25,10 @@ export default function AProposPage() {
         <div className="absolute bottom-10 right-10 w-32 h-32 bg-indigo-300/20 rounded-full blur-2xl"></div>
       </section>
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-        <div className="relative dark:bg-background backdrop-blur-sm shadow-2xl shadow-primary-900/5 rounded-3xl p-8 sm:p-12 border border-border/20 dark:border-border/80">
+        <div className="relative dark:bg-background backdrop-blur-sm shadow-2xl shadow-primary-900/5 rounded-lg p-8 sm:p-12 border border-border/20 dark:border-border/80">
           <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-900 rounded-2xl flex items-center justify-center text-2xl text-white">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-900 rounded-xl flex items-center justify-center text-2xl text-white">
                 🎯
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold  overflow-hidden primary-gradient-light  bg-clip-text text-transparent">
@@ -115,7 +115,7 @@ export default function AProposPage() {
 
       {/* Vision */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <div className="relative dark:bg-background backdrop-blur-sm p-12 rounded-3xl border border-border/20 dark:border-border/80 shadow-xl shadow-primary-900/10">
+        <div className="relative dark:bg-background backdrop-blur-sm p-12 rounded-xl border border-border/20 dark:border-border/80 shadow-xl shadow-primary-900/10">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary-600 to-primary-900 rounded-full mb-6 text-3xl text-white">
             🔮
           </div>
@@ -148,7 +148,7 @@ function ValueCard({
   return (
     <div className="bg-white dark:bg-background backdrop-blur-sm border border-primary-200/50 dark:border-border/90 rounded-2xl p-6 shadow-lg shadow-gray-900/5 hover:shadow-2xl hover:shadow-primary-900/10 transition-transform hover:-translate-y-1 duration-300 group">
       <div
-        className={`w-12 h-12 flex items-center justify-center rounded-xl mb-4 text-white shadow-md bg-gradient-to-br ${gradient} transition-transform `}
+        className={`w-12 h-12 flex items-center justify-center rounded-lg mb-4 text-white shadow-md bg-gradient-to-br ${gradient} transition-transform `}
       >
         {icon}
       </div>
@@ -174,7 +174,7 @@ function ProcessCard({
   return (
     <div className="bg-white dark:bg-background backdrop-blur-sm border border-primary-200/50 dark:border-border/90 rounded-2xl p-8 shadow-lg shadow-gray-900/5">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-14 h-14 bg-gradient-to-br from-primary-600 to-primary-900 rounded-2xl flex items-center justify-center text-3xl text-white shadow-md">
+        <div className="w-14 h-14 bg-gradient-to-br from-primary-600 to-primary-900 rounded-xl flex items-center justify-center text-3xl text-white shadow-md">
           {icon}
         </div>
         <h3 className="text-2xl font-bold text-gray-700 dark:text-gray-100">

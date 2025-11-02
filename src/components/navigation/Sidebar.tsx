@@ -134,7 +134,7 @@ const AppSidebar: React.FC<SidebarProps> = ({
         )}
       </div>
 
-      <nav className="flex-1 space-y-1 py-1 px-3 overflow-y-auto">
+      <nav className="flex-1 space-y-0.5 py-1 px-3 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
 
@@ -144,7 +144,7 @@ const AppSidebar: React.FC<SidebarProps> = ({
               href={item.href}
               onClick={handleLinkClick}
               className={cn(
-                "flex items-center rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200 ease-in-out",
+                "flex items-center rounded-md px-3 py-3 text-sm font-medium transition-all duration-200 ease-in-out",
                 "hover:bg-secondary-400/40 dark:hover:bg-secondary-50/20 ",
                 "active:scale-[0.99] transform",
                 isActive
