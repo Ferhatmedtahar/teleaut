@@ -9,7 +9,6 @@ export interface Doctor {
   education: string;
   license_file_url: string;
   created_at: string;
-  //review
   specialty?: string;
   years_of_experience: number;
   consultation_fee: number;

@@ -1,10 +1,5 @@
-"use client";
-
 import { Button } from "@/components/common/buttons/Button";
-import { Search, X } from "lucide-react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
 import TeleaustismLogo from "../home/Logo";
 import { ToggleThemeGuest } from "../home/ToggleThemeGuest";
 
@@ -12,37 +7,7 @@ interface GuestNavbarProps {
   readonly className?: string;
 }
 
-const SearchFormReset = ({
-  setSearch,
-}: {
-  setSearch: React.Dispatch<React.SetStateAction<string>>;
-}) => {
-  const router = useRouter();
-
-  const reset = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget.closest("form") as HTMLFormElement;
-    setSearch("");
-    if (form) form.reset();
-    // Reset URL to remove search params
-    router.push("/");
-  };
-
-  return (
-    <button
-      aria-label="Reset the form"
-      type="reset"
-      onClick={reset}
-      className="text-primary-600 hover:text-primary-700 dark:text-primary-50 dark:hover:text-primary-100 transition-colors"
-    >
-      <X className="size-5" />
-    </button>
-  );
-};
-
 export default function GuestNavbar({ className }: GuestNavbarProps) {
-  const [showMobileSearch, setShowMobileSearch] = useState(false);
-
   return (
     <>
       <header
@@ -55,56 +20,11 @@ export default function GuestNavbar({ className }: GuestNavbarProps) {
               <TeleaustismLogo />
             </Link>
           </div>
-
-          {/* Desktop Search Component - Hidden on mobile */}
-          {/* <div className="hidden md:flex flex-1 max-w-2xl mx-4 relative"> */}
-          {/* <Form
-              action="/"
-              onSubmit={handleDesktopSearchSubmit}
-              id="search-form"
-              className="relative w-full"
-            >
-              <Input
-                ref={searchInputRef}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                name="search"
-                placeholder="Rechercher des vidéos..."
-                className="pl-10 pr-10 rounded-full w-full"
-              />
-
-              <div className="absolute inset-y-0 left-3 flex items-center">
-                <button type="submit" className="hover:cursor-pointer">
-                  <Search className="h-5 w-5 dark:text-primary-200/80 text-muted-foreground" />
-                </button>
-              </div>
-
-              {search && (
-                <div className="absolute inset-y-0 right-3 flex items-center">
-                  <SearchFormReset setSearch={setSearch} />
-                </div>
-              )}
-            </Form>
-          </div> */}
-
-          {/* Right side controls */}
           <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-            {/* Theme toggle - always visible */}
-
-            {/* Mobile search button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden flex-shrink-0 h-9 w-9"
-              aria-label="Open search"
-              onClick={() => setShowMobileSearch(true)}
-            >
-              <Search className="h-5 w-5" />
-            </Button>
             <div className="flex-shrink-0">
               <ToggleThemeGuest />
             </div>
-            {/* Auth buttons */}
+
             <div className="flex items-center gap-1 sm:gap-2 ml-1 sm:ml-2">
               <Link href="/sign-in" passHref>
                 <Button
@@ -130,8 +50,6 @@ export default function GuestNavbar({ className }: GuestNavbarProps) {
           </div>
         </div>
       </header>
-
-      {/* Mobile search overlay - YouTube style */}
     </>
   );
 }
