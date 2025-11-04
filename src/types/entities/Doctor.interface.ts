@@ -14,4 +14,5 @@ export interface Doctor {
   consultation_fee: number;
   availability_times: string;
   national_id_card?: string;
+  profile_url?: string; // Add this line
 }

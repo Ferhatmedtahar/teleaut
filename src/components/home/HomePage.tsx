@@ -4,7 +4,6 @@ import DoctorsFilter from "./DoctorFilter";
 
 export default async function HomePage() {
   const { success, doctors } = await getDoctorsList();
-
   if (!success) {
     return (
       <div className="space-y-6 dark:bg-background/80 bg-background/80 p-6 rounded-lg">

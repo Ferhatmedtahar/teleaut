@@ -110,9 +110,9 @@ export default function GuestHomePage({
                 }}
                 className="mb-12 text-lg text-white/90 dark:text-primary-50 md:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed"
               >
-                Découvrez une plateforme d&apos;apprentissage innovante où
-                enseignants et étudiants se connectent pour partager des
-                connaissances et créer un avenir meilleur.
+                Découvrez une plateforme de santé innovante où médecins et
+                patients se connectent pour faciliter les consultations et
+                améliorer la prise en charge de la maladie d&apos;autisme.
               </motion.p>
 
               <motion.div
@@ -193,65 +193,67 @@ export default function GuestHomePage({
           </div>
         </motion.section>
       ) : (
-        <section className="px-4 py-16 md:px-6 lg:px-10">
-          <motion.h2
-            variants={fadeInUp}
-            className="mb-10 sm:mb-12 text-center text-3xl font-bold"
-            transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
-          >
-            Médecins sur la plateforme?
-          </motion.h2>
-          <div className="mx-auto max-w-6xl space-y-24">
-            {doctors.length > 0 ? (
-              <motion.div
-                ref={resultsRef}
-                initial="initial"
-                whileInView="animate"
-                viewport={{ once: true }}
-                variants={staggerContainer}
-                className="scroll-mt-20"
-              >
-                <motion.h2
-                  variants={fadeInUp}
-                  className="text-3xl font-bold mb-10 text-center"
-                  transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
-                ></motion.h2>
+        doctors.length > 0 && (
+          <section className="px-4 py-16 md:px-6 lg:px-10">
+            <motion.h2
+              variants={fadeInUp}
+              className="mb-10 sm:mb-12 text-center text-3xl font-bold"
+              transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+            >
+              Médecins sur la plateforme?
+            </motion.h2>
+            <div className="mx-auto max-w-6xl space-y-24">
+              {doctors.length > 0 ? (
                 <motion.div
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4"
+                  ref={resultsRef}
+                  initial="initial"
+                  whileInView="animate"
+                  viewport={{ once: true }}
                   variants={staggerContainer}
+                  className="scroll-mt-20"
                 >
-                  {doctors.slice(0, 6).map((doctor) => (
-                    <motion.div
-                      key={doctor.id}
-                      variants={scaleIn}
-                      viewport={{ once: true }}
-                      transition={{
-                        duration: 0.8,
-                        ease: [0.22, 0.03, 0.26, 1],
-                      }}
-                    >
-                      <DoctorCard doctor={doctor} />
-                    </motion.div>
-                  ))}
+                  <motion.h2
+                    variants={fadeInUp}
+                    className="text-3xl font-bold mb-10 text-center"
+                    transition={{ duration: 0.7, ease: [0.22, 0.03, 0.26, 1] }}
+                  ></motion.h2>
+                  <motion.div
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4"
+                    variants={staggerContainer}
+                  >
+                    {doctors.slice(0, 6).map((doctor) => (
+                      <motion.div
+                        key={doctor.id}
+                        variants={scaleIn}
+                        viewport={{ once: true }}
+                        transition={{
+                          duration: 0.8,
+                          ease: [0.22, 0.03, 0.26, 1],
+                        }}
+                      >
+                        <DoctorCard doctor={doctor} />
+                      </motion.div>
+                    ))}
+                  </motion.div>
                 </motion.div>
-              </motion.div>
-            ) : (
-              <div>
-                <motion.p
-                  variants={fadeInUp}
-                  className="text-lg text-center text-primary-900 dark:text-primary-50/75 max-w-xl mx-auto"
-                  transition={{
-                    duration: 0.7,
-                    ease: [0.22, 0.03, 0.26, 1],
-                    delay: 0.1,
-                  }}
-                >
-                  Aucune vidéo n&apos;a été trouvée.
-                </motion.p>
-              </div>
-            )}
-          </div>
-        </section>
+              ) : (
+                <div>
+                  <motion.p
+                    variants={fadeInUp}
+                    className="text-lg text-center text-primary-900 dark:text-primary-50/75 max-w-xl mx-auto"
+                    transition={{
+                      duration: 0.7,
+                      ease: [0.22, 0.03, 0.26, 1],
+                      delay: 0.1,
+                    }}
+                  >
+                    Aucune vidéo n&apos;a été trouvée.
+                  </motion.p>
+                </div>
+              )}
+            </div>
+          </section>
+        )
       )}
       <section className="px-4 pb-24 pt-10 md:px-6 lg:px-10 relative">
         <motion.div
